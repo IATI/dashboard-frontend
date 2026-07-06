@@ -1,0 +1,18 @@
+# Node
+node_modules/
+
+# Nuxt build output
+.nuxt/
+.output/
+dist
+dist/
+
+# Secrets
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# Local dev artifacts
+launchctl.txt

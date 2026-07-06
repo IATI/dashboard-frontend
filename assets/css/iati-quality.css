@@ -1,0 +1,171 @@
+/* IATI Publishing Quality — shared styles */
+:root {
+  --teal-90: #155366; --teal-80: #2d6a7d; --teal-70: #448093; --teal-60: #5c97a9;
+  --teal-50: #73adbf; --teal-40: #90c0cf; --teal-30: #add3df; --teal-20: #cae6ef; --teal-10: #e6f9fe;
+  --blue-50: #06dbe4; --blue-30: #7bedf2;
+  --green-30: #75dfc7; --green-40: #3bd2af; --green-50: #00c497; --green-90: #145d4c;
+  --orange-50: #ff7264; --orange-90: #6e0900;
+  --red-50: #f73357;
+  --grey-90: #121212; --grey-70: #4b4b4b; --grey-60: #686868; --grey-30: #bdbdbd; --grey-20: #dadada; --grey-10: #f6f6f6;
+  --shadow: 0 4px 5px var(--grey-20);
+}
+* { box-sizing: border-box }
+body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family: "Nunito Sans", system-ui, sans-serif; line-height: 1.45 }
+h1, h2, h3, h4, h5 { font-family: "Hanken Grotesk", system-ui, sans-serif; margin: 0; line-height: 1.15; font-weight: 700 }
+
+/* App chrome */
+.appbar { background: var(--teal-90); color: #fff }
+.appbar__top { display: flex; justify-content: space-between; align-items: center; padding: 6px 28px; font-size: .82rem; border-bottom: 1px solid rgba(255,255,255,.08) }
+.appbar__top a { color: #fff }
+.appbar__main { display: flex; align-items: center; padding: 14px 28px; gap: 28px }
+.appbar__logo { display: flex; align-items: center; gap: 12px }
+.appbar__logo img { height: 36px }
+.appbar__logo .label { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.05rem; letter-spacing: .5px; text-transform: uppercase; border-left: 3px solid var(--blue-50); padding-left: 12px; line-height: 1.1 }
+.appbar__logo .label small { display: block; font-size: .65rem; font-weight: 600; letter-spacing: .6px; opacity: .85; margin-top: 2px }
+.appbar__nav { display: flex; gap: 22px; flex: 1; margin-left: 14px }
+.appbar__nav a { color: #fff; text-decoration: none; font-family: "Hanken Grotesk"; font-weight: 600; font-size: .95rem; padding: 6px 0; border-bottom: 2px solid transparent }
+.appbar__nav a.active, .appbar__nav a:hover { border-color: var(--blue-50) }
+
+.titlebar { background: var(--teal-90); color: #fff; padding: 24px 28px 28px; position: relative; overflow: hidden }
+.titlebar::after { content: ""; position: absolute; right: -30px; top: -40px; width: 340px; height: 340px; background: url(/assets/svg/marque-white.svg) no-repeat; background-size: contain; opacity: .08; pointer-events: none }
+.titlebar__inner { max-width: 1280px; margin: 0 auto; border-left: 4px solid var(--blue-50); padding-left: 1rem; position: relative; z-index: 1 }
+.titlebar .eyebrow { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.0625rem; margin: 0 0 .5rem }
+.titlebar h1 { font-size: 2.4rem; font-weight: 800 }
+.titlebar .meta { margin-top: .7rem; display: flex; gap: 18px; flex-wrap: wrap; font-size: .92rem; opacity: .92 }
+.titlebar .meta strong { font-weight: 700 }
+
+.crumbs { background: #fff; border-bottom: 1px solid var(--grey-20) }
+.crumbs__inner { max-width: 1280px; margin: 0 auto; padding: 10px 28px; font-size: .9rem; font-weight: 600; color: var(--grey-70) }
+.crumbs a { color: var(--teal-80); text-decoration: underline; text-decoration-color: var(--teal-30) }
+.crumbs .sep { color: var(--teal-90); padding: 0 .45em }
+
+.main { max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px }
+
+/* Score badge */
+.score { display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px; font-family: "Hanken Grotesk"; font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .4px }
+.score--good { background: #ebfffa; color: var(--green-90); border: 1px solid var(--green-50) }
+.score--ok { background: var(--teal-10); color: var(--teal-90); border: 1px solid var(--teal-50) }
+.score--warn { background: #fff0f0; color: var(--orange-90); border: 1px solid var(--orange-50) }
+.score--bad { background: #fff0f3; color: #6d091b; border: 1px solid var(--red-50) }
+.score .dot { width: 10px; height: 10px; border-radius: 50% }
+.score--good .dot { background: var(--green-50) }
+.score--ok .dot { background: var(--teal-60) }
+.score--warn .dot { background: var(--orange-50) }
+.score--bad .dot { background: var(--red-50) }
+
+/* Cards */
+.card { background: #fff; box-shadow: var(--shadow); border-top: 4px solid var(--teal-90); padding: 18px 20px }
+.card h3 { font-size: 1.15rem; margin: 0 0 6px }
+.card .sub { color: var(--teal-90); font-family: "Hanken Grotesk"; font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .4px; margin: 0 0 14px }
+.card--accent-blue { border-color: var(--blue-50) }
+.card--accent-green { border-color: var(--green-50) }
+.card--accent-orange { border-color: var(--orange-50) }
+.card--flat { border-top: none; box-shadow: none; border: 1px solid var(--grey-20) }
+
+/* Stat chip (big number) */
+.bignum { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 2.2rem; line-height: 1; color: var(--teal-90) }
+.bignum.warn { color: var(--orange-90) }
+.bignum.good { color: var(--green-90) }
+.bignum small { display: block; font-size: .7rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--grey-60); margin-top: 6px }
+
+/* Bars */
+.bar { position: relative; background: var(--teal-10); height: 18px; border: 1px solid var(--teal-30); overflow: hidden }
+.bar > span { display: block; height: 100%; background: var(--teal-70); transition: width .4s ease }
+.bar.bar--lg { height: 22px }
+.bar--good > span { background: var(--green-50) }
+.bar--warn > span { background: var(--orange-50) }
+.bar--bad > span { background: var(--red-50) }
+.bar__label { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: .78rem; font-weight: 700; color: var(--grey-90) }
+
+/* Indicator pill */
+.ind { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--grey-20) }
+.ind:last-child { border-bottom: none }
+.ind .name { flex: 1; font-weight: 600; font-size: .9rem }
+.ind .name small { display: block; color: var(--grey-60); font-weight: 400; font-size: .78rem; margin-top: 2px }
+.ind .pct { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .95rem; width: 64px; text-align: right }
+.ind .meter { width: 140px }
+.ind .meter .bar { height: 10px }
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 2px solid var(--grey-20); margin-bottom: 18px }
+.tabs button { background: none; border: none; padding: 12px 18px; font-family: "Hanken Grotesk"; font-weight: 600; font-size: .95rem; color: var(--grey-60); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px }
+.tabs button.active { color: var(--teal-90); border-color: var(--blue-50) }
+
+/* Section title bar */
+.section-title { background: var(--teal-90); color: #fff; text-transform: uppercase; font-weight: 700; padding: .55rem 1rem; font-size: .95rem; letter-spacing: .4px; margin: 0; font-family: "Nunito Sans" }
+
+/* Tables */
+.tbl { width: 100%; border-collapse: collapse; font-size: .92rem; background: #fff }
+.tbl th { background: var(--teal-90); color: #fff; text-align: left; padding: 10px 12px; font-family: "Hanken Grotesk"; font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .3px }
+.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--grey-20); vertical-align: middle }
+.tbl tr:nth-child(even) td { background: #fbfbfb }
+.tbl .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600 }
+.tbl .org { font-weight: 700; color: var(--teal-90) }
+.tbl .org small { display: block; color: var(--grey-60); font-weight: 400; text-transform: uppercase; letter-spacing: .3px; font-size: .7rem; margin-top: 2px }
+
+/* Heat / score block */
+.heat { display: inline-block; width: 34px; height: 18px; text-align: center; font-size: .72rem; font-weight: 700; line-height: 18px; color: #fff }
+.heat-0 { background: #e5e5e5; color: var(--grey-60) }
+.heat-1 { background: #f73357 }
+.heat-2 { background: #ff7264 }
+.heat-3 { background: #dfb000 }
+.heat-4 { background: #3bd2af; color: var(--grey-90) }
+.heat-5 { background: #00c497 }
+
+/* Gauge ring */
+.gauge { --p: 0; --c: var(--teal-70); position: relative; width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--c) calc(var(--p) * 1%), var(--grey-20) 0) }
+.gauge::after { content: ""; position: absolute; inset: 14px; background: #fff; border-radius: 50% }
+.gauge .v { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.65rem; color: var(--teal-90); z-index: 1 }
+.gauge .v small { display: block; font-size: .65rem; letter-spacing: .5px; text-transform: uppercase; color: var(--grey-60); font-weight: 600; margin-top: 2px }
+
+/* Stacked bar */
+.stacked { display: flex; height: 20px; border: 1px solid var(--grey-20); overflow: hidden; background: #fff }
+.stacked > span { height: 100% }
+.stack-legend { display: flex; gap: 14px; font-size: .8rem; margin-top: 8px; flex-wrap: wrap }
+.stack-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 4px; vertical-align: middle }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: .4em; background: var(--teal-90); color: #fff; border: none; padding: .55em .9em; font-family: "Hanken Grotesk"; font-weight: 600; font-size: .9rem; cursor: pointer; text-decoration: none }
+.btn:hover { background: var(--teal-80) }
+.btn--light { color: var(--grey-90); background: #fff; box-shadow: inset 0 0 0 1px var(--grey-20) }
+.btn--light:hover { background: var(--blue-30) }
+.btn--pill { background: var(--teal-10); color: var(--grey-90); border: 1px solid var(--teal-50); padding: .4em .8em; font-size: .82rem }
+
+/* Callout */
+.callout { padding: 14px 16px; border-left: 4px solid var(--orange-50); background: #fff0f0; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: flex-start }
+.callout.info { border-color: var(--blue-50); background: var(--teal-10) }
+.callout.good { border-color: var(--green-50); background: #ebfffa }
+.callout h4 { font-size: .95rem; margin: 0 0 4px; font-family: "Hanken Grotesk" }
+.callout p { margin: 0; font-size: .88rem; line-height: 1.5 }
+.callout .ic { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.4rem; color: var(--orange-90); width: 28px; text-align: center; flex-shrink: 0; line-height: 1 }
+.callout.info .ic { color: var(--teal-90) }
+.callout.good .ic { color: var(--green-90) }
+
+/* Sparkline */
+.spark { display: flex; align-items: flex-end; gap: 3px; height: 36px }
+.spark span { display: block; width: 8px; background: var(--teal-50) }
+
+/* Group filter chips */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px }
+.chip { padding: 6px 12px; background: #fff; border: 1px solid var(--grey-20); font-family: "Hanken Grotesk"; font-weight: 600; font-size: .85rem; color: var(--grey-70); cursor: pointer }
+.chip.active { background: var(--teal-90); color: #fff; border-color: var(--teal-90) }
+
+/* Layout helpers */
+.grid { display: grid; gap: 16px }
+.g-2 { grid-template-columns: 1fr 1fr }
+.g-3 { grid-template-columns: repeat(3, 1fr) }
+.g-4 { grid-template-columns: repeat(4, 1fr) }
+.g-5 { grid-template-columns: repeat(5, 1fr) }
+.g-13 { grid-template-columns: 1fr 3fr }
+.g-31 { grid-template-columns: 3fr 1fr }
+.row { display: flex; gap: 12px; align-items: center }
+.spread { display: flex; justify-content: space-between; align-items: center; gap: 12px }
+.mt { margin-top: 18px } .mt-sm { margin-top: 10px } .mb-sm { margin-bottom: 10px }
+
+/* Footer */
+.foot { background: var(--teal-90); color: #fff; padding: 22px 28px; margin-top: 24px; font-size: .85rem }
+.foot__inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center }
+.foot a { color: #fff; text-decoration-color: var(--teal-50) }
+
+/* Artboard screen wrapper */
+.artboard-screen { width: 1280px; min-height: 1100px; background: #fff }

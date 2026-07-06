@@ -1,0 +1,345 @@
+<script setup>
+const props = defineProps({
+  org: { type: String, default: 'USAID' },
+  orgName: { type: String, default: 'United States Agency for International Development (USAID)' }
+})
+
+const { t } = useLocale()
+
+const orgData = {
+  USAID: {
+    overall: 78, timeliness: 100, coverage: 95, disaggregation: 100, comprehensiveness: 81, traceability: 0.63,
+    orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
+    coverageRows: [
+      { y: '2023',       iati: 55.8, ref: 60.4 },
+      { y: '2024',       iati: 66.6, ref: 74.1 },
+      { y: '2025',       iati: 53.7, ref: 66.1 },
+      { y: '2026 (YTD)', iati: 5.4,  ref: 25.3, partial: true },
+    ],
+    indicatorData: [
+      { g: 'indGroupAvailability', items: [
+        { nk: 'indFilesReg',    hk: 'hintFilesReg',    p: 100, w: 'good' },
+        { nk: 'indSchemaValid', hk: 'hintSchemaValid', p: 100, w: 'good' },
+        { nk: 'indOrgFile',     hk: 'hintOrgFile',     p: 100, w: 'good' },
+        { nk: 'indTotalBudget', hk: 'hintTotalBudget', p: 0,   w: 'bad', flag: true },
+      ]},
+      { g: 'indGroupCoverage', items: [
+        { nk: 'indCov2024', hk: 'hintCov2024', p: 81, w: 'good' },
+        { nk: 'indCov2023', hk: 'hintCov2023', p: 74, w: null },
+        { nk: 'indCov2025', hk: 'hintCov2025', p: 64, w: null },
+      ]},
+      { g: 'indGroupFinancial', items: [
+        { nk: 'indCommitments',  p: 97, w: 'good' },
+        { nk: 'indDisbursements', p: 99, w: 'good' },
+        { nk: 'indCapital',      hk: 'hintCapital',   p: 42, w: 'warn' },
+        { nk: 'indDisaggTx',     hk: 'hintDisaggTx',  p: 71, w: null },
+      ]},
+      { g: 'indGroupTraceability', items: [
+        { nk: 'indOutgoing',  hk: 'hintOutgoing',  p: 12,   w: 'bad', flag: true },
+        { nk: 'indOrgIDs',    hk: 'hintOrgIDs',    p: 96,   w: 'good' },
+        { nk: 'indDownstream', hk: 'hintDownstream', p: 34, w: 'warn' },
+      ]},
+      { g: 'indGroupProjectInfo', items: [
+        { nk: 'indSectors',    p: 99, w: 'good' },
+        { nk: 'indRecipient',  p: 96, w: 'good' },
+        { nk: 'indGeo',        p: 48, w: 'warn' },
+        { nk: 'indDocs',       p: 88, w: 'good' },
+        { nk: 'indResults',    p: 22, w: 'bad' },
+        { nk: 'indConditions', p: 6,  w: 'bad' },
+      ]},
+    ]
+  },
+  EU: {
+    overall: 45, timeliness: 100, coverage: 35, disaggregation: 100, comprehensiveness: 85, traceability: 100,
+    orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
+    coverageRows: [
+      { y: '2023',       iati: 55.8, ref: 60.4 },
+      { y: '2024',       iati: 66.6, ref: 74.1 },
+      { y: '2025',       iati: 53.7, ref: 66.1 },
+      { y: '2026 (YTD)', iati: 5.4,  ref: 25.3, partial: true },
+    ],
+    indicatorData: [
+      { g: 'indGroupAvailability', items: [
+        { nk: 'indFilesReg',    hk: 'hintFilesReg',    p: 100, w: 'good' },
+        { nk: 'indSchemaValid', hk: 'hintSchemaValid', p: 100, w: 'good' },
+        { nk: 'indOrgFile',     hk: 'hintOrgFile',     p: 100, w: 'good' },
+        { nk: 'indTotalBudget', hk: 'hintTotalBudget', p: 0,   w: 'bad', flag: true },
+      ]},
+      { g: 'indGroupCoverage', items: [
+        { nk: 'indCov2024', hk: 'hintCov2024', p: 35, w: 'good' },
+        { nk: 'indCov2023', hk: 'hintCov2023', p: 35, w: null },
+        { nk: 'indCov2025', hk: 'hintCov2025', p: 35, w: null },
+      ]},
+      { g: 'indGroupFinancial', items: [
+        { nk: 'indCommitments',  p: 91,  w: 'good' },
+        { nk: 'indDisbursements', p: 84, w: 'good' },
+        { nk: 'indCapital',      hk: 'hintCapital',  p: 100, w: 'good' },
+        { nk: 'indDisaggTx',     hk: 'hintDisaggTx', p: 71, w: null },
+      ]},
+      { g: 'indGroupTraceability', items: [
+        { nk: 'indOutgoing', hk: 'hintOutgoing', p: 0.32, w: 'bad', flag: true },
+        { nk: 'indOrgIDs',   hk: 'hintOrgIDs',  p: 29,   w: 'good' },
+      ]},
+      { g: 'indGroupComprehensiveness', items: [
+        { nk: 'indSectors',    p: 100, w: 'good' },
+        { nk: 'indRecipient',  p: 100, w: 'good' },
+        { nk: 'indGeo',        p: 58,  w: 'good' },
+        { nk: 'indDocs',       p: 64,  w: 'good' },
+        { nk: 'indResults',    p: 26,  w: 'bad' },
+        { nk: 'indConditions', p: 0,   w: 'bad' },
+      ]},
+    ]
+  }
+}
+
+const d = computed(() => orgData[props.org] || orgData.USAID)
+
+const overall          = computed(() => d.value.overall)
+const timeliness       = computed(() => d.value.timeliness)
+const coverage         = computed(() => d.value.coverage)
+const disaggregation   = computed(() => d.value.disaggregation)
+const comprehensiveness = computed(() => d.value.comprehensiveness)
+const publisherID      = computed(() => d.value.publisherID)
+const totalDisbursements = computed(() => d.value.totalDisbursements)
+const coverageRows     = computed(() => d.value.coverageRows)
+
+const indicators = computed(() =>
+  d.value.indicatorData.map(group => ({
+    g: t(group.g),
+    items: group.items.map(it => ({ ...it, n: t(it.nk), h: it.hk ? t(it.hk) : '' }))
+  }))
+)
+
+function levelFor(pct) {
+  if (pct >= 75) return 'good'
+  if (pct >= 50) return 'ok'
+  if (pct >= 25) return 'warn'
+  return 'bad'
+}
+
+function starsFor(pct) {
+  if (pct >= 90) return 3
+  if (pct >= 60) return 2
+  if (pct >= 40) return 1
+  return 0
+}
+</script>
+
+<template>
+  <div>
+    <AppBar active="org" />
+    <Crumbs :path="[
+      { label: t('breadPublishingQuality'), href: '#' },
+      { label: t('navOrganisations'), href: '#' },
+      { label: orgName },
+    ]" />
+    <TitleBar :eyebrow="t('orgEyebrow')" :title="orgName">
+      <template #meta>
+        <span><strong>{{ t('orgReportingID') }}</strong> {{ publisherID }}</span>
+        <span><strong>{{ t('orgType') }}</strong> {{ d.publisherType }}</span>
+        <span><strong>{{ t('orgLastUpdated') }}</strong> 12 Apr 2026</span>
+        <span><strong>{{ t('orgDisbursed') }}</strong> ${{ totalDisbursements }}</span>
+      </template>
+    </TitleBar>
+
+    <main class="main">
+      <!-- Hero — score + alerts -->
+      <div class="grid g-31 mb-sm">
+        <div class="card">
+          <p class="sub">{{ t('orgOverallQuality') }}</p>
+          <div class="row" style="gap: 24px; align-items: center">
+            <Gauge :show-pct="false" :pct="overall" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
+            <div style="flex: 1">
+              <template v-if="org == 'EU'">
+                <div class="row" style="gap: 12px; margin-bottom: 8px">
+                  <Score :level="levelFor(timeliness)">{{ t('orgTimely') }}</Score>
+                  <Score level="warn">{{ t('orgCoverageIsLow') }}</Score>
+                </div>
+                <p style="margin: 0; font-size: .94rem; line-height: 1.5">{{ t('orgEUText') }}</p>
+              </template>
+              <template v-else>
+                <div class="row" style="gap: 12px; margin-bottom: 8px">
+                  <Score :level="levelFor(overall)">{{ t('orgGoodMinorGaps') }}</Score>
+                  <Score level="warn">{{ t('orgRegressionTraceability') }}</Score>
+                </div>
+                <p style="margin: 0; font-size: .94rem; line-height: 1.5">{{ t('orgUSAIDText') }}</p>
+              </template>
+            </div>
+          </div>
+          <div class="grid g-4 mt" id="characteristics">
+            <div class="card card--flat" style="padding: 14px">
+              <div class="bignum good">{{ timeliness }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimTimeliness') }}</small></div>
+              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
+                <div class="spark">
+                  <span v-for="(h, i) in [58,62,68,74,79,81]" :key="i" :style="{ height: h * 0.4 + 'px' }" />
+                </div>
+                <div>
+                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(timeliness) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
+                </div>
+              </div>
+            </div>
+            <div class="card card--flat" style="padding: 14px">
+              <div :class="`bignum ${coverage > 80 ? 'good' : 'warn'}`">{{ coverage }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimCoverage') }}</small></div>
+              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
+                <div class="spark">
+                  <span v-for="(h, i) in [58,62,68,74,79,81]" :key="i" :style="{ height: h * 0.4 + 'px' }" />
+                </div>
+                <div>
+                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(coverage) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
+                </div>
+              </div>
+            </div>
+            <div class="card card--flat" style="padding: 14px">
+              <div :class="`bignum ${disaggregation > 80 ? 'good' : 'warn'}`">{{ disaggregation }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimDisaggregation') }}</small></div>
+              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
+                <div class="spark">
+                  <span v-for="(h, i) in [18,17,16,14,13,12]" :key="i" :style="{ height: h * 1.5 + 'px' }" />
+                </div>
+                <div>
+                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(disaggregation) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
+                </div>
+              </div>
+            </div>
+            <div class="card card--flat" style="padding: 14px">
+              <div :class="`bignum ${comprehensiveness > 80 ? 'good' : 'warn'}`">{{ comprehensiveness }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimComprehensiveness') }}</small></div>
+              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
+                <div class="spark">
+                  <span v-for="(h, i) in [18,17,16,14,13,12]" :key="i" :style="{ height: h * 1.5 + 'px' }" />
+                </div>
+                <div>
+                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(comprehensiveness) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div class="callout good">
+            <div class="ic">✓</div>
+            <div>
+              <h4>{{ t('orgCalloutAvailTitle') }}</h4>
+              <p>{{ t('orgCalloutAvailText') }} <a href="#">{{ t('orgViewDetails') }}</a></p>
+            </div>
+          </div>
+          <div class="callout">
+            <div class="ic">!</div>
+            <div>
+              <h4>{{ t('orgCalloutActionTitle') }}</h4>
+              <template v-if="org == 'EU'">
+                <p v-html="t('orgEUAction')" />
+              </template>
+              <template v-else>
+                <p v-html="t('orgUSAIDAction')" />
+              </template>
+            </div>
+          </div>
+          <div class="callout info">
+            <div class="ic">i</div>
+            <div>
+              <h4>{{ t('orgCalloutPeersTitle') }}</h4>
+              <p v-html="t('orgCalloutPeersText')" /> <a href="#">{{ t('orgOpenGroup') }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title mt">{{ t('orgSummaryTitle') }}</h2>
+      <div class="card">{{ t('orgSummaryText') }}</div>
+
+      <!-- Prioritised issues -->
+      <h2 class="section-title mt">{{ t('orgIssuesTitle') }}</h2>
+      <div class="card" style="border-top: none; padding: 0">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 50px">#</th>
+              <th>{{ t('orgColIssue') }}</th>
+              <th>{{ t('orgColWhy') }}</th>
+              <th style="width: 140px">{{ t('orgColCurrent') }}</th>
+              <th style="width: 130px">{{ t('orgColTrend') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td class="org">{{ t('orgIssue1n') }}<small>{{ t('orgIssue1s') }}</small></td>
+              <td>{{ t('orgIssue1w') }}</td>
+              <td><Bar :pct="6" variant="bad" /></td>
+              <td><span class="heat heat-1">−2</span></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td class="org">{{ t('orgIssue2n') }}<small>{{ t('orgIssue2s') }}</small></td>
+              <td>{{ t('orgIssue2w') }}</td>
+              <td><Bar :pct="12" variant="bad" /></td>
+              <td><span class="heat heat-1">−4</span></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td class="org">{{ t('orgIssue3n') }}<small>{{ t('orgIssue3s') }}</small></td>
+              <td>{{ t('orgIssue3w') }}</td>
+              <td><Bar :pct="22" variant="bad" /></td>
+              <td><span class="heat heat-3">±0</span></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td class="org">{{ t('orgIssue4n') }}<small>{{ t('orgIssue4s') }}</small></td>
+              <td>{{ t('orgIssue4w') }}</td>
+              <td><Bar :pct="0" variant="bad" /></td>
+              <td><span class="heat heat-0">N/A</span></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td class="org">{{ t('orgIssue5n') }}</td>
+              <td>{{ t('orgIssue5w') }}</td>
+              <td><Bar :pct="48" variant="warn" /></td>
+              <td><span class="heat heat-4">+3</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Coverage chart + all indicators -->
+      <div class="grid g-2 mt">
+        <div class="card">
+          <p class="sub">{{ t('orgCoverageTitle') }}</p>
+          <h3>{{ t('orgIATIvsCRS').replace('{org}', org) }}</h3>
+          <div style="margin-top: 18px">
+            <div v-for="r in coverageRows" :key="r.y" style="margin-bottom: 14px">
+              <div class="spread" style="margin-bottom: 4px; font-size: .85rem">
+                <strong>{{ r.y }}</strong>
+                <span>${{ r.iati.toFixed(1) }} bn / ${{ r.ref.toFixed(1) }} bn ({{ Math.round(100 * r.iati / r.ref) }}%)</span>
+              </div>
+              <div class="bar bar--lg" style="background: var(--grey-10); border: 1px solid var(--grey-20)">
+                <span :style="{ width: Math.min(100, 100 * r.iati / r.ref) + '%', background: r.partial ? 'var(--teal-50)' : 'var(--green-50)' }" />
+              </div>
+            </div>
+          </div>
+          <p style="font-size: .8rem; color: var(--grey-60); margin: 6px 0 0">{{ t('orgCoverageNote') }}</p>
+        </div>
+
+        <div class="card">
+          <p class="sub">{{ t('orgAllIndicators') }}</p>
+          <h3>{{ t('orgByGroup') }}</h3>
+          <div style="margin-top: 8px">
+            <div v-for="group in indicators" :key="group.g" style="margin-bottom: 14px">
+              <div style="font-family: Hanken Grotesk; font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .4px; color: var(--teal-90); border-bottom: 2px solid var(--teal-30); padding-bottom: 4px; margin-bottom: 4px">
+                {{ group.g }}
+              </div>
+              <Indicator
+                v-for="(it, i) in group.items"
+                :key="i"
+                :name="it.n"
+                :hint="it.h || ''"
+                :pct="it.p"
+                :variant="it.w"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <Foot />
+  </div>
+</template>
