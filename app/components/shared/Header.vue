@@ -48,11 +48,11 @@ const { t, locale, setLocale } = useI18n({ useScope: 'global' })
         <div class="iati-header__nav">
           <nav>
             <ul class="iati-tool-nav">
-              <li><a class="iati-tool-nav-link" :class="{ active: active === 'overall' }" href="/">{{ t('navOverview') }}</a></li>
-              <li><a class="iati-tool-nav-link" :class="{ active: active === 'groups' }" href="/group">{{ t('navGroups') }}</a></li>
-              <li><a class="iati-tool-nav-link" :class="{ active: active === 'country' }" href="/country">{{ t('navCountry') }}</a></li>
-              <li><a class="iati-tool-nav-link" :class="{ active: active === 'org' }" href="/usaid">{{ t('navOrganisations') }}</a></li>
-              <li><a class="iati-tool-nav-link" :class="{ active: active === 'exploring' }" href="/exploring-data">{{ t('navExploring') }}</a></li>
+              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'overall' }" to="/">{{ t('navOverview') }}</NuxtLink></li>
+              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'groups' }" to="/group">{{ t('navGroups') }}</NuxtLink></li>
+              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'country' }" to="/country">{{ t('navCountry') }}</NuxtLink></li>
+              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'org' }" to="/usaid">{{ t('navOrganisations') }}</NuxtLink></li>
+              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'exploring' }" to="/exploring-data">{{ t('navExploring') }}</NuxtLink></li>
               <li><a class="iati-tool-nav-link" href="#">{{ t('navAbout') }}</a></li>
             </ul>
           </nav>

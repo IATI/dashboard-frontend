@@ -334,7 +334,7 @@ const recipientCountries = computed(() => {
       <!-- Not found -->
       <Card loading v-if="notFound">
         Publisher <strong>{{ slug }}</strong> not found.
-        <br><a href="/exploring-data/publishers" style="color: var(--teal-70)">← Back to publishers list</a>
+        <br><NuxtLink to="/exploring-data/publishers" style="color: var(--teal-70)">← Back to publishers list</NuxtLink>
       </Card>
 
       <template v-else>

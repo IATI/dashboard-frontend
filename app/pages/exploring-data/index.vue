@@ -24,8 +24,8 @@ const sections = [
     <main class="main">
       <BRow cols="1" cols-md="2" cols-lg="3" gutter-x="3" gutter-y="3">
         <BCol v-for="s in sections" :key="s.key">
-          <a
-            :href="s.href"
+          <NuxtLink
+            :to="s.href"
             class="iati-card iati-card--nav"
             style="padding: 28px 24px; height: 100%; display: block"
           >
@@ -34,7 +34,7 @@ const sections = [
             <p class="sub" style="margin: 0">
               {{ t(`explore${s.key.charAt(0).toUpperCase() + s.key.slice(1)}Subtitle`) }}
             </p>
-          </a>
+          </NuxtLink>
         </BCol>
       </BRow>
     </main>
