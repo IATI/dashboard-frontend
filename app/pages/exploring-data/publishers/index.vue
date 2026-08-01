@@ -230,7 +230,7 @@ const FIELDS = [
           </template>
           <template #cell(name)="{ value, item }">
             <span class="org">
-              <a :href="`/exploring-data/publishers/${item.slug}`" style="color: var(--teal-70); text-decoration: none">{{ value }}</a>
+              <NuxtLink :to="`/exploring-data/publishers/${item.slug}`" style="color: var(--teal-70); text-decoration: none">{{ value }}</NuxtLink>
             </span>
           </template>
           <template #cell(slug)="{ value }">
