@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     langDir: 'locales',
     strategy: 'no_prefix',
   },
-  css: ['~/assets/css/iati-quality.scss'],
   runtimeConfig: {
     public: {
       dashboardBase: 'https://dashboard.iatistandard.org',
