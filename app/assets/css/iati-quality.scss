@@ -1,0 +1,285 @@
+// Bootstrap — grid, tables, and collapse only (no visual component styles)
+// Bootstrap 5 uses @import internally so @use is not yet compatible
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/tables';
+@import 'bootstrap/scss/pagination';
+@import 'bootstrap/scss/transitions';
+
+// ─── IATI Publishing Quality — shared styles ─────────────────────────────────
+
+// Bridge prototype token names to the IATI Design System --color-* tokens
+:root {
+  --teal-90: var(--color-teal-90); --teal-80: var(--color-teal-80); --teal-70: var(--color-teal-70); --teal-60: var(--color-teal-60);
+  --teal-50: var(--color-teal-50); --teal-40: var(--color-teal-40); --teal-30: var(--color-teal-30); --teal-20: var(--color-teal-20); --teal-10: var(--color-teal-10);
+  --blue-50: var(--color-blue-50); --blue-30: var(--color-blue-30);
+  --green-30: var(--color-green-30); --green-40: var(--color-green-40); --green-50: var(--color-green-50); --green-90: var(--color-green-90);
+  --orange-50: var(--color-orange-50); --orange-90: var(--color-orange-90);
+  --red-50: var(--color-red-50);
+  --grey-90: var(--color-grey-90); --grey-70: var(--color-grey-70); --grey-60: var(--color-grey-60); --grey-30: var(--color-grey-30); --grey-20: var(--color-grey-20); --grey-10: var(--color-grey-10);
+  --shadow: 0 4px 5px var(--color-grey-20);
+}
+
+* { box-sizing: border-box }
+body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family: "Nunito Sans", system-ui, sans-serif; line-height: 1.45 }
+
+// DS overrides — match DS specificity (0,2,0) so our rules win in the cascade
+.iati-design-system--enabled {
+  // Heading reset: match DS specificity (0,1,1) so our reset wins
+  h1, h2, h3, h4, h5 { font-family: "Hanken Grotesk", system-ui, sans-serif; margin: 0; line-height: 1.15; font-weight: 700 }
+
+  // Header layout
+  .iati-header__container { max-width: 1280px; padding: 0 28px }
+  .iati-header__general-nav { display: flex; align-items: center; gap: 1rem }
+
+  // Table overrides: disable horizontal scroll, remove forced column min-width
+  .iati-table {
+    overflow-x: visible;
+    td, th { min-width: 0 }
+  }
+
+  // Card modifier classes: prefixed to match DS base specificity (0,2,0)
+  // so they correctly override the DS base border-top / padding / box-shadow
+  .iati-card {
+    &--accent-blue  { border-color: var(--blue-50) }
+    &--accent-green { border-color: var(--green-50) }
+    &--accent-orange { border-color: var(--orange-50) }
+    &--flat    { border-top: none; box-shadow: none; border: 1px solid var(--grey-20) }
+    &--flush   { border-top: none; padding: 0 }
+    &--loading { padding: 40px; text-align: center; color: var(--grey-60) }
+    &--nav     { display: block; text-decoration: none; color: inherit; cursor: pointer }
+    &--header  { padding: 0; border-top: none }
+  }
+}
+
+// ─── Active nav link ──────────────────────────────────────────────────────────
+.iati-tool-nav-link.active { border-bottom: 2px solid var(--blue-50); padding-bottom: calc(1rem - 2px) }
+
+// ─── Breadcrumb ───────────────────────────────────────────────────────────────
+.crumbs {
+  background: #fff;
+  border-bottom: 1px solid var(--grey-20);
+  &__inner { max-width: 1280px; margin: 0 auto; padding: 10px 28px; font-size: .9rem; color: var(--grey-70) }
+}
+
+// ─── Page title bar ───────────────────────────────────────────────────────────
+.titlebar {
+  background: #fff;
+  border-bottom: 1px solid var(--grey-20);
+  &__inner  { max-width: 1280px; margin: 0 auto; padding: 20px 28px 24px; border-left: 4px solid var(--blue-50); padding-left: 24px }
+  &__eyebrow { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .6px; color: var(--teal-70); margin: 0 0 6px }
+  &__title  { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.9rem; color: var(--teal-90); margin: 0 0 10px; line-height: 1.1 }
+  &__meta   { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: .85rem; color: var(--grey-70); margin-top: 4px;
+    strong { color: var(--grey-90) }
+  }
+}
+
+.main { max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px }
+
+// ─── Score badge ──────────────────────────────────────────────────────────────
+.score {
+  display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px;
+  font-family: "Hanken Grotesk"; font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .4px;
+  &--good { background: #ebfffa; color: var(--green-90); border: 1px solid var(--green-50) }
+  &--ok   { background: var(--teal-10); color: var(--teal-90); border: 1px solid var(--teal-50) }
+  &--warn { background: #fff0f0; color: var(--orange-90); border: 1px solid var(--orange-50) }
+  &--bad  { background: #fff0f3; color: #6d091b; border: 1px solid var(--red-50) }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    .score--good & { background: var(--green-50) }
+    .score--ok &   { background: var(--teal-60) }
+    .score--warn &  { background: var(--orange-50) }
+    .score--bad &   { background: var(--red-50) }
+  }
+}
+
+// ─── Cards ────────────────────────────────────────────────────────────────────
+// Base card styles (background, border-top, box-shadow, padding, flex column)
+// are provided by the DS under .iati-design-system--enabled .iati-card.
+// We only define extensions here.
+.iati-card {
+  h3 { margin: 0 0 4px }
+  .sub { color: var(--teal-90); font-family: "Hanken Grotesk"; font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .4px; margin: 0 0 16px }
+
+  &__icon   { font-size: 2rem; margin-bottom: 12px }
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; background: var(--teal-90); border-radius: 4px 4px 0 0;
+    h3 { margin: 0; color: #fff }
+    a  { color: rgba(255,255,255,.75); font-size: .82rem; text-decoration: none }
+  }
+
+  &--nav h3 { font-size: 1.1rem; margin: 0 0 6px; color: var(--teal-90) }
+
+  &-footer {
+    padding: 14px 20px; border-top: 1px solid var(--grey-20);
+    &--center { text-align: center }
+    p { margin: 0; font-size: .78rem; color: var(--grey-60) }
+  }
+}
+
+// ─── Stat (big number) ────────────────────────────────────────────────────────
+.bignum {
+  font-family: "Hanken Grotesk"; font-weight: 800; font-size: 2.2rem; line-height: 1; color: var(--teal-90);
+  &.warn { color: var(--orange-90) }
+  &.good { color: var(--green-90) }
+  small  { display: block; font-size: .7rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--grey-60); margin-top: 6px }
+}
+
+// ─── Bar ──────────────────────────────────────────────────────────────────────
+.bar {
+  position: relative; background: var(--teal-10); height: 18px; border: 1px solid var(--teal-30); overflow: hidden;
+  > span { display: block; height: 100%; background: var(--teal-70); transition: width .4s ease }
+  &.bar--lg { height: 22px }
+  &--good > span { background: var(--green-50) }
+  &--warn > span { background: var(--orange-50) }
+  &--bad  > span { background: var(--red-50) }
+  &__label { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: .78rem; font-weight: 700; color: var(--grey-90) }
+}
+
+// ─── Indicator pill ───────────────────────────────────────────────────────────
+.ind {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--grey-20);
+  &:last-child { border-bottom: none }
+  .name {
+    flex: 1; font-weight: 600; font-size: .9rem;
+    small { display: block; color: var(--grey-60); font-weight: 400; font-size: .78rem; margin-top: 2px }
+  }
+  .pct   { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .95rem; width: 64px; text-align: right }
+  .meter { width: 140px; .bar { height: 10px } }
+}
+
+// ─── Section title ────────────────────────────────────────────────────────────
+.section-title { background: var(--teal-90); color: #fff; text-transform: uppercase; font-weight: 700; padding: .55rem 1rem; font-size: .95rem; letter-spacing: .4px; margin: 0; font-family: "Nunito Sans" }
+
+// ─── Table ────────────────────────────────────────────────────────────────────
+// BTable: hide the auto-generated "Click to sort" screen-reader text
+.visually-hidden {
+  position: absolute !important; width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+  clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important;
+}
+
+.iati-table {
+  table { margin-bottom: 0 }
+  // BTable: compact header, prevent sort-icon padding from causing text wrap
+  th { white-space: nowrap; padding-top: 8px; padding-bottom: 8px }
+  .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600 }
+  .org {
+    font-weight: 700; color: var(--teal-90);
+    small { display: block; color: var(--grey-60); font-weight: 400; text-transform: uppercase; letter-spacing: .3px; font-size: .7rem; margin-top: 2px }
+  }
+}
+
+// ─── Pagination ───────────────────────────────────────────────────────────────
+.pagination { align-items: center }
+.page-link {
+  color: var(--teal-90); line-height: 1.5;
+  &:hover, &:focus { color: var(--teal-80) }
+}
+.page-item {
+  &.active   .page-link { background-color: var(--teal-90); border-color: var(--teal-90) }
+  &.disabled .page-link { color: var(--grey-30) }
+}
+
+// ─── Heat / score block ───────────────────────────────────────────────────────
+.heat {
+  display: inline-block; width: 34px; height: 18px; text-align: center; font-size: .72rem; font-weight: 700; line-height: 18px; color: #fff;
+  &-0 { background: #e5e5e5; color: var(--grey-60) }
+  &-1 { background: #f73357 }
+  &-2 { background: #ff7264 }
+  &-3 { background: #dfb000 }
+  &-4 { background: #3bd2af; color: var(--grey-90) }
+  &-5 { background: #00c497 }
+}
+
+// ─── Gauge ring ───────────────────────────────────────────────────────────────
+.gauge {
+  --p: 0; --c: var(--teal-70);
+  position: relative; width: 120px; height: 120px; border-radius: 50%;
+  background: conic-gradient(var(--c) calc(var(--p) * 1%), var(--grey-20) 0);
+  &::after { content: ""; position: absolute; inset: 14px; background: #fff; border-radius: 50% }
+  .v {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column;
+    font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.65rem; color: var(--teal-90); z-index: 1;
+    small { display: block; font-size: .65rem; letter-spacing: .5px; text-transform: uppercase; color: var(--grey-60); font-weight: 600; margin-top: 2px }
+  }
+}
+
+// ─── Stack legend (composite chart) ──────────────────────────────────────────
+.stack-legend {
+  display: flex; gap: 14px; font-size: .8rem; margin-top: 8px; flex-wrap: wrap;
+  i { display: inline-block; width: 10px; height: 10px; margin-right: 4px; vertical-align: middle }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.btn-link      { background: none; border: none; color: var(--teal-70); cursor: pointer; padding: 0; font-family: inherit; font-size: .78rem; margin-top: 8px }
+.btn-show-more { background: none; border: 1px solid var(--grey-20); color: var(--teal-70); font-size: .82rem; cursor: pointer; padding: 4px 12px; border-radius: 4px; margin-top: 14px }
+
+// ─── Callout ──────────────────────────────────────────────────────────────────
+.callout {
+  padding: 14px 16px; border-left: 4px solid var(--orange-50); background: #fff0f0; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: flex-start;
+  &.info { border-color: var(--blue-50); background: var(--teal-10) }
+  &.good { border-color: var(--green-50); background: #ebfffa }
+  h4 { font-size: .95rem; margin: 0 0 4px; font-family: "Hanken Grotesk" }
+  p  { margin: 0; font-size: .88rem; line-height: 1.5 }
+  .ic {
+    font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.4rem; color: var(--orange-90);
+    width: 28px; text-align: center; flex-shrink: 0; line-height: 1;
+    .callout.info & { color: var(--teal-90) }
+    .callout.good & { color: var(--green-90) }
+  }
+}
+
+// ─── Sparkline ────────────────────────────────────────────────────────────────
+.spark {
+  display: flex; align-items: flex-end; gap: 3px; height: 36px;
+  span { display: block; width: 8px; background: var(--teal-50) }
+}
+
+// ─── Filter chips ─────────────────────────────────────────────────────────────
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px }
+.chip {
+  padding: 6px 12px; background: #fff; border: 1px solid var(--grey-20);
+  font-family: "Hanken Grotesk"; font-weight: 600; font-size: .85rem; color: var(--grey-70); cursor: pointer;
+  &.active { background: var(--teal-90); color: #fff; border-color: var(--teal-90) }
+}
+
+// ─── Layout helpers ───────────────────────────────────────────────────────────
+.flex-row { display: flex; gap: 12px; align-items: center }
+.spread   { display: flex; justify-content: space-between; align-items: center; gap: 12px }
+.mt    { margin-top: 18px }
+.mt-sm { margin-top: 10px }
+.mb-sm { margin-bottom: 10px }
+.col   { display: flex; flex-direction: column; gap: 16px }
+
+// ─── Misc ─────────────────────────────────────────────────────────────────────
+.loading { color: var(--grey-60); padding: 40px 0; text-align: center }
+.chart   { position: relative }
+
+.panel {
+  background: var(--grey-10); border-radius: 6px; padding: 14px;
+  h4 {
+    font-size: .95rem; margin: 0 0 10px; font-weight: 700; color: var(--teal-90); font-family: monospace;
+    &.warn { color: var(--orange-90) }
+  }
+  ul { margin: 0; padding: 0; list-style: none; font-size: .8rem; line-height: 1.7; color: var(--grey-70) }
+}
+
+// ─── Filter bar ───────────────────────────────────────────────────────────────
+.filter-bar {
+  padding: 14px 20px; border-bottom: 1px solid var(--grey-20); display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  label  { display: block; font-size: .8rem; font-weight: 700; color: var(--grey-70); margin-bottom: 4px }
+  input, select { padding: 6px 10px; font-size: .88rem; border: 1px solid var(--grey-20); border-radius: 3px; font-family: inherit }
+  input  { width: 280px }
+  select { background: #fff }
+}
+.filter-count { color: var(--grey-60); font-size: .82rem; padding-bottom: 2px }
+
+// ─── Multi-column publisher list ──────────────────────────────────────────────
+.pub-list { columns: 3; column-gap: 24px; padding: 0 0 0 18px; margin: 0; font-size: .82rem; line-height: 1.9; color: var(--grey-70) }
