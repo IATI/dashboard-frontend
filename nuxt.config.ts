@@ -36,4 +36,9 @@ export default defineNuxtConfig({
   components: {
     dirs: [{ path: '~/components', pathPrefix: false }],
   },
+  nitro: {
+    prerender: {
+      fallback: '404.html',
+    },
+  },
 })
