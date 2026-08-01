@@ -9,7 +9,7 @@ const { t, locale, setLocale } = useI18n({ useScope: 'global' })
     <div class="iati-header__section iati-header__section--first">
       <div class="iati-header__container">
         <a href="https://iatistandard.org/" aria-label="Go to IATI homepage">
-          <img class="iati-header__logo" alt="" src="/assets/svg/logo-colour.svg" />
+          <img class="iati-header__logo" alt="" src="~/assets/svg/logo-colour.svg" />
         </a>
         <nav class="iati-header__general-nav">
           <ul class="iati-piped-list">
