@@ -155,7 +155,8 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 }
 
 // ─── Section title ────────────────────────────────────────────────────────────
-.section-title { background: var(--teal-90); color: #fff; text-transform: uppercase; font-weight: 700; padding: .55rem 1rem; font-size: .95rem; letter-spacing: .4px; margin: 0; font-family: "Nunito Sans" }
+// Needs .iati-design-system--enabled scope to beat DS h2 font-size specificity
+.iati-design-system--enabled .section-title { background: var(--teal-90); color: #fff; text-transform: uppercase; font-weight: 700; padding: .55rem 1rem; font-size: .95rem; letter-spacing: .4px; margin: 0; font-family: "Nunito Sans" }
 
 // ─── Table ────────────────────────────────────────────────────────────────────
 // BTable: hide the auto-generated "Click to sort" screen-reader text
