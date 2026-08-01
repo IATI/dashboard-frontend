@@ -32,7 +32,7 @@
   "overallTitle": "Tableau de bord IATI",
   "overallLive": "En direct",
   "overallRefreshed": "actualisé",
-  "overallStatsLine": "{n} organisations déclarantes · ${b} Md dépensés (12 derniers mois)",
+  "overallStatsLine": "{n} organisations déclarantes · {b} Md dépensés (12 derniers mois)",
   "overallMethodology": "Méthodologie →",
   "overallDownload": "Télécharger CSV/JSON →",
   "overallGoodTitle": "Ce qui fonctionne bien",

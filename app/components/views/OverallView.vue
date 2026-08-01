@@ -54,7 +54,7 @@ function coverageVariant(cov) { return cov >= 60 ? 'good' : cov >= 30 ? null : '
           <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--green-50); display: inline-block; box-shadow: 0 0 0 3px rgba(0,196,151,.25)" />
           <strong>{{ t('overallLive') }}</strong> &middot; {{ t('overallRefreshed') }} {{ lastRefresh }}
         </span>
-        <span><strong>1,719</strong> {{ t('overallStatsLine').replace('{n}', '1,719').replace('${b}', '228') }}</span>
+        <span><strong>1,719</strong> {{ t('overallStatsLine', { n: '1,719', b: '$228' }) }}</span>
         <span>
           <a href="#" style="color: #fff; text-decoration-color: var(--blue-50)">{{ t('overallMethodology') }}</a>
           &nbsp;

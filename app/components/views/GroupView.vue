@@ -148,30 +148,30 @@ function changeClass(change) {
           <p class="sub">{{ t('dimAvailability') }}</p>
           <div :class="`bignum ${levelFor(g.availability)}`">{{ g.availability }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupAvailSmall') }}</small>
-            <small>{{ t('groupMedian').replace('{n}', g.n) }}</small>
+            <small>{{ t('groupMedian', { n: g.n }) }}</small>
           </div>
         </Card></BCol>
         <BCol><Card>
           <p class="sub">{{ t('dimTimeliness') }}</p>
           <div :class="`bignum ${levelFor(g.timeliness)}`">{{ g.timeliness }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupTimelinessSmall') }}</small>
-            <small>{{ t('groupMedian').replace('{n}', g.n) }}</small></div>
+            <small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
         <BCol><Card>
           <p class="sub">{{ t('dimCoverage') }}</p>
           <div :class="`bignum ${levelFor(g.coverage)}`">{{ g.coverage }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupCoverageSmall') }}</small>
-            <small>{{ t('groupMedian').replace('{n}', g.n) }}</small></div>
+            <small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
         <BCol><Card>
           <p class="sub">{{ t('dimDisaggregation') }}</p>
           <div :class="`bignum ${levelFor(g.disaggregation)}`">{{ g.disaggregation }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupDisaggSmall') }}</small>
-            <small>{{ t('groupMedian').replace('{n}', g.n) }}</small></div>
+            <small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
         <BCol><Card>
           <p class="sub">{{ t('dimComprehensiveness') }}</p>
-          <div :class="`bignum ${levelFor(g.comprehensiveness)}`">{{ g.comprehensiveness }}<span style="font-size: 1.2rem">%</span><small>{{ t('groupMedian').replace('{n}', g.n) }}</small></div>
+          <div :class="`bignum ${levelFor(g.comprehensiveness)}`">{{ g.comprehensiveness }}<span style="font-size: 1.2rem">%</span><small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
       </BRow>
 
@@ -189,7 +189,7 @@ function changeClass(change) {
           </div>
           <p style="font-size: .8rem; color: var(--grey-60); margin: 10px 0 0">
             {{ t('groupDistNote') }}
-            {{ t('groupDistBand').replace('{label}', tGroup(active).toLowerCase()) }}
+            {{ t('groupDistBand', { label: tGroup(active).toLowerCase() }) }}
           </p>
         </Card></BCol>
 
@@ -212,7 +212,7 @@ function changeClass(change) {
       </BRow>
 
       <!-- Member table -->
-      <h2 class="section-title mt">{{ t('groupTableH2').replace('{label}', tGroup(active)) }}</h2>
+      <h2 class="section-title mt">{{ t('groupTableH2', { label: tGroup(active) }) }}</h2>
       <Card flush>
         <div class="iati-table">
           <table>
@@ -241,7 +241,7 @@ function changeClass(change) {
       </Card>
 
       <p style="font-size: .8rem; color: var(--grey-60); margin-top: 8px">
-        {{ t('groupTableNote').replace('{n}', g.n) }} <a href="#">{{ t('groupDownloadCSV') }}</a>.
+        {{ t('groupTableNote', { n: g.n }) }} <a href="#">{{ t('groupDownloadCSV') }}</a>.
       </p>
     </main>
   </div>

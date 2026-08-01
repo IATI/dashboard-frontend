@@ -32,7 +32,7 @@
   "overallTitle": "IATI Dashboard",
   "overallLive": "Live",
   "overallRefreshed": "refreshed",
-  "overallStatsLine": "{n} reporting organisations · ${b} bn spent (last 12 mo)",
+  "overallStatsLine": "{n} reporting organisations · {b} bn spent (last 12 mo)",
   "overallMethodology": "Methodology →",
   "overallDownload": "Download CSV/JSON →",
   "overallGoodTitle": "What's going well",

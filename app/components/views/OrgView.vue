@@ -312,7 +312,7 @@ function starsFor(pct) {
       <BRow gutter-x="3" gutter-y="3" class="mt">
         <BCol cols="12" md="6"><Card>
           <p class="sub">{{ t('orgCoverageTitle') }}</p>
-          <h3>{{ t('orgIATIvsCRS').replace('{org}', org) }}</h3>
+          <h3>{{ t('orgIATIvsCRS', { org: org }) }}</h3>
           <div style="margin-top: 18px">
             <div v-for="r in coverageRows" :key="r.y" style="margin-bottom: 14px">
               <div class="spread" style="margin-bottom: 4px; font-size: .85rem">

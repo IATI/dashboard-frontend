@@ -236,7 +236,7 @@ function metricLevel(v) {
       </Card>
 
       <p style="font-size: .8rem; color: var(--grey-60); margin-top: 8px">
-        {{ t('countryNote').replace('{n}', country.partners.length) }}
+        {{ t('countryNote', { n: country.partners.length }) }}
       </p>
     </main>
   </div>
