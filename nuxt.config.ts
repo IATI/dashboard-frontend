@@ -35,4 +35,10 @@ export default defineNuxtConfig({
   components: {
     dirs: [{ path: '~/components', pathPrefix: false }],
   },
+  nitro: {
+    prerender: {
+      // @ts-ignore — not in Nitro types but processed at runtime for SPA fallback
+      fallback: '404.html',
+    },
+  },
 })
