@@ -114,8 +114,7 @@ function coverageVariant(cov) { return cov >= 60 ? 'good' : cov >= 30 ? null : '
       </BRow>
 
       <!-- Coverage deep-dive -->
-      <Card class="mt" style="border-top-color: var(--teal-70)">
-        <p class="sub">{{ t('coverageDeepLabel') }}</p>
+      <Card class="mt" style="border-top-color: var(--teal-70)" :kicker="t('coverageDeepLabel')">
         <BRow cols="1" cols-md="2" cols-lg="4" gutter-x="3" gutter-y="3" style="margin-top: 12px">
           <BCol v-for="g in coverageGroups" :key="g.label">
             <div style="font-size: .82rem; font-weight: 700; color: var(--teal-90)">{{ g.label }}</div>

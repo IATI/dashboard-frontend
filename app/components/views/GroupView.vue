@@ -177,9 +177,7 @@ function changeClass(change) {
 
       <!-- Distribution + comparison -->
       <BRow gutter-x="3" gutter-y="3" class="mt">
-        <BCol cols="12" md="6"><Card>
-          <p class="sub">{{ t('groupDistTitle') }}</p>
-          <h3>{{ tGroup(active) }}</h3>
+        <BCol cols="12" md="6"><Card :kicker="t('groupDistTitle')" :title="tGroup(active)">
           <div style="display: flex; align-items: flex-end; gap: 8px; height: 140px; margin-top: 18px">
             <div v-for="b in bars" :key="b.label" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px">
               <div :style="{ width: '100%', background: b.c, height: b.v * 2.6 + 'px' }" />
@@ -193,9 +191,7 @@ function changeClass(change) {
           </p>
         </Card></BCol>
 
-        <BCol cols="12" md="6"><Card>
-          <p class="sub">{{ t('groupCompareTitle') }}</p>
-          <h3>{{ t('groupCompareH3') }}</h3>
+        <BCol cols="12" md="6"><Card :kicker="t('groupCompareTitle')" :title="t('groupCompareH3')">
           <div style="margin-top: 14px">
             <div v-for="r in benchmarks" :key="r.n" style="margin-bottom: 14px">
               <div class="spread" style="margin-bottom: 4px; font-size: .85rem">

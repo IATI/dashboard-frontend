@@ -151,8 +151,7 @@ function starsFor(pct) {
     <main class="main">
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
-        <BCol cols="12" md="9"><Card>
-          <p class="sub">{{ t('orgOverallQuality') }}</p>
+        <BCol cols="12" md="9"><Card :kicker="t('orgOverallQuality')">
           <div class="flex-row" style="gap: 24px; align-items: center">
             <Gauge :show-pct="false" :pct="overall" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
             <div style="flex: 1">
@@ -319,9 +318,7 @@ function starsFor(pct) {
 
       <!-- Coverage chart + all indicators -->
       <BRow gutter-x="3" gutter-y="3" class="mt">
-        <BCol cols="12" md="6"><Card>
-          <p class="sub">{{ t('orgCoverageTitle') }}</p>
-          <h3>{{ t('orgIATIvsCRS', { org }) }}</h3>
+        <BCol cols="12" md="6"><Card :kicker="t('orgCoverageTitle')" :title="t('orgIATIvsCRS', { org })">
           <div style="margin-top: 18px">
             <div v-for="r in coverageRows" :key="r.y" style="margin-bottom: 14px">
               <div class="spread" style="margin-bottom: 4px; font-size: .85rem">
@@ -336,9 +333,7 @@ function starsFor(pct) {
           <p style="font-size: .8rem; color: var(--grey-60); margin: 6px 0 0">{{ t('orgCoverageNote') }}</p>
         </Card></BCol>
 
-        <BCol cols="12" md="6"><Card>
-          <p class="sub">{{ t('orgAllIndicators') }}</p>
-          <h3>{{ t('orgByGroup') }}</h3>
+        <BCol cols="12" md="6"><Card :kicker="t('orgAllIndicators')" :title="t('orgByGroup')">
           <div style="margin-top: 8px">
             <div v-for="group in indicators" :key="group.g" style="margin-bottom: 14px">
               <div style="font-family: Hanken Grotesk; font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .4px; color: var(--teal-90); border-bottom: 2px solid var(--teal-30); padding-bottom: 4px; margin-bottom: 4px">
