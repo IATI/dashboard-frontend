@@ -42,7 +42,11 @@ npm run dev
 
 The dev server runs at `http://localhost:3000`.
 
-> **Note:** Data on the Exploring Data pages is fetched directly from `dashboard.iatistandard.org`. That server does not currently send CORS headers, so data fetches will fail during local development on client-side navigation (page refreshes work because Nuxt fetches server-side). This is a known limitation pending a CORS fix on the dashboard server.
+> **Note:** Data on the Exploring Data pages is fetched from `dashboard.iatistandard.org`, which does not currently send CORS headers. To work around this in local development, create a `.env` file with:
+> ```
+> NUXT_PUBLIC_DASHBOARD_BASE=https://black-math-8c4c.dashboard-cors-proxy.workers.dev
+> ```
+> This routes requests through a Cloudflare Worker CORS proxy. Without this file, client-side data fetches will fail (page refreshes still work because Nuxt fetches server-side). The same proxy is used automatically in the production build.
 
 ## Building and previewing
 
