@@ -1,13 +1,20 @@
 <script setup>
-const props = defineProps({
-  org: { type: String, default: 'USAID' },
-  orgName: { type: String, default: 'United States Agency for International Development (USAID)' }
-})
-
+definePageMeta({ active: 'org' })
 const { t } = useI18n({ useScope: 'global' })
+const route = useRoute()
+const slug = route.params.slug
+
+const orgMeta = {
+  usaid: { org: 'USAID', name: 'United States Agency for International Development (USAID)' },
+  eu:    { org: 'EU',    name: 'EU - International Partnerships' },
+}
+
+const meta    = orgMeta[slug] || orgMeta.usaid
+const org     = meta.org
+const orgName = meta.name
 
 const orgData = {
-  USAID: {
+  usaid: {
     overall: 78, timeliness: 100, coverage: 95, disaggregation: 100, comprehensiveness: 81, traceability: 0.63,
     orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
     coverageRows: [
@@ -29,14 +36,14 @@ const orgData = {
         { nk: 'indCov2025', hk: 'hintCov2025', p: 64, w: null },
       ]},
       { g: 'indGroupFinancial', items: [
-        { nk: 'indCommitments',  p: 97, w: 'good' },
+        { nk: 'indCommitments',   p: 97, w: 'good' },
         { nk: 'indDisbursements', p: 99, w: 'good' },
-        { nk: 'indCapital',      hk: 'hintCapital',   p: 42, w: 'warn' },
-        { nk: 'indDisaggTx',     hk: 'hintDisaggTx',  p: 71, w: null },
+        { nk: 'indCapital',       hk: 'hintCapital',   p: 42, w: 'warn' },
+        { nk: 'indDisaggTx',      hk: 'hintDisaggTx',  p: 71, w: null },
       ]},
       { g: 'indGroupTraceability', items: [
-        { nk: 'indOutgoing',  hk: 'hintOutgoing',  p: 12,   w: 'bad', flag: true },
-        { nk: 'indOrgIDs',    hk: 'hintOrgIDs',    p: 96,   w: 'good' },
+        { nk: 'indOutgoing',   hk: 'hintOutgoing',   p: 12, w: 'bad', flag: true },
+        { nk: 'indOrgIDs',     hk: 'hintOrgIDs',     p: 96, w: 'good' },
         { nk: 'indDownstream', hk: 'hintDownstream', p: 34, w: 'warn' },
       ]},
       { g: 'indGroupProjectInfo', items: [
@@ -49,7 +56,7 @@ const orgData = {
       ]},
     ]
   },
-  EU: {
+  eu: {
     overall: 45, timeliness: 100, coverage: 35, disaggregation: 100, comprehensiveness: 85, traceability: 100,
     orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
     coverageRows: [
@@ -71,10 +78,10 @@ const orgData = {
         { nk: 'indCov2025', hk: 'hintCov2025', p: 35, w: null },
       ]},
       { g: 'indGroupFinancial', items: [
-        { nk: 'indCommitments',  p: 91,  w: 'good' },
-        { nk: 'indDisbursements', p: 84, w: 'good' },
-        { nk: 'indCapital',      hk: 'hintCapital',  p: 100, w: 'good' },
-        { nk: 'indDisaggTx',     hk: 'hintDisaggTx', p: 71, w: null },
+        { nk: 'indCommitments',   p: 91,  w: 'good' },
+        { nk: 'indDisbursements', p: 84,  w: 'good' },
+        { nk: 'indCapital',       hk: 'hintCapital',  p: 100, w: 'good' },
+        { nk: 'indDisaggTx',      hk: 'hintDisaggTx', p: 71,  w: null },
       ]},
       { g: 'indGroupTraceability', items: [
         { nk: 'indOutgoing', hk: 'hintOutgoing', p: 0.32, w: 'bad', flag: true },
@@ -92,16 +99,16 @@ const orgData = {
   }
 }
 
-const d = computed(() => orgData[props.org] || orgData.USAID)
+const d = computed(() => orgData[slug] || orgData.usaid)
 
-const overall          = computed(() => d.value.overall)
-const timeliness       = computed(() => d.value.timeliness)
-const coverage         = computed(() => d.value.coverage)
-const disaggregation   = computed(() => d.value.disaggregation)
+const overall           = computed(() => d.value.overall)
+const timeliness        = computed(() => d.value.timeliness)
+const coverage          = computed(() => d.value.coverage)
+const disaggregation    = computed(() => d.value.disaggregation)
 const comprehensiveness = computed(() => d.value.comprehensiveness)
-const publisherID      = computed(() => d.value.publisherID)
+const publisherID       = computed(() => d.value.publisherID)
 const totalDisbursements = computed(() => d.value.totalDisbursements)
-const coverageRows     = computed(() => d.value.coverageRows)
+const coverageRows      = computed(() => d.value.coverageRows)
 
 const indicators = computed(() =>
   d.value.indicatorData.map(group => ({
@@ -149,7 +156,7 @@ function starsFor(pct) {
           <div class="flex-row" style="gap: 24px; align-items: center">
             <Gauge :show-pct="false" :pct="overall" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
             <div style="flex: 1">
-              <template v-if="org == 'EU'">
+              <template v-if="slug === 'eu'">
                 <div class="flex-row" style="gap: 12px; margin-bottom: 8px">
                   <Score :level="levelFor(timeliness)">{{ t('orgTimely') }}</Score>
                   <Score level="warn">{{ t('orgCoverageIsLow') }}</Score>
@@ -225,7 +232,7 @@ function starsFor(pct) {
             <div class="ic">!</div>
             <div>
               <h4>{{ t('orgCalloutActionTitle') }}</h4>
-              <template v-if="org == 'EU'">
+              <template v-if="slug === 'eu'">
                 <i18n-t keypath="orgEUAction" tag="p">
                   <template #emphasis><strong>{{ t('orgEUActionBold') }}</strong></template>
                 </i18n-t>
@@ -312,7 +319,7 @@ function starsFor(pct) {
       <BRow gutter-x="3" gutter-y="3" class="mt">
         <BCol cols="12" md="6"><Card>
           <p class="sub">{{ t('orgCoverageTitle') }}</p>
-          <h3>{{ t('orgIATIvsCRS', { org: org }) }}</h3>
+          <h3>{{ t('orgIATIvsCRS', { org }) }}</h3>
           <div style="margin-top: 18px">
             <div v-for="r in coverageRows" :key="r.y" style="margin-bottom: 14px">
               <div class="spread" style="margin-bottom: 4px; font-size: .85rem">
