@@ -258,7 +258,9 @@ function starsFor(pct) {
       </BRow>
 
       <h2 class="section-title mt">{{ t('orgSummaryTitle') }}</h2>
-      <Card>{{ t('orgSummaryText') }}</Card>
+      <Card>
+        <OrgFinancialChart :org-id="d.publisherID" />
+      </Card>
 
       <!-- Prioritised issues -->
       <h2 class="section-title mt">{{ t('orgIssuesTitle') }}</h2>
