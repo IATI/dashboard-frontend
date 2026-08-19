@@ -9,9 +9,9 @@ A prototype frontend for a new IATI Dashboard, focused on publisher metrics and 
 | Section | Route | Description |
 |---|---|---|
 | Overview | `/` | Aggregate publishing quality scores across availability, characteristics, and added-value fields |
-| Country | `/country` | Country-level breakdown of publisher coverage and comprehensiveness |
-| Groups | `/group` | Quality metrics grouped by publisher type or region |
-| Org views | `/usaid`, `/eu` | Organisation-specific dashboards (USAID, EU) |
+| Country | `/countries/[code]` | Country-level breakdown of publisher coverage and comprehensiveness (e.g. `/countries/KE`) |
+| Groups | `/groups/[type]` | Quality metrics by IATI publisher type (e.g. `/groups/10` for Government/Bilateral) |
+| Publishers | `/publishers/[slug]` | Organisation-specific dashboards with scores, coverage, and spending charts (e.g. `/publishers/usaid`) |
 | Exploring Data | `/exploring-data` | Raw aggregate statistics fetched live from the dashboard API |
 | — Publishers | `/exploring-data/publishers` | Full list of IATI reporting organisations with filtering and sorting |
 | — Publisher detail | `/exploring-data/publishers/[slug]` | Per-publisher breakdown: activities, files, budgets, validation |
