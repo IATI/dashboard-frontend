@@ -2,7 +2,7 @@
 
 A prototype frontend for a new IATI Dashboard, focused on publisher metrics and data quality assessment, integrating the "exploring the data" section of the existing Dashboard. Built with Nuxt 4 and the IATI Design System.
 
-**Live demo:** https://brough.io/iati-dashboard-frontend/
+**Live demo:** https://iati.github.io/dashboard-frontend/
 
 ## What's in here
 
