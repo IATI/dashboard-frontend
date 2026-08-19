@@ -256,14 +256,12 @@ function starsFor(pct) {
         </div></BCol>
       </BRow>
 
-      <h2 class="section-title mt">{{ t('orgSummaryTitle') }}</h2>
-      <Card>
+      <Card class="mt" :kicker="t('orgSummaryTitle')">
         <OrgFinancialChart :org-id="d.publisherID" />
       </Card>
 
       <!-- Prioritised issues -->
-      <h2 class="section-title mt">{{ t('orgIssuesTitle') }}</h2>
-      <Card flush>
+      <Card class="mt" :kicker="t('orgIssuesTitle')">
         <div class="iati-table">
         <table>
           <thead>
