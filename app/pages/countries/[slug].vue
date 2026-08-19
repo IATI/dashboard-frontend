@@ -1,8 +1,10 @@
 <script setup>
-const { countries, partnerDisagg, partnerComp } = useCountryData()
+definePageMeta({ active: 'country' })
 const { t } = useI18n({ useScope: 'global' })
+const route = useRoute()
+const { countries, partnerDisagg, partnerComp } = useCountryData()
 
-const countryId = ref('KE')
+const countryId = ref((route.params.slug || 'KE').toString().toUpperCase())
 const source = ref('crs') // 'crs' | 'iati'
 
 const country = computed(() => countries.find((c) => c.id === countryId.value))

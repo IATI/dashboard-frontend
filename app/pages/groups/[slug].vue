@@ -1,6 +1,25 @@
 <script setup>
+definePageMeta({ active: 'groups' })
 const { t } = useI18n({ useScope: 'global' })
+const route = useRoute()
 const { countries, partnerComp, partnerDisagg } = useCountryData()
+
+// Approximate mapping from IATI publisher type codes to internal group IDs.
+// Groups without a clean IATI code (uk, nl, us, local) are addressed by their own ID.
+const slugToGroup = {
+  '10':    'bilat',
+  '40':    'multi',
+  '21':    'un',
+  '22':    'uk',
+  'nl':    'nl',
+  'us':    'us',
+  'local': 'local',
+  '60':    'found',
+}
+const groupToSlug = Object.fromEntries(Object.entries(slugToGroup).map(([s, g]) => [g, s]))
+
+const slug = (route.params.slug || '10').toString()
+const initialGroup = slugToGroup[slug] ?? 'bilat'
 
 const groupLabelKey = { bilat: 'groupBilateral', multi: 'groupMDBs', un: 'groupUN', uk: 'groupUKNGOs', nl: 'groupNLNGOs', us: 'groupUSNGOs', local: 'groupLocal', found: 'groupFoundations' }
 const tGroup = (id) => t(groupLabelKey[id] || id)
@@ -70,13 +89,13 @@ const members = [
   { name: 'Netherlands — MFA',             pid: 'XM-DAC-7',       cov: 84, comprehensiveness: 48, timeliness: 100, score: 88, change: '+1' },
 ]
 
-const active = ref('bilat')
+const active = ref(initialGroup)
 const g = computed(() => {
   const base = groupsData.find((x) => x.id === active.value)
   const type = groupTypeMap[active.value]
-  const comp      = type ? compByType.value[type]      : null
-  const disagg    = type ? disaggByType.value[type]    : null
-  const timeliness = type ? timelinesByType.value[type] : null
+  const comp       = type ? compByType.value[type]       : null
+  const disagg     = type ? disaggByType.value[type]     : null
+  const timeliness = type ? timelinesByType.value[type]  : null
   return {
     ...base,
     comprehensiveness: comp       ?? base.comprehensiveness,
