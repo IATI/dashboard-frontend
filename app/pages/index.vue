@@ -146,7 +146,7 @@ function coverageVariant(cov) { return cov >= 60 ? 'good' : cov >= 30 ? null : '
       <Card class="mt" style="border-top-color: var(--blue-50)">
         <div class="spread" style="margin-bottom: 6px">
           <div>
-            <p class="sub">{{ t('compositeLabel') }}</p>
+            <p class="iati-card__subtitle">{{ t('compositeLabel') }}</p>
             <h3>{{ t('compositeH3') }}</h3>
           </div>
           <div class="flex-row" style="gap: 6px">

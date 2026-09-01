@@ -164,32 +164,32 @@ function changeClass(change) {
       <!-- Headline stats -->
       <BRow cols="1" cols-md="3" cols-lg="5" gutter-x="3" gutter-y="3" class="mb-sm">
         <BCol><Card>
-          <p class="sub">{{ t('dimAvailability') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimAvailability') }}</p>
           <div :class="`bignum ${levelFor(g.availability)}`">{{ g.availability }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupAvailSmall') }}</small>
             <small>{{ t('groupMedian', { n: g.n }) }}</small>
           </div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimTimeliness') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimTimeliness') }}</p>
           <div :class="`bignum ${levelFor(g.timeliness)}`">{{ g.timeliness }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupTimelinessSmall') }}</small>
             <small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimCoverage') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimCoverage') }}</p>
           <div :class="`bignum ${levelFor(g.coverage)}`">{{ g.coverage }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupCoverageSmall') }}</small>
             <small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimDisaggregation') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimDisaggregation') }}</p>
           <div :class="`bignum ${levelFor(g.disaggregation)}`">{{ g.disaggregation }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('groupDisaggSmall') }}</small>
             <small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimComprehensiveness') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimComprehensiveness') }}</p>
           <div :class="`bignum ${levelFor(g.comprehensiveness)}`">{{ g.comprehensiveness }}<span style="font-size: 1.2rem">%</span><small>{{ t('groupMedian', { n: g.n }) }}</small></div>
         </Card></BCol>
       </BRow>

@@ -18,7 +18,7 @@
     "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.45.9",
     "chart.js": "^4.5.1",
-    "iati-design-system": "^4.10.0",
+    "iati-design-system": "^4.10.2",
     "papaparse": "^5.5.4",
     "vue-chartjs": "^5.3.3"
   }

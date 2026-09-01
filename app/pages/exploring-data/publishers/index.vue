@@ -176,7 +176,7 @@ const FIELDS = [
       <BRow gutter-x="3" gutter-y="3" class="mb-sm">
         <BCol cols="12" md="6"><Card>
           <h3>Reporting Orgs</h3>
-          <p class="sub">Number of organisations publishing IATI data over time.</p>
+          <p class="iati-card__subtitle">Number of organisations publishing IATI data over time.</p>
           <div v-if="!pubsSeries.length" class="loading">Loading…</div>
           <div v-else class="chart" style="height: 260px">
             <LineChart :data="totalChartData" :options="baseOpts" />
@@ -185,7 +185,7 @@ const FIELDS = [
 
         <BCol cols="12" md="6"><Card>
           <h3>Reporting Orgs by type</h3>
-          <p class="sub">Various types of organisations publishing IATI data.</p>
+          <p class="iati-card__subtitle">Various types of organisations publishing IATI data.</p>
           <div v-if="!pubTypesParsed.series.length" class="loading">Loading…</div>
           <div v-else class="chart" style="height: 340px">
             <LineChart :data="byTypeChartData" :options="byTypeOpts" />

@@ -81,7 +81,7 @@ function toggleAll(v) { showAll.value = { ...showAll.value, [v]: !showAll.value[
         <!-- Bar chart: expected versions -->
         <Card class="mb-sm">
           <h3>Reporting orgs per version</h3>
-          <p class="sub">Count of reporting orgs using each expected IATI version.</p>
+          <p class="iati-card__subtitle">Count of reporting orgs using each expected IATI version.</p>
           <div class="chart" style="height: 260px">
             <BarChart :data="barChartData" :options="barOpts" />
           </div>
@@ -90,7 +90,7 @@ function toggleAll(v) { showAll.value = { ...showAll.value, [v]: !showAll.value[
         <!-- Publisher card gallery — expected versions -->
         <Card class="mb-sm">
           <h3>Reporting orgs by version — expected</h3>
-          <p class="sub" style="margin: 0 0 20px">
+          <p class="iati-card__subtitle" style="margin: 0 0 20px">
             Listing of reporting orgs per IATI version.
             <a :href="`${BASE}/stats/current/inverted-publisher/versions.json`" target="_blank" style="font-size: .8rem">(JSON)</a>
           </p>
@@ -117,7 +117,7 @@ function toggleAll(v) { showAll.value = { ...showAll.value, [v]: !showAll.value[
         <!-- Other / non-standard versions -->
         <Card v-if="otherVersions.length">
           <h3>Reporting orgs by version — non-standard</h3>
-          <p class="sub" style="margin: 0 0 20px">Publishers using a non-recognised version string.</p>
+          <p class="iati-card__subtitle" style="margin: 0 0 20px">Publishers using a non-recognised version string.</p>
           <BRow cols="2" cols-lg="4" gutter-x="3" gutter-y="3">
             <BCol v-for="v in otherVersions" :key="v">
               <div class="panel">

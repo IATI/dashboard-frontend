@@ -27,7 +27,7 @@ const trendColor = computed(() =>
 
 <template>
   <div class="iati-card" :style="{ borderTopColor: c.ring }">
-    <p class="sub">{{ title }}</p>
+    <p class="iati-card__subtitle">{{ title }}</p>
     <div class="spread" style="align-items: flex-end">
       <div>
         <div :style="{ fontFamily: 'Hanken Grotesk', fontWeight: '800', fontSize: '2.4rem', color: c.fg, lineHeight: '1' }">

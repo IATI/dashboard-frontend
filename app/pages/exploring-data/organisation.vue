@@ -110,21 +110,21 @@ const PREVIEW = 40
           <!-- Stat cards -->
           <BCol cols="12" md="6"><div class="col" style="gap: 12px">
             <Card>
-              <p class="sub">Reporting orgs without an organisation dataset</p>
+              <p class="iati-card__subtitle">Reporting orgs without an organisation dataset</p>
               <div class="bignum warn" style="font-size: 2.8rem">
                 {{ stats.no.toLocaleString() }}
                 <small>{{ stats.noPct }}% of all publishers</small>
               </div>
             </Card>
             <Card accent="blue">
-              <p class="sub">{{ t('exploreHasOrgFile') }}</p>
+              <p class="iati-card__subtitle">{{ t('exploreHasOrgFile') }}</p>
               <div class="bignum good">
                 {{ stats.yes.toLocaleString() }}
                 <small>{{ stats.yesPct }}% of all publishers</small>
               </div>
             </Card>
             <Card>
-              <p class="sub">Total publishers</p>
+              <p class="iati-card__subtitle">Total publishers</p>
               <div class="bignum">{{ stats.total.toLocaleString() }}</div>
             </Card>
           </div></BCol>
@@ -140,7 +140,7 @@ const PREVIEW = 40
         <!-- Time series: count without org file over time -->
         <Card class="mb-sm">
           <h3>Reporting orgs without an organisation dataset, over time</h3>
-          <p class="sub">Count of reporting orgs without an organisation file, over time.</p>
+          <p class="iati-card__subtitle">Count of reporting orgs without an organisation file, over time.</p>
           <div v-if="!noSeries.length" class="loading">Loading…</div>
           <div v-else class="chart" style="height: 240px">
             <LineChart :data="tsData" :options="tsOpts" />
@@ -153,7 +153,7 @@ const PREVIEW = 40
             List of reporting orgs without an organisation dataset
             <span style="font-weight: 400; font-size: .85rem; color: var(--grey-60)">({{ missingPublishers.length }})</span>
           </h3>
-          <p class="sub">
+          <p class="iati-card__subtitle">
             The following reporting orgs do not have an organisation dataset registered.
             <a :href="`${BASE}/stats/current/inverted-publisher/publisher_has_org_file.json`" target="_blank" style="font-size: .8rem">(JSON)</a>
           </p>

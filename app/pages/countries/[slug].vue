@@ -133,31 +133,31 @@ function metricLevel(v) {
       <!-- Headline stats -->
       <BRow cols="1" cols-md="3" cols-lg="5" gutter-x="3" gutter-y="3" class="mb-sm">
         <BCol><Card>
-          <p class="sub">{{ t('dimAvailability') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimAvailability') }}</p>
           <div :class="`bignum ${availabilityPct >= 60 ? 'good' : 'warn'}`">{{ availabilityPct }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('countryAvailSmall') }}</small>
           </div>
         </Card></BCol>
         <BCol><Card accent="blue">
-          <p class="sub">{{ t('dimTimeliness') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimTimeliness') }}</p>
           <div :class="`bignum ${timelinessPct >= 60 ? 'good' : 'warn'}`">{{ timelinessPct }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('countryTimelinessSmall') }}</small>
           </div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimCoverage') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimCoverage') }}</p>
           <div :class="`bignum ${spendCoveredPct >= 60 ? 'good' : 'warn'}`">{{ spendCoveredPct }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('countryCoverageSmall') }}</small>
           </div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimDisaggregation') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimDisaggregation') }}</p>
           <div :class="`bignum ${country.disagg >= 80 ? 'good' : country.disagg >= 60 ? 'ok' : 'warn'}`">{{ country.disagg }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('countryDisaggSmall') }}</small>
           </div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('dimComprehensiveness') }}</p>
+          <p class="iati-card__subtitle">{{ t('dimComprehensiveness') }}</p>
           <div :class="`bignum ${compPct >= 80 ? 'good' : compPct >= 60 ? 'ok' : 'warn'}`">{{ compPct }}<span style="font-size: 1.2rem">%</span>
             <small>{{ t('countryCompSmall') }}</small>
           </div>

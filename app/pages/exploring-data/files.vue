@@ -108,18 +108,18 @@ function fmtGB(gb) { return gb ? `${gb.toFixed(1)} GB` : '—' }
       <!-- Scalar stats -->
       <BRow cols="1" cols-md="3" gutter-x="3" gutter-y="3" class="mb-sm">
         <BCol><Card accent="blue">
-          <p class="sub">{{ t('exploreTotalFileSize') }}</p>
+          <p class="iati-card__subtitle">{{ t('exploreTotalFileSize') }}</p>
           <div class="bignum good">
             {{ latestSize ? fmtGB(latestSize.value) : '…' }}
             <small>{{ latestSize?.date ?? '' }}</small>
           </div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('exploreActivityFiles') }}</p>
+          <p class="iati-card__subtitle">{{ t('exploreActivityFiles') }}</p>
           <div class="bignum">{{ latestActFiles ? latestActFiles.value.toLocaleString() : '…' }}</div>
         </Card></BCol>
         <BCol><Card>
-          <p class="sub">{{ t('exploreOrgFiles') }}</p>
+          <p class="iati-card__subtitle">{{ t('exploreOrgFiles') }}</p>
           <div class="bignum">{{ latestOrgFiles ? latestOrgFiles.value.toLocaleString() : '…' }}</div>
         </Card></BCol>
       </BRow>
@@ -127,7 +127,7 @@ function fmtGB(gb) { return gb ? `${gb.toFixed(1)} GB` : '—' }
       <!-- Total dataset size -->
       <Card class="mb-sm">
         <h3>{{ t('exploreTotalFileSize') }}</h3>
-        <p class="sub">Total size of all datasets in GB, over time.</p>
+        <p class="iati-card__subtitle">Total size of all datasets in GB, over time.</p>
         <div v-if="!fileSizeSeries.length" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 260px">
           <LineChart :data="fileSizeChartData" :options="sizeOpts" />
@@ -137,7 +137,7 @@ function fmtGB(gb) { return gb ? `${gb.toFixed(1)} GB` : '—' }
       <!-- Activity datasets chart -->
       <Card class="mb-sm">
         <h3>{{ t('exploreActivityFiles') }}</h3>
-        <p class="sub">Count of total number of activity datasets over time.</p>
+        <p class="iati-card__subtitle">Count of total number of activity datasets over time.</p>
         <div v-if="!actFilesSeries.length" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 220px">
           <LineChart :data="actFilesChartData" :options="countOpts" />
@@ -147,7 +147,7 @@ function fmtGB(gb) { return gb ? `${gb.toFixed(1)} GB` : '—' }
       <!-- Organisation datasets chart -->
       <Card class="mb-sm">
         <h3>{{ t('exploreOrgFiles') }}</h3>
-        <p class="sub">Count of total number of organisation datasets over time.</p>
+        <p class="iati-card__subtitle">Count of total number of organisation datasets over time.</p>
         <div v-if="!orgFilesSeries.length" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 220px">
           <LineChart :data="orgFilesChartData" :options="countOpts" />
@@ -157,7 +157,7 @@ function fmtGB(gb) { return gb ? `${gb.toFixed(1)} GB` : '—' }
       <!-- File size distribution -->
       <Card>
         <h3>{{ t('exploreFileSizeDist') }}</h3>
-        <p class="sub">Current number of datasets in each file-size bracket.</p>
+        <p class="iati-card__subtitle">Current number of datasets in each file-size bracket.</p>
         <div v-if="!binsData" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 200px">
           <BarChart :data="binsChartData" :options="binsOpts" />

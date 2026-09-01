@@ -142,14 +142,14 @@ const byTypeOpts = {
       <!-- Headline stats -->
       <BRow gutter-x="3" gutter-y="3" class="mb-sm">
         <BCol cols="12" md="6"><Card accent="blue">
-          <p class="sub">{{ t('exploreTotal') }}</p>
+          <p class="iati-card__subtitle">{{ t('exploreTotal') }}</p>
           <div class="bignum good">
             {{ latestTotal ? fmtN(latestTotal.value) : '…' }}
             <small>total activities (including duplicates)</small>
           </div>
         </Card></BCol>
         <BCol cols="12" md="6"><Card>
-          <p class="sub">Unique Activities</p>
+          <p class="iati-card__subtitle">Unique Activities</p>
           <div class="bignum">
             {{ latestUnique ? fmtN(latestUnique.value) : '…' }}
             <small>deduplicated by iati-identifier</small>
@@ -160,7 +160,7 @@ const byTypeOpts = {
       <!-- Total activities chart -->
       <Card class="mb-sm">
         <h3>Total activities</h3>
-        <p class="sub">Total count of activities across all reporting orgs, over time. Includes activities with duplicate iati-identifier.</p>
+        <p class="iati-card__subtitle">Total count of activities across all reporting orgs, over time. Includes activities with duplicate iati-identifier.</p>
         <div v-if="!totalSeries.length" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 260px">
           <LineChart :data="totalChartData" :options="baseLineOpts" />
@@ -170,7 +170,7 @@ const byTypeOpts = {
       <!-- Unique activities chart -->
       <Card class="mb-sm">
         <h3>Unique Activities</h3>
-        <p class="sub">Total count of unique activities across all reporting orgs, over time. Excludes duplicate iati-identifier values.</p>
+        <p class="iati-card__subtitle">Total count of unique activities across all reporting orgs, over time. Excludes duplicate iati-identifier values.</p>
         <div v-if="!uniqueSeries.length" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 260px">
           <LineChart :data="uniqueChartData" :options="baseLineOpts" />
@@ -180,7 +180,7 @@ const byTypeOpts = {
       <!-- By publisher type chart -->
       <Card>
         <h3>{{ t('exploreByType') }}</h3>
-        <p class="sub">Count of all activities, aggregated by reporting org type, over time.</p>
+        <p class="iati-card__subtitle">Count of all activities, aggregated by reporting org type, over time.</p>
         <div v-if="!byTypeParsed.series.length" class="loading">Loading…</div>
         <div v-else class="chart" style="height: 320px">
           <LineChart :data="byTypeChartData" :options="byTypeOpts" />

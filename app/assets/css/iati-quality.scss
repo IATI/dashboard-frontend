@@ -107,7 +107,8 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // We only define extensions here.
 .iati-card {
   h3 { margin: 0 0 4px }
-  .sub { color: var(--teal-90); font-family: "Hanken Grotesk"; font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .4px; margin: 0 0 16px }
+  // DS provides color, font, weight, uppercase — we add margin and letter-spacing
+  &__subtitle { letter-spacing: .4px; margin-bottom: 16px }
 
   &__icon   { font-size: 2rem; margin-bottom: 12px }
   &__header {

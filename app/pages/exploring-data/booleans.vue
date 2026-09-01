@@ -83,7 +83,7 @@ const chartOpts = {
       <div v-else class="col">
         <Card v-for="a in attributes" :key="a.attr">
           <h3 style="font-size: .95rem">{{ a.label }}</h3>
-          <p class="sub">{{ a.total.toLocaleString() }} total uses</p>
+          <p class="iati-card__subtitle">{{ a.total.toLocaleString() }} total uses</p>
           <div style="height: 120px">
             <BarChart :data="chartData(a.entries)" :options="chartOpts" />
           </div>

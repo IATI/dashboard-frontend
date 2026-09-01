@@ -401,21 +401,21 @@ const recipientCountries = computed(() => {
           <!-- Key stats column -->
           <BCol cols="12" md="6"><div class="col" style="gap: 12px">
             <Card>
-              <p class="sub" style="margin: 0 0 4px">Activities</p>
+              <p class="iati-card__subtitle" style="margin: 0 0 4px">Activities</p>
               <div class="bignum" style="font-size: 2.4rem">{{ actCount != null ? Number(actCount).toLocaleString() : '—' }}</div>
             </Card>
             <BRow gutter-x="3">
               <BCol><Card>
-                <p class="sub" style="margin: 0 0 4px; font-size: .78rem">Activity files</p>
+                <p class="iati-card__subtitle" style="margin: 0 0 4px; font-size: .78rem">Activity files</p>
                 <div class="bignum" style="font-size: 1.8rem">{{ filesCount != null ? Number(filesCount).toLocaleString() : '—' }}</div>
               </Card></BCol>
               <BCol><Card>
-                <p class="sub" style="margin: 0 0 4px; font-size: .78rem">Organisation files</p>
+                <p class="iati-card__subtitle" style="margin: 0 0 4px; font-size: .78rem">Organisation files</p>
                 <div class="bignum" style="font-size: 1.8rem">{{ orgFilesCount != null ? Number(orgFilesCount).toLocaleString() : '—' }}</div>
               </Card></BCol>
             </BRow>
             <Card>
-              <p class="sub" style="margin: 0 0 4px">Total file size</p>
+              <p class="iati-card__subtitle" style="margin: 0 0 4px">Total file size</p>
               <div class="bignum" style="font-size: 2rem">{{ fmtBytes(fileSizeRaw) }}</div>
             </Card>
           </div></BCol>

@@ -23,7 +23,7 @@ defineProps({
       <slot name="actions" />
     </div>
     <template v-if="kicker">
-      <p class="sub">{{ kicker }}</p>
+      <p class="iati-card__subtitle">{{ kicker }}</p>
       <h3 v-if="title">{{ title }}</h3>
     </template>
     <slot />

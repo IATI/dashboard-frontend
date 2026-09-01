@@ -31,7 +31,7 @@ const sections = [
           >
             <div class="iati-card__icon">{{ s.icon }}</div>
             <h3>{{ t(`explore${s.key.charAt(0).toUpperCase() + s.key.slice(1)}Title`) }}</h3>
-            <p class="sub" style="margin: 0">
+            <p class="iati-card__subtitle" style="margin: 0">
               {{ t(`explore${s.key.charAt(0).toUpperCase() + s.key.slice(1)}Subtitle`) }}
             </p>
           </NuxtLink>
