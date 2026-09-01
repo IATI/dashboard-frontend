@@ -123,13 +123,6 @@ function levelFor(pct) {
   if (pct >= 25) return 'warn'
   return 'bad'
 }
-
-function starsFor(pct) {
-  if (pct >= 90) return 3
-  if (pct >= 60) return 2
-  if (pct >= 40) return 1
-  return 0
-}
 </script>
 
 <template>
@@ -152,107 +145,55 @@ function starsFor(pct) {
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
         <BCol cols="12" md="9"><Card :kicker="t('orgOverallQuality')">
-          <div class="flex-row" style="gap: 24px; align-items: center">
+          <div class="flex-row flex-row--lg">
             <Gauge :show-pct="false" :pct="overall" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
-            <div style="flex: 1">
+            <div class="flex-1">
               <template v-if="slug === 'eu'">
-                <div class="flex-row" style="gap: 12px; margin-bottom: 8px">
+                <div class="flex-row mb-xs">
                   <Score :level="levelFor(timeliness)">{{ t('orgTimely') }}</Score>
                   <Score level="warn">{{ t('orgCoverageIsLow') }}</Score>
                 </div>
-                <p style="margin: 0; font-size: .94rem; line-height: 1.5">{{ t('orgEUText') }}</p>
+                <p class="hero-text">{{ t('orgEUText') }}</p>
               </template>
               <template v-else>
-                <div class="flex-row" style="gap: 12px; margin-bottom: 8px">
+                <div class="flex-row mb-xs">
                   <Score :level="levelFor(overall)">{{ t('orgGoodMinorGaps') }}</Score>
                   <Score level="warn">{{ t('orgRegressionTraceability') }}</Score>
                 </div>
-                <p style="margin: 0; font-size: .94rem; line-height: 1.5">{{ t('orgUSAIDText') }}</p>
+                <p class="hero-text">{{ t('orgUSAIDText') }}</p>
               </template>
             </div>
           </div>
           <BRow cols="1" cols-md="2" cols-lg="4" gutter-x="3" gutter-y="3" class="mt" id="characteristics">
-            <BCol><Card flat style="padding: 14px">
-              <div class="bignum good">{{ timeliness }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimTimeliness') }}</small></div>
-              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
-                <div class="spark">
-                  <span v-for="(h, i) in [58,62,68,74,79,81]" :key="i" :style="{ height: h * 0.4 + 'px' }" />
-                </div>
-                <div>
-                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(timeliness) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
-                </div>
-              </div>
-            </Card></BCol>
-            <BCol><Card flat style="padding: 14px">
-              <div :class="`bignum ${coverage > 80 ? 'good' : 'warn'}`">{{ coverage }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimCoverage') }}</small></div>
-              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
-                <div class="spark">
-                  <span v-for="(h, i) in [58,62,68,74,79,81]" :key="i" :style="{ height: h * 0.4 + 'px' }" />
-                </div>
-                <div>
-                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(coverage) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
-                </div>
-              </div>
-            </Card></BCol>
-            <BCol><Card flat style="padding: 14px">
-              <div :class="`bignum ${disaggregation > 80 ? 'good' : 'warn'}`">{{ disaggregation }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimDisaggregation') }}</small></div>
-              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
-                <div class="spark">
-                  <span v-for="(h, i) in [18,17,16,14,13,12]" :key="i" :style="{ height: h * 1.5 + 'px' }" />
-                </div>
-                <div>
-                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(disaggregation) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
-                </div>
-              </div>
-            </Card></BCol>
-            <BCol><Card flat style="padding: 14px">
-              <div :class="`bignum ${comprehensiveness > 80 ? 'good' : 'warn'}`">{{ comprehensiveness }}<span style="font-size: 1.2rem">%</span><small>{{ t('dimComprehensiveness') }}</small></div>
-              <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 10px">
-                <div class="spark">
-                  <span v-for="(h, i) in [18,17,16,14,13,12]" :key="i" :style="{ height: h * 1.5 + 'px' }" />
-                </div>
-                <div>
-                  <span v-for="n in 3" :key="n" :style="{ color: n <= starsFor(comprehensiveness) ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '1.1rem' }">★</span>
-                </div>
-              </div>
-            </Card></BCol>
+            <BCol><DimensionCard :label="t('dimTimeliness')"        :pct="timeliness"        :history="[58,62,68,74,79,81]" /></BCol>
+            <BCol><DimensionCard :label="t('dimCoverage')"          :pct="coverage"          :history="[58,62,68,74,79,81]" /></BCol>
+            <BCol><DimensionCard :label="t('dimDisaggregation')"    :pct="disaggregation"    :history="[18,17,16,14,13,12]" /></BCol>
+            <BCol><DimensionCard :label="t('dimComprehensiveness')" :pct="comprehensiveness" :history="[18,17,16,14,13,12]" /></BCol>
           </BRow>
         </Card></BCol>
 
-        <BCol cols="12" md="3"><div style="display: flex; flex-direction: column; gap: 10px">
-          <div class="callout good">
-            <div class="ic">✓</div>
-            <div>
-              <h4>{{ t('orgCalloutAvailTitle') }}</h4>
-              <p>{{ t('orgCalloutAvailText') }} <a href="#">{{ t('orgViewDetails') }}</a></p>
-            </div>
-          </div>
-          <div class="callout">
-            <div class="ic">!</div>
-            <div>
-              <h4>{{ t('orgCalloutActionTitle') }}</h4>
-              <template v-if="slug === 'eu'">
-                <i18n-t keypath="orgEUAction" tag="p">
-                  <template #emphasis><strong>{{ t('orgEUActionBold') }}</strong></template>
-                </i18n-t>
-              </template>
-              <template v-else>
-                <i18n-t keypath="orgUSAIDAction" tag="p">
-                  <template #emphasis><strong>{{ t('orgUSAIDActionBold') }}</strong></template>
-                </i18n-t>
-              </template>
-            </div>
-          </div>
-          <div class="callout info">
-            <div class="ic">i</div>
-            <div>
-              <h4>{{ t('orgCalloutPeersTitle') }}</h4>
-              <i18n-t keypath="orgCalloutPeersText" tag="p">
-                <template #emphasis><strong>{{ t('orgCalloutPeersTextBold') }}</strong></template>
+        <BCol cols="12" md="3"><div class="col">
+          <OrganisationCallout variant="good" icon="✓" :title="t('orgCalloutAvailTitle')">
+            <p>{{ t('orgCalloutAvailText') }} <a href="#">{{ t('orgViewDetails') }}</a></p>
+          </OrganisationCallout>
+          <OrganisationCallout :title="t('orgCalloutActionTitle')">
+            <template v-if="slug === 'eu'">
+              <i18n-t keypath="orgEUAction" tag="p">
+                <template #emphasis><strong>{{ t('orgEUActionBold') }}</strong></template>
               </i18n-t>
-              <a href="#">{{ t('orgOpenGroup') }}</a>
-            </div>
-          </div>
+            </template>
+            <template v-else>
+              <i18n-t keypath="orgUSAIDAction" tag="p">
+                <template #emphasis><strong>{{ t('orgUSAIDActionBold') }}</strong></template>
+              </i18n-t>
+            </template>
+          </OrganisationCallout>
+          <OrganisationCallout variant="info" icon="i" :title="t('orgCalloutPeersTitle')">
+            <i18n-t keypath="orgCalloutPeersText" tag="p">
+              <template #emphasis><strong>{{ t('orgCalloutPeersTextBold') }}</strong></template>
+            </i18n-t>
+            <a href="#">{{ t('orgOpenGroup') }}</a>
+          </OrganisationCallout>
         </div></BCol>
       </BRow>
 
@@ -317,26 +258,24 @@ function starsFor(pct) {
       <!-- Coverage chart + all indicators -->
       <BRow gutter-x="3" gutter-y="3" class="mt">
         <BCol cols="12" md="6"><Card :kicker="t('orgCoverageTitle')" :title="t('orgIATIvsCRS', { org })">
-          <div style="margin-top: 18px">
-            <div v-for="r in coverageRows" :key="r.y" style="margin-bottom: 14px">
-              <div class="spread" style="margin-bottom: 4px; font-size: .85rem">
+          <div class="mt">
+            <div v-for="r in coverageRows" :key="r.y" class="mb-md">
+              <div class="spread spread--sm">
                 <strong>{{ r.y }}</strong>
                 <span>${{ r.iati.toFixed(1) }} bn / ${{ r.ref.toFixed(1) }} bn ({{ Math.round(100 * r.iati / r.ref) }}%)</span>
               </div>
-              <div class="bar bar--lg" style="background: var(--grey-10); border: 1px solid var(--grey-20)">
+              <div class="bar bar--lg bar--track">
                 <span :style="{ width: Math.min(100, 100 * r.iati / r.ref) + '%', background: r.partial ? 'var(--teal-50)' : 'var(--green-50)' }" />
               </div>
             </div>
           </div>
-          <p style="font-size: .8rem; color: var(--grey-60); margin: 6px 0 0">{{ t('orgCoverageNote') }}</p>
+          <p class="coverage-note">{{ t('orgCoverageNote') }}</p>
         </Card></BCol>
 
         <BCol cols="12" md="6"><Card :kicker="t('orgAllIndicators')" :title="t('orgByGroup')">
-          <div style="margin-top: 8px">
-            <div v-for="group in indicators" :key="group.g" style="margin-bottom: 14px">
-              <div style="font-family: Hanken Grotesk; font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .4px; color: var(--teal-90); border-bottom: 2px solid var(--teal-30); padding-bottom: 4px; margin-bottom: 4px">
-                {{ group.g }}
-              </div>
+          <div class="mt-sm">
+            <div v-for="group in indicators" :key="group.g" class="mb-md">
+              <div class="indicator-group-heading">{{ group.g }}</div>
               <Indicator
                 v-for="(it, i) in group.items"
                 :key="i"

@@ -140,6 +140,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   position: relative; background: var(--teal-10); height: 18px; border: 1px solid var(--teal-30); overflow: hidden;
   > span { display: block; height: 100%; background: var(--teal-70); transition: width .4s ease }
   &.bar--lg { height: 22px }
+  &--track { background: var(--grey-10); border-color: var(--grey-20) }
   &--good > span { background: var(--green-50) }
   &--warn > span { background: var(--orange-50) }
   &--bad  > span { background: var(--red-50) }
@@ -241,6 +242,13 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
 }
 
+// ─── Indicator group heading ──────────────────────────────────────────────────
+.indicator-group-heading {
+  font-family: "Hanken Grotesk"; font-weight: 700; font-size: .82rem;
+  text-transform: uppercase; letter-spacing: .4px; color: var(--teal-90);
+  border-bottom: 2px solid var(--teal-30); padding-bottom: 4px; margin-bottom: 4px;
+}
+
 // ─── Sparkline ────────────────────────────────────────────────────────────────
 .spark {
   display: flex; align-items: flex-end; gap: 3px; height: 36px;
@@ -256,12 +264,21 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 }
 
 // ─── Layout helpers ───────────────────────────────────────────────────────────
-.flex-row { display: flex; gap: 12px; align-items: center }
-.spread   { display: flex; justify-content: space-between; align-items: center; gap: 12px }
+.flex-row     { display: flex; gap: 12px; align-items: center }
+.flex-row--lg { gap: 24px }
+.flex-1       { flex: 1 }
+.spread       { display: flex; justify-content: space-between; align-items: center; gap: 12px }
+.spread--sm   { margin-bottom: 4px; font-size: .85rem }
 .mt    { margin-top: 18px }
 .mt-sm { margin-top: 10px }
+.mb-xs { margin-bottom: 8px }
 .mb-sm { margin-bottom: 10px }
+.mb-md { margin-bottom: 14px }
 .col   { display: flex; flex-direction: column; gap: 16px }
+
+// ─── Coverage chart ───────────────────────────────────────────────────────────
+.hero-text    { margin: 0; font-size: .94rem }
+.coverage-note { font-size: .8rem; color: var(--grey-60); margin: 6px 0 0 }
 
 // ─── Misc ─────────────────────────────────────────────────────────────────────
 .loading { color: var(--grey-60); padding: 40px 0; text-align: center }
