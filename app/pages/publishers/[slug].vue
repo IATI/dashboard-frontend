@@ -86,14 +86,14 @@ const orgData = {
       availability: { category: 'good', components: {
         downloadable: { value: true,  category: 'excellent' },
         readable:     { value: true,  category: 'excellent' },
-        no_errors:    { value: false, category: 'poor' },
+        no_errors:    { value: false, category: 'needs_improvement' },
       }},
-      timeliness: { category: 'very_good', components: {
-        timeliness: { value: 'one_quarter', category: 'very_good' },
-        frequency:  { value: 'quarterly',   category: 'very_good' },
+      timeliness: { category: 'good', components: {
+        timeliness: { value: 'one_quarter', category: 'good' },
+        frequency:  { value: 'quarterly',   category: 'good' },
       }},
-      coverage: { category: 'poor', components: {
-        coverage:       { value: 35, category: 'poor' },
+      coverage: { category: 'needs_improvement', components: {
+        coverage:       { value: 35, category: 'needs_improvement' },
         disaggregation: { value: 3,  category: 'very_good' },
       }},
       comprehensiveness: { category: 'very_good', components: {

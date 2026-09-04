@@ -8,10 +8,10 @@ const props = defineProps({
 
 // Single source of truth for how a methodology band renders as stars.
 const CATEGORY_STARS = {
-  excellent: 3,
-  very_good: 2,
-  good:      1,
-  poor:      0,
+  excellent:         3,
+  very_good:         2,
+  good:              1,
+  needs_improvement: 0,
 }
 
 const lit = computed(() => CATEGORY_STARS[props.category] ?? 0)
