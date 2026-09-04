@@ -15,8 +15,29 @@ const orgName = meta.name
 
 const orgData = {
   usaid: {
-    overall: 78, timeliness: 100, coverage: 95, disaggregation: 100, comprehensiveness: 81, traceability: 0.63,
+    overall: 78, traceability: 0.63,
     orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
+    dimensions: [
+      { k: 'dimAvailability', pct: 100, metrics: [
+        { k: 'subDownloadable',     v: true },
+        { k: 'subPassesValidation', v: true },
+        { k: 'subNoCriticalErrors', v: true },
+      ]},
+      { k: 'dimTimeliness', pct: 100, metrics: [
+        { k: 'subTimeliness', v: 100 },
+        { k: 'subFrequency',  v: 92 },
+      ]},
+      { k: 'dimCoverage', pct: 95, metrics: [
+        { k: 'subCoverage',       v: 95 },
+        { k: 'dimDisaggregation', v: 100 },
+      ]},
+      { k: 'dimComprehensiveness', pct: 81, metrics: [
+        { k: 'subOrgFields',       v: 88 },
+        { k: 'subBasicFields',     v: 99 },
+        { k: 'subFinancialFields', v: 79 },
+        { k: 'subAdvancedFields',  v: 58 },
+      ]},
+    ],
     coverageRows: [
       { y: '2023',       iati: 55.8, ref: 60.4 },
       { y: '2024',       iati: 66.6, ref: 74.1 },
@@ -57,8 +78,29 @@ const orgData = {
     ]
   },
   eu: {
-    overall: 45, timeliness: 100, coverage: 35, disaggregation: 100, comprehensiveness: 85, traceability: 100,
+    overall: 45, traceability: 100,
     orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
+    dimensions: [
+      { k: 'dimAvailability', pct: 100, metrics: [
+        { k: 'subDownloadable',     v: true },
+        { k: 'subPassesValidation', v: true },
+        { k: 'subNoCriticalErrors', v: false },
+      ]},
+      { k: 'dimTimeliness', pct: 100, metrics: [
+        { k: 'subTimeliness', v: 100 },
+        { k: 'subFrequency',  v: 88 },
+      ]},
+      { k: 'dimCoverage', pct: 35, metrics: [
+        { k: 'subCoverage',       v: 35 },
+        { k: 'dimDisaggregation', v: 100 },
+      ]},
+      { k: 'dimComprehensiveness', pct: 85, metrics: [
+        { k: 'subOrgFields',       v: 91 },
+        { k: 'subBasicFields',     v: 100 },
+        { k: 'subFinancialFields', v: 84 },
+        { k: 'subAdvancedFields',  v: 62 },
+      ]},
+    ],
     coverageRows: [
       { y: '2023',       iati: 55.8, ref: 60.4 },
       { y: '2024',       iati: 66.6, ref: 74.1 },
@@ -102,10 +144,6 @@ const orgData = {
 const d = computed(() => orgData[slug] || orgData.usaid)
 
 const overall           = computed(() => d.value.overall)
-const timeliness        = computed(() => d.value.timeliness)
-const coverage          = computed(() => d.value.coverage)
-const disaggregation    = computed(() => d.value.disaggregation)
-const comprehensiveness = computed(() => d.value.comprehensiveness)
 const publisherID       = computed(() => d.value.publisherID)
 const totalDisbursements = computed(() => d.value.totalDisbursements)
 const coverageRows      = computed(() => d.value.coverageRows)
@@ -117,12 +155,14 @@ const indicators = computed(() =>
   }))
 )
 
-function levelFor(pct) {
-  if (pct >= 75) return 'good'
-  if (pct >= 50) return 'ok'
-  if (pct >= 25) return 'warn'
-  return 'bad'
-}
+const dimensions = computed(() =>
+  d.value.dimensions.map(dim => ({
+    key:     dim.k,
+    label:   t(dim.k),
+    pct:     dim.pct,
+    metrics: dim.metrics.map(m => ({ label: t(m.k), value: m.v })),
+  }))
+)
 </script>
 
 <template>
@@ -144,34 +184,23 @@ function levelFor(pct) {
     <main class="main">
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
-        <BCol cols="12" md="9"><Card :kicker="t('orgOverallQuality')">
-          <div class="flex-row flex-row--lg">
-            <Gauge :show-pct="false" :pct="overall" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
-            <div class="flex-1">
-              <template v-if="slug === 'eu'">
-                <div class="flex-row mb-xs">
-                  <Score :level="levelFor(timeliness)">{{ t('orgTimely') }}</Score>
-                  <Score level="warn">{{ t('orgCoverageIsLow') }}</Score>
-                </div>
-                <p class="hero-text">{{ t('orgEUText') }}</p>
-              </template>
-              <template v-else>
-                <div class="flex-row mb-xs">
-                  <Score :level="levelFor(overall)">{{ t('orgGoodMinorGaps') }}</Score>
-                  <Score level="warn">{{ t('orgRegressionTraceability') }}</Score>
-                </div>
-                <p class="hero-text">{{ t('orgUSAIDText') }}</p>
-              </template>
+        <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">
+          <div class="hero-metrics">
+            <div class="hero-metrics__gauge">
+              <Gauge :show-pct="false" :pct="overall" size="160px" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
+            </div>
+            <div class="hero-metrics__cards">
+              <DimensionCard
+                v-for="dim in dimensions" :key="dim.key"
+                :label="dim.label"
+                :pct="dim.pct"
+                :metrics="dim.metrics"
+              />
             </div>
           </div>
-          <BRow cols="1" cols-md="2" cols-lg="4" gutter-x="3" gutter-y="3" class="mt" id="characteristics">
-            <BCol><DimensionCard :label="t('dimTimeliness')"        :pct="timeliness"        :history="[58,62,68,74,79,81]" /></BCol>
-            <BCol><DimensionCard :label="t('dimCoverage')"          :pct="coverage"          :history="[58,62,68,74,79,81]" /></BCol>
-            <BCol><DimensionCard :label="t('dimDisaggregation')"    :pct="disaggregation"    :history="[18,17,16,14,13,12]" /></BCol>
-            <BCol><DimensionCard :label="t('dimComprehensiveness')" :pct="comprehensiveness" :history="[18,17,16,14,13,12]" /></BCol>
-          </BRow>
-        </Card></BCol>
-
+          </Card>
+        </BCol>
+        <!--
         <BCol cols="12" md="3"><div class="col">
           <OrganisationCallout variant="good" icon="✓" :title="t('orgCalloutAvailTitle')">
             <p>{{ t('orgCalloutAvailText') }} <a href="#">{{ t('orgViewDetails') }}</a></p>
@@ -195,6 +224,7 @@ function levelFor(pct) {
             <a href="#">{{ t('orgOpenGroup') }}</a>
           </OrganisationCallout>
         </div></BCol>
+        -->
       </BRow>
 
       <Card class="mt" :kicker="t('orgSummaryTitle')">

@@ -294,5 +294,15 @@
   "exploreHasOrgFile": "Ont un fichier organisation",
   "exploreNoOrgFile": "Pas de fichier organisation",
   "explorePublishers": "éditeurs",
-  "exploreBreadcrumb": "Explorer les données"
+  "exploreBreadcrumb": "Explorer les données",
+  "subDownloadable": "Téléchargeable",
+  "subPassesValidation": "Validation réussie",
+  "subNoCriticalErrors": "Aucune erreur critique",
+  "subTimeliness": "Actualité",
+  "subFrequency": "Fréquence",
+  "subCoverage": "Couverture",
+  "subOrgFields": "Champs organisation",
+  "subBasicFields": "Champs de base",
+  "subFinancialFields": "Champs financiers",
+  "subAdvancedFields": "Champs avancés"
 }

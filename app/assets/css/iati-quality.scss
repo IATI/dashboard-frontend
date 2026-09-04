@@ -13,6 +13,8 @@
 @import 'bootstrap/scss/transitions';
 @import 'bootstrap/scss/close';
 @import 'bootstrap/scss/alert';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
 
 // ─── IATI Publishing Quality — shared styles ─────────────────────────────────
 
@@ -206,14 +208,26 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
 // ─── Gauge ring ───────────────────────────────────────────────────────────────
 .gauge {
-  --p: 0; --c: var(--teal-70);
-  position: relative; width: 120px; height: 120px; border-radius: 50%;
+  --p: 0; --c: var(--teal-70); --size: 120px;
+  position: relative; width: var(--size); height: var(--size); border-radius: 50%;
   background: conic-gradient(var(--c) calc(var(--p) * 1%), var(--grey-20) 0);
-  &::after { content: ""; position: absolute; inset: 14px; background: #fff; border-radius: 50% }
-  .v {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column;
+  &::after { content: ""; position: absolute; inset: calc(var(--size) * 0.117); background: #fff; border-radius: 50% }
+  &__value {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.65rem; color: var(--teal-90); z-index: 1;
-    small { display: block; font-size: .65rem; letter-spacing: .5px; text-transform: uppercase; color: var(--grey-60); font-weight: 600; margin-top: 2px }
+  }
+}
+
+// Gauge with its caption below the ring, leaving the ring interior clean
+.gauge-block {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  &__caption { text-align: center }
+  &__stars   { white-space: nowrap; font-size: 1.05rem; line-height: 1 }
+  &__star    { color: var(--grey-20) }
+  &__star--lit { color: var(--green-50) }
+  &__label {
+    font-family: "Hanken Grotesk"; font-weight: 700; font-size: .78rem;
+    text-transform: uppercase; letter-spacing: .5px; color: var(--grey-60); margin: 6px 0 0;
   }
 }
 
@@ -266,7 +280,24 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // ─── Layout helpers ───────────────────────────────────────────────────────────
 .flex-row     { display: flex; gap: 12px; align-items: center }
 .flex-row--lg { gap: 24px }
-.flex-1       { flex: 1 }
+.flex-1       { flex: 1; min-width: 0 }
+
+// Hero metric row: gauge on left, divider, 2×2 grid of cards on right
+.hero-metrics {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  &__gauge {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    padding: 0 36px; border-right: 1px solid var(--grey-20);
+  }
+  &__cards { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+
+  @media (max-width: 767px) {
+    flex-direction: column; align-items: stretch; gap: 20px;
+    &__gauge { padding: 0 0 20px; border-right: none; border-bottom: 1px solid var(--grey-20) }
+  }
+}
 .spread       { display: flex; justify-content: space-between; align-items: center; gap: 12px }
 .spread--sm   { margin-bottom: 4px; font-size: .85rem }
 .mt    { margin-top: 18px }

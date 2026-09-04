@@ -293,5 +293,15 @@
   "exploreHasOrgFile": "Have organisation file",
   "exploreNoOrgFile": "No organisation file",
   "explorePublishers": "publishers",
-  "exploreBreadcrumb": "Exploring Data"
+  "exploreBreadcrumb": "Exploring Data",
+  "subDownloadable": "Downloadable",
+  "subPassesValidation": "Passes validation",
+  "subNoCriticalErrors": "No critical errors",
+  "subTimeliness": "Timeliness",
+  "subFrequency": "Frequency",
+  "subCoverage": "Coverage",
+  "subOrgFields": "Organisation fields",
+  "subBasicFields": "Basic fields",
+  "subFinancialFields": "Financial fields",
+  "subAdvancedFields": "Advanced fields"
 }

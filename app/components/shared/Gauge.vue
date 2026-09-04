@@ -1,9 +1,10 @@
 <script setup>
 const props = defineProps({
-  pct: { type: Number, required: true },
-  color: { type: String, default: 'var(--teal-70)' },
-  label: { type: String, default: '' },
+  pct:     { type: Number, required: true },
+  color:   { type: String, default: 'var(--teal-70)' },
+  label:   { type: String, default: '' },
   showPct: { type: Boolean, default: true },
+  size:    { type: String, default: '120px' },
 })
 
 const stars = computed(() => {
@@ -15,11 +16,19 @@ const stars = computed(() => {
 </script>
 
 <template>
-  <div class="gauge" :style="{ '--p': pct, '--c': color }">
-    <div class="v">
-      <div id="stars" style="white-space: nowrap">
-        <span v-for="n in 3" :key="n" :style="{ color: n <= stars ? 'var(--green-50)' : 'var(--grey-20)', fontSize: '.9rem' }">★</span>
-        </div>
-      <small>{{ label }}</small></div>
+  <div class="gauge-block">
+    <div class="gauge" :style="{ '--p': pct, '--c': color, '--size': size }">
+      <span v-if="showPct" class="gauge__value">{{ pct }}%</span>
+    </div>
+    <div class="gauge-block__caption">
+      <div class="gauge-block__stars">
+        <span
+          v-for="n in 3" :key="n"
+          class="gauge-block__star"
+          :class="{ 'gauge-block__star--lit': n <= stars }"
+        >★</span>
+      </div>
+      <p v-if="label" class="gauge-block__label">{{ label }}</p>
+    </div>
   </div>
 </template>
