@@ -301,12 +301,22 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 800;
     font-size: 1.5rem; line-height: 1.1; color: var(--teal-90); margin: 0; text-align: center;
   }
-  &__cards { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+  // min-width: 0 lets the cards shrink instead of overflowing — grid items
+  // default to min-width: auto, which floors them at their content width
+  &__cards {
+    flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0;
+    > * { min-width: 0 }
+  }
 
   @media (max-width: 767px) {
     flex-direction: column; align-items: center; gap: 20px;
     &__overall { padding: 0 }
     &__cards   { width: 100% }
+  }
+
+  // One card per row on xs
+  @media (max-width: 575.98px) {
+    &__cards { grid-template-columns: 1fr }
   }
 }
 .spread       { display: flex; justify-content: space-between; align-items: center; gap: 12px }
