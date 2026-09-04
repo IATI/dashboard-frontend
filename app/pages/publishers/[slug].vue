@@ -1,4 +1,6 @@
 <script setup>
+import methodology from '~~/sample-data/methodology.json'
+
 definePageMeta({ active: 'org' })
 const { t } = useI18n({ useScope: 'global' })
 const route = useRoute()
@@ -18,24 +20,24 @@ const orgData = {
     overall: 78, traceability: 0.63,
     orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
     dimensions: {
-      availability: { score: 100, components: {
-        downloadable:       { value: true },
-        passes_validation:  { value: true },
-        no_critical_errors: { value: true },
+      availability: { category: 'excellent', components: {
+        downloadable: { value: true, category: 'excellent' },
+        readable:     { value: true, category: 'excellent' },
+        no_errors:    { value: true, category: 'excellent' },
       }},
-      timeliness: { score: 100, components: {
-        timeliness: { value: 100 },
-        frequency:  { value: 92 },
+      timeliness: { category: 'excellent', components: {
+        timeliness: { value: 'one_month', category: 'excellent' },
+        frequency:  { value: 'monthly',   category: 'excellent' },
       }},
-      coverage: { score: 95, components: {
-        coverage:       { value: 95 },
-        disaggregation: { value: 100 },
+      coverage: { category: 'excellent', components: {
+        coverage:       { value: 95, category: 'excellent' },
+        disaggregation: { value: 4,  category: 'excellent' },
       }},
-      comprehensiveness: { score: 81, components: {
-        organisation_fields: { value: 88 },
-        basic_fields:        { value: 99 },
-        financial_fields:    { value: 79 },
-        advanced_fields:     { value: 58 },
+      comprehensiveness: { category: 'very_good', components: {
+        organisation_fields: { value: 88, category: 'very_good' },
+        basic_fields:        { value: 99, category: 'excellent' },
+        financial_fields:    { value: 79, category: 'very_good' },
+        advanced_fields:     { value: 58, category: 'good' },
       }},
     },
     coverageRows: [
@@ -81,24 +83,24 @@ const orgData = {
     overall: 45, traceability: 100,
     orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
     dimensions: {
-      availability: { score: 100, components: {
-        downloadable:       { value: true },
-        passes_validation:  { value: true },
-        no_critical_errors: { value: false },
+      availability: { category: 'good', components: {
+        downloadable: { value: true,  category: 'excellent' },
+        readable:     { value: true,  category: 'excellent' },
+        no_errors:    { value: false, category: 'poor' },
       }},
-      timeliness: { score: 100, components: {
-        timeliness: { value: 100 },
-        frequency:  { value: 88 },
+      timeliness: { category: 'very_good', components: {
+        timeliness: { value: 'one_quarter', category: 'very_good' },
+        frequency:  { value: 'quarterly',   category: 'very_good' },
       }},
-      coverage: { score: 35, components: {
-        coverage:       { value: 35 },
-        disaggregation: { value: 100 },
+      coverage: { category: 'poor', components: {
+        coverage:       { value: 35, category: 'poor' },
+        disaggregation: { value: 3,  category: 'very_good' },
       }},
-      comprehensiveness: { score: 85, components: {
-        organisation_fields: { value: 91 },
-        basic_fields:        { value: 100 },
-        financial_fields:    { value: 84 },
-        advanced_fields:     { value: 62 },
+      comprehensiveness: { category: 'very_good', components: {
+        organisation_fields: { value: 91,  category: 'excellent' },
+        basic_fields:        { value: 100, category: 'excellent' },
+        financial_fields:    { value: 84,  category: 'very_good' },
+        advanced_fields:     { value: 62,  category: 'very_good' },
       }},
     },
     coverageRows: [
@@ -163,16 +165,43 @@ const DIMENSION_ORDER = ['availability', 'timeliness', 'coverage', 'comprehensiv
 const labelKey = (prefix, id) =>
   prefix + id.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase())
 
+function displayValue(id, value) {
+  if (typeof value === 'boolean') return value ? '✓' : '✗'
+  if (typeof value === 'string')  return t(labelKey('value', value))
+  return methodology.components[id]?.unit === 'percent' ? `${value}%` : String(value)
+}
+
+// Star position -> the band you reach by clearing it
+const STAR_BANDS = ['good', 'very_good', 'excellent']
+
+// Hover text for each of a component's three stars, from the methodology thresholds.
+// A band with no threshold is not required to earn that star.
+function starTooltips(id) {
+  const meta = methodology.components[id]
+  return STAR_BANDS.map(band => {
+    const threshold = meta?.thresholds?.[band]
+    if (threshold === undefined) return t('starNotRequired')
+    if (meta.unit === 'percent') return t('starRequiresPercent', { value: threshold })
+    if (meta.unit === 'count')   return t('starRequiresCount',   { value: threshold })
+    if (meta.unit === 'boolean') return t('starRequiresPass')
+    return t('starRequiresValue', { value: t(labelKey('value', threshold)) })
+  })
+}
+
 const dimensions = computed(() =>
   DIMENSION_ORDER.map(id => {
     const dim = d.value.dimensions[id]
     return {
-      key:     id,
-      label:   t(labelKey('dim', id)),
-      pct:     dim.score,
-      metrics: Object.entries(dim.components).map(([cid, c]) => ({
-        label: t(labelKey('sub', cid)),
-        value: c.value,
+      key:      id,
+      label:    t(labelKey('dim', id)),
+      category: dim.category,
+      metrics:  Object.entries(dim.components).map(([cid, c]) => ({
+        label:     t(labelKey('sub', cid)),
+        display:   displayValue(cid, c.value),
+        category:  c.category,
+        tooltips:  starTooltips(cid),
+        isBoolean: typeof c.value === 'boolean',
+        boolValue: c.value === true,
       })),
     }
   })
@@ -207,7 +236,7 @@ const dimensions = computed(() =>
               <DimensionCard
                 v-for="dim in dimensions" :key="dim.key"
                 :label="dim.label"
-                :pct="dim.pct"
+                :category="dim.category"
                 :metrics="dim.metrics"
               />
             </div>

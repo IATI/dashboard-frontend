@@ -1,0 +1,57 @@
+<script setup>
+const props = defineProps({
+  category: { type: String, default: null },
+  size:     { type: String, default: 'md' },   // 'md' | 'lg'
+  // Optional per-star hover text, lowest band first: [1 star, 2 stars, 3 stars]
+  tooltips: { type: Array, default: () => [] },
+})
+
+// Single source of truth for how a methodology band renders as stars.
+const CATEGORY_STARS = {
+  excellent: 3,
+  very_good: 2,
+  good:      1,
+  poor:      0,
+}
+
+const lit = computed(() => CATEGORY_STARS[props.category] ?? 0)
+
+const starClass = n => ['stars__star', { 'stars__star--lit': n <= lit.value }]
+</script>
+
+<template>
+  <span class="stars" :class="`stars--${size}`">
+    <template v-for="n in 3" :key="n">
+      <BTooltip v-if="tooltips[n - 1]" :title="tooltips[n - 1]" placement="top" noninteractive>
+        <template #target>
+          <span :class="[starClass(n), 'stars__star--help']">★</span>
+        </template>
+      </BTooltip>
+      <span v-else :class="starClass(n)">★</span>
+    </template>
+  </span>
+</template>
+
+<style scoped>
+.stars { white-space: nowrap; line-height: 1; display: inline-flex; gap: 1px }
+.stars__star { color: var(--grey-20); cursor: default; transition: color .15s ease }
+.stars__star--lit { color: var(--green-50) }
+.stars--md { font-size: 1rem }
+.stars--lg { font-size: 1.6rem; gap: 3px }
+
+/* Hovering a star previews it in green — including unearned ones, which shows
+   what the band would look like once its threshold is met. */
+.stars__star--help:hover {
+  color: var(--green-50);
+  animation: star-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes star-pulse {
+  0%, 100% { opacity: 1 }
+  50%      { opacity: .4 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stars__star--help:hover { animation: none }
+}
+</style>

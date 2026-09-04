@@ -295,8 +295,6 @@
   "explorePublishers": "publishers",
   "exploreBreadcrumb": "Exploring Data",
   "subDownloadable": "Downloadable",
-  "subPassesValidation": "Passes validation",
-  "subNoCriticalErrors": "No critical errors",
   "subTimeliness": "Timeliness",
   "subFrequency": "Frequency",
   "subCoverage": "Coverage",
@@ -304,5 +302,18 @@
   "subBasicFields": "Basic fields",
   "subFinancialFields": "Financial fields",
   "subAdvancedFields": "Advanced fields",
-  "subDisaggregation": "Disaggregation"
+  "subDisaggregation": "Disaggregation",
+  "subReadable": "Readable",
+  "subNoErrors": "No critical errors",
+  "valueOneMonth": "One month",
+  "valueMonthly": "Monthly",
+  "valueOneQuarter": "One quarter",
+  "valueQuarterly": "Quarterly",
+  "valueOneYear": "One year",
+  "valueAnnually": "Annually",
+  "starNotRequired": "Not required",
+  "starRequiresPercent": "Requires at least {value}%",
+  "starRequiresCount": "Requires at least {value}",
+  "starRequiresValue": "Requires {value}",
+  "starRequiresPass": "Must pass this check"
 }
