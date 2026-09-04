@@ -300,8 +300,9 @@
   "subTimeliness": "Timeliness",
   "subFrequency": "Frequency",
   "subCoverage": "Coverage",
-  "subOrgFields": "Organisation fields",
+  "subOrganisationFields": "Organisation fields",
   "subBasicFields": "Basic fields",
   "subFinancialFields": "Financial fields",
-  "subAdvancedFields": "Advanced fields"
+  "subAdvancedFields": "Advanced fields",
+  "subDisaggregation": "Disaggregation"
 }

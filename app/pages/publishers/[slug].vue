@@ -17,27 +17,27 @@ const orgData = {
   usaid: {
     overall: 78, traceability: 0.63,
     orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
-    dimensions: [
-      { k: 'dimAvailability', pct: 100, metrics: [
-        { k: 'subDownloadable',     v: true },
-        { k: 'subPassesValidation', v: true },
-        { k: 'subNoCriticalErrors', v: true },
-      ]},
-      { k: 'dimTimeliness', pct: 100, metrics: [
-        { k: 'subTimeliness', v: 100 },
-        { k: 'subFrequency',  v: 92 },
-      ]},
-      { k: 'dimCoverage', pct: 95, metrics: [
-        { k: 'subCoverage',       v: 95 },
-        { k: 'dimDisaggregation', v: 100 },
-      ]},
-      { k: 'dimComprehensiveness', pct: 81, metrics: [
-        { k: 'subOrgFields',       v: 88 },
-        { k: 'subBasicFields',     v: 99 },
-        { k: 'subFinancialFields', v: 79 },
-        { k: 'subAdvancedFields',  v: 58 },
-      ]},
-    ],
+    dimensions: {
+      availability: { score: 100, components: {
+        downloadable:       { value: true },
+        passes_validation:  { value: true },
+        no_critical_errors: { value: true },
+      }},
+      timeliness: { score: 100, components: {
+        timeliness: { value: 100 },
+        frequency:  { value: 92 },
+      }},
+      coverage: { score: 95, components: {
+        coverage:       { value: 95 },
+        disaggregation: { value: 100 },
+      }},
+      comprehensiveness: { score: 81, components: {
+        organisation_fields: { value: 88 },
+        basic_fields:        { value: 99 },
+        financial_fields:    { value: 79 },
+        advanced_fields:     { value: 58 },
+      }},
+    },
     coverageRows: [
       { y: '2023',       iati: 55.8, ref: 60.4 },
       { y: '2024',       iati: 66.6, ref: 74.1 },
@@ -80,27 +80,27 @@ const orgData = {
   eu: {
     overall: 45, traceability: 100,
     orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
-    dimensions: [
-      { k: 'dimAvailability', pct: 100, metrics: [
-        { k: 'subDownloadable',     v: true },
-        { k: 'subPassesValidation', v: true },
-        { k: 'subNoCriticalErrors', v: false },
-      ]},
-      { k: 'dimTimeliness', pct: 100, metrics: [
-        { k: 'subTimeliness', v: 100 },
-        { k: 'subFrequency',  v: 88 },
-      ]},
-      { k: 'dimCoverage', pct: 35, metrics: [
-        { k: 'subCoverage',       v: 35 },
-        { k: 'dimDisaggregation', v: 100 },
-      ]},
-      { k: 'dimComprehensiveness', pct: 85, metrics: [
-        { k: 'subOrgFields',       v: 91 },
-        { k: 'subBasicFields',     v: 100 },
-        { k: 'subFinancialFields', v: 84 },
-        { k: 'subAdvancedFields',  v: 62 },
-      ]},
-    ],
+    dimensions: {
+      availability: { score: 100, components: {
+        downloadable:       { value: true },
+        passes_validation:  { value: true },
+        no_critical_errors: { value: false },
+      }},
+      timeliness: { score: 100, components: {
+        timeliness: { value: 100 },
+        frequency:  { value: 88 },
+      }},
+      coverage: { score: 35, components: {
+        coverage:       { value: 35 },
+        disaggregation: { value: 100 },
+      }},
+      comprehensiveness: { score: 85, components: {
+        organisation_fields: { value: 91 },
+        basic_fields:        { value: 100 },
+        financial_fields:    { value: 84 },
+        advanced_fields:     { value: 62 },
+      }},
+    },
     coverageRows: [
       { y: '2023',       iati: 55.8, ref: 60.4 },
       { y: '2024',       iati: 66.6, ref: 74.1 },
@@ -155,13 +155,27 @@ const indicators = computed(() =>
   }))
 )
 
+// Dimensions are keyed by id in the API; display order is a presentation concern
+const DIMENSION_ORDER = ['availability', 'timeliness', 'coverage', 'comprehensiveness']
+
+// API ids are snake_case; i18n keys are the same id camel-cased behind a prefix,
+// e.g. ('sub', 'passes_validation') -> 'subPassesValidation'
+const labelKey = (prefix, id) =>
+  prefix + id.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase())
+
 const dimensions = computed(() =>
-  d.value.dimensions.map(dim => ({
-    key:     dim.k,
-    label:   t(dim.k),
-    pct:     dim.pct,
-    metrics: dim.metrics.map(m => ({ label: t(m.k), value: m.v })),
-  }))
+  DIMENSION_ORDER.map(id => {
+    const dim = d.value.dimensions[id]
+    return {
+      key:     id,
+      label:   t(labelKey('dim', id)),
+      pct:     dim.score,
+      metrics: Object.entries(dim.components).map(([cid, c]) => ({
+        label: t(labelKey('sub', cid)),
+        value: c.value,
+      })),
+    }
+  })
 )
 </script>
 

@@ -301,8 +301,9 @@
   "subTimeliness": "Actualité",
   "subFrequency": "Fréquence",
   "subCoverage": "Couverture",
-  "subOrgFields": "Champs organisation",
+  "subOrganisationFields": "Champs organisation",
   "subBasicFields": "Champs de base",
   "subFinancialFields": "Champs financiers",
-  "subAdvancedFields": "Champs avancés"
+  "subAdvancedFields": "Champs avancés",
+  "subDisaggregation": "Désagrégation"
 }
