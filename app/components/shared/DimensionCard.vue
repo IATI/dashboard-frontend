@@ -3,7 +3,7 @@ defineProps({
   label:    { type: String, required: true },
   category: { type: String, default: null },
   // Sub-metrics (components) shown alongside the dimension band.
-  // Each: { label, display, category, isBoolean, boolValue }
+  // Each: { label, display, category, tooltips }
   metrics:  { type: Array, default: () => [] },
 })
 </script>
@@ -19,13 +19,7 @@ defineProps({
       <ul v-if="metrics.length" class="dimension-card__metrics">
         <li v-for="m in metrics" :key="m.label" class="dimension-card__metric">
           <span class="dimension-card__metric-label">{{ m.label }}</span>
-          <span
-            class="dimension-card__metric-value"
-            :class="{
-              'dimension-card__metric-value--yes': m.isBoolean && m.boolValue,
-              'dimension-card__metric-value--no':  m.isBoolean && !m.boolValue,
-            }"
-          >{{ m.display }}</span>
+          <span class="dimension-card__metric-value">{{ m.display }}</span>
           <Stars :category="m.category" size="md" :tooltips="m.tooltips || []" />
         </li>
       </ul>
@@ -77,8 +71,6 @@ defineProps({
   color: var(--teal-90);
   font-variant-numeric: tabular-nums;
 }
-.dimension-card__metric-value--yes { color: var(--green-50) }
-.dimension-card__metric-value--no  { color: var(--red-50) }
 
 /* Large screens: band on the left, sub-metrics to its right */
 @media (min-width: 992px) {

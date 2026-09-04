@@ -17,7 +17,7 @@ const orgName = meta.name
 
 const orgData = {
   usaid: {
-    overall: 78, traceability: 0.63,
+    overall: { category: 'very_good' }, traceability: 0.63,
     orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
     dimensions: {
       availability: { category: 'excellent', components: {
@@ -80,7 +80,7 @@ const orgData = {
     ]
   },
   eu: {
-    overall: 45, traceability: 100,
+    overall: { category: 'good' }, traceability: 100,
     orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
     dimensions: {
       availability: { category: 'good', components: {
@@ -196,12 +196,10 @@ const dimensions = computed(() =>
       label:    t(labelKey('dim', id)),
       category: dim.category,
       metrics:  Object.entries(dim.components).map(([cid, c]) => ({
-        label:     t(labelKey('sub', cid)),
-        display:   displayValue(cid, c.value),
-        category:  c.category,
-        tooltips:  starTooltips(cid),
-        isBoolean: typeof c.value === 'boolean',
-        boolValue: c.value === true,
+        label:    t(labelKey('sub', cid)),
+        display:  displayValue(cid, c.value),
+        category: c.category,
+        tooltips: starTooltips(cid),
       })),
     }
   })
@@ -229,8 +227,11 @@ const dimensions = computed(() =>
       <BRow gutter-x="4" class="mb-sm">
         <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">
           <div class="hero-metrics">
-            <div class="hero-metrics__gauge">
-              <Gauge :show-pct="false" :pct="overall" size="160px" :color="overall > 50 ? 'var(--green-50)' : 'grey'" :label="overall > 50 ? t('orgVeryGood') : t('orgPublished')" />
+            <div class="hero-metrics__overall">
+              <div class="hero-metrics__badge">
+                <Stars :category="overall.category" size="xl" />
+                <p class="hero-metrics__category">{{ t(labelKey('category', overall.category)) }}</p>
+              </div>
             </div>
             <div class="hero-metrics__cards">
               <DimensionCard

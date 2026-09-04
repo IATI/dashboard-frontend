@@ -315,5 +315,9 @@
   "starRequiresPercent": "Requires at least {value}%",
   "starRequiresCount": "Requires at least {value}",
   "starRequiresValue": "Requires {value}",
-  "starRequiresPass": "Must pass this check"
+  "starRequiresPass": "Must pass this check",
+  "categoryExcellent": "Excellent",
+  "categoryVeryGood": "Very good",
+  "categoryGood": "Good",
+  "categoryPoor": "Poor"
 }

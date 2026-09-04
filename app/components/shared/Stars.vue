@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
   category: { type: String, default: null },
-  size:     { type: String, default: 'md' },   // 'md' | 'lg'
+  size:     { type: String, default: 'md' },   // 'md' | 'lg' | 'xl'
   // Optional per-star hover text, lowest band first: [1 star, 2 stars, 3 stars]
   tooltips: { type: Array, default: () => [] },
 })
@@ -38,6 +38,7 @@ const starClass = n => ['stars__star', { 'stars__star--lit': n <= lit.value }]
 .stars__star--lit { color: var(--green-50) }
 .stars--md { font-size: 1rem }
 .stars--lg { font-size: 1.6rem; gap: 3px }
+.stars--xl { font-size: 2.6rem; gap: 5px }
 
 /* Hovering a star previews it in green — including unearned ones, which shows
    what the band would look like once its threshold is met. */
