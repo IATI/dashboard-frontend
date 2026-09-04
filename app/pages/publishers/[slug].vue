@@ -21,9 +21,9 @@ const orgData = {
     orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
     dimensions: {
       availability: { category: 'excellent', components: {
-        downloadable: { value: true, category: 'excellent' },
-        readable:     { value: true, category: 'excellent' },
-        no_errors:    { value: true, category: 'excellent' },
+        downloadable:       { value: true, category: 'excellent' },
+        no_critical_errors: { value: true, category: 'excellent' },
+        no_errors:          { value: true, category: 'excellent' },
       }},
       timeliness: { category: 'excellent', components: {
         timeliness: { value: 'one_month', category: 'excellent' },
@@ -84,9 +84,9 @@ const orgData = {
     orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
     dimensions: {
       availability: { category: 'good', components: {
-        downloadable: { value: true,  category: 'excellent' },
-        readable:     { value: true,  category: 'excellent' },
-        no_errors:    { value: false, category: 'needs_improvement' },
+        downloadable:       { value: true,  category: 'excellent' },
+        no_critical_errors: { value: true,  category: 'excellent' },
+        no_errors:          { value: false, category: 'needs_improvement' },
       }},
       timeliness: { category: 'good', components: {
         timeliness: { value: 'one_quarter', category: 'good' },

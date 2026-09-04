@@ -294,7 +294,6 @@
   "exploreNoOrgFile": "No organisation file",
   "explorePublishers": "publishers",
   "exploreBreadcrumb": "Exploring Data",
-  "subDownloadable": "Downloadable",
   "subTimeliness": "Timeliness",
   "subFrequency": "Frequency",
   "subCoverage": "Coverage",
@@ -303,8 +302,7 @@
   "subFinancialFields": "Financial fields",
   "subAdvancedFields": "Advanced fields",
   "subDisaggregation": "Disaggregation",
-  "subReadable": "Readable",
-  "subNoErrors": "No critical errors",
+  "subNoErrors": "No errors",
   "valueOneMonth": "One month",
   "valueMonthly": "Monthly",
   "valueOneQuarter": "One quarter",
@@ -319,5 +317,7 @@
   "categoryExcellent": "Excellent",
   "categoryVeryGood": "Very good",
   "categoryGood": "Good",
-  "categoryNeedsImprovement": "Needs improvement"
+  "categoryNeedsImprovement": "Needs improvement",
+  "subNoCriticalErrors": "No critical errors",
+  "subDownloadable": "Downloadable"
 }

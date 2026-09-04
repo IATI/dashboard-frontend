@@ -1,58 +1,104 @@
 {
-  "_comment": "Fixed methodology definition — identical for every publisher, so it is served separately from per-publisher results rather than repeated in each payload. Also the home for each component's unit, which the results payload deliberately omits.",
-
+  "_comment": "Fixed methodology definition \u2014 identical for every publisher, so it is served separately from per-publisher results rather than repeated in each payload. Also the home for each component's unit, which the results payload deliberately omits.",
   "bands": {
     "needs_improvement": 0,
     "good": 1,
     "very_good": 2,
     "excellent": 3
   },
-
   "dimensions": {
     "timeliness": {
       "_comment": "Band is a joint function of both components, not an aggregate of their individual bands: both monthly/one month => excellent; both quarterly/one quarter, or either one monthly/one month => good; otherwise needs_improvement."
     }
   },
-
   "components": {
-    "downloadable": { "unit": "boolean", "thresholds": { "good": true, "very_good": true, "excellent": true } },
-    "readable":     { "unit": "boolean", "thresholds": { "good": true, "very_good": true, "excellent": true } },
-    "no_errors":    { "unit": "boolean", "thresholds": { "good": true, "very_good": true, "excellent": true } },
-
+    "downloadable": {
+      "unit": "boolean",
+      "thresholds": {
+        "good": true,
+        "very_good": true,
+        "excellent": true
+      }
+    },
+    "no_critical_errors": {
+      "unit": "boolean",
+      "thresholds": {
+        "good": true,
+        "very_good": true,
+        "excellent": true
+      }
+    },
+    "no_errors": {
+      "unit": "boolean",
+      "thresholds": {
+        "good": true,
+        "very_good": true,
+        "excellent": true
+      }
+    },
     "timeliness": {
       "unit": "enum",
-      "thresholds": { "good": "one_quarter", "very_good": "one_month", "excellent": "one_month" }
+      "thresholds": {
+        "good": "one_quarter",
+        "very_good": "one_month",
+        "excellent": "one_month"
+      }
     },
     "frequency": {
       "unit": "enum",
-      "thresholds": { "good": "quarterly", "very_good": "monthly", "excellent": "monthly" }
+      "thresholds": {
+        "good": "quarterly",
+        "very_good": "monthly",
+        "excellent": "monthly"
+      }
     },
-
     "coverage": {
       "unit": "percent",
-      "thresholds": { "good": 40, "very_good": 60, "excellent": 80 }
+      "thresholds": {
+        "good": 40,
+        "very_good": 60,
+        "excellent": 80
+      }
     },
     "disaggregation": {
       "unit": "count",
-      "thresholds": { "good": 2, "very_good": 3, "excellent": 4 }
+      "thresholds": {
+        "good": 2,
+        "very_good": 3,
+        "excellent": 4
+      }
     },
-
     "organisation_fields": {
       "unit": "percent",
-      "thresholds": { "good": 40, "very_good": 60, "excellent": 75 }
+      "thresholds": {
+        "good": 40,
+        "very_good": 60,
+        "excellent": 75
+      }
     },
     "basic_fields": {
       "unit": "percent",
-      "thresholds": { "good": 90, "very_good": 95, "excellent": 99 }
+      "thresholds": {
+        "good": 90,
+        "very_good": 95,
+        "excellent": 99
+      }
     },
     "financial_fields": {
       "unit": "percent",
-      "thresholds": { "good": 60, "very_good": 70, "excellent": 90 }
+      "thresholds": {
+        "good": 60,
+        "very_good": 70,
+        "excellent": 90
+      }
     },
     "advanced_fields": {
-      "_comment": "No 'good' threshold — the first star is not required for this component.",
+      "_comment": "No 'good' threshold \u2014 the first star is not required for this component.",
       "unit": "percent",
-      "thresholds": { "very_good": 60, "excellent": 80 }
+      "thresholds": {
+        "very_good": 60,
+        "excellent": 80
+      }
     }
   }
 }

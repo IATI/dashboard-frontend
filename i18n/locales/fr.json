@@ -295,7 +295,6 @@
   "exploreNoOrgFile": "Pas de fichier organisation",
   "explorePublishers": "éditeurs",
   "exploreBreadcrumb": "Explorer les données",
-  "subDownloadable": "Téléchargeable",
   "subTimeliness": "Actualité",
   "subFrequency": "Fréquence",
   "subCoverage": "Couverture",
@@ -304,8 +303,7 @@
   "subFinancialFields": "Champs financiers",
   "subAdvancedFields": "Champs avancés",
   "subDisaggregation": "Désagrégation",
-  "subReadable": "Lisible",
-  "subNoErrors": "Aucune erreur critique",
+  "subNoErrors": "Aucune erreur",
   "valueOneMonth": "Un mois",
   "valueMonthly": "Mensuelle",
   "valueOneQuarter": "Un trimestre",
@@ -320,5 +318,7 @@
   "categoryExcellent": "Excellent",
   "categoryVeryGood": "Très bon",
   "categoryGood": "Bon",
-  "categoryNeedsImprovement": "À améliorer"
+  "categoryNeedsImprovement": "À améliorer",
+  "subNoCriticalErrors": "Aucune erreur critique",
+  "subDownloadable": "Téléchargeable"
 }
