@@ -1,0 +1,111 @@
+{
+  "publisher": {
+    "iati_identifier": "US-GOV-1",
+    "short_name": "usaid",
+    "name": "United States Agency for International Development (USAID)",
+    "organisation_type": "10"
+  },
+  "assessed_at": "2026-09-01T00:00:00Z",
+  "activity_count": 12480,
+  "overall": {
+    "category": "very_good"
+  },
+  "dimensions": {
+    "availability": {
+      "category": "excellent",
+      "components": {
+        "downloadable": {
+          "value": true,
+          "category": "excellent",
+          "detail": {
+            "reachable_files": 118,
+            "total_files": 118
+          }
+        },
+        "readable": {
+          "value": true,
+          "category": "excellent",
+          "detail": {
+            "readable_files": 118,
+            "total_files": 118
+          }
+        },
+        "no_errors": {
+          "value": true,
+          "category": "excellent",
+          "detail": {
+            "critical_errors": 0
+          }
+        }
+      }
+    },
+    "timeliness": {
+      "category": "excellent",
+      "components": {
+        "timeliness": {
+          "value": "one_month",
+          "category": "excellent"
+        },
+        "frequency": {
+          "value": "monthly",
+          "category": "excellent"
+        }
+      }
+    },
+    "coverage": {
+      "category": "excellent",
+      "components": {
+        "coverage": {
+          "value": 95,
+          "category": "excellent",
+          "detail": {
+            "iati_spend_usd": 66600000000,
+            "reference_spend_usd": 70100000000,
+            "reference_source": "oecd_dac_crs"
+          }
+        },
+        "disaggregation": {
+          "value": 4,
+          "category": "excellent"
+        }
+      }
+    },
+    "comprehensiveness": {
+      "category": "very_good",
+      "components": {
+        "organisation_fields": {
+          "value": 88,
+          "category": "very_good",
+          "detail": {
+            "numerator": 10982,
+            "denominator": 12480
+          }
+        },
+        "basic_fields": {
+          "value": 99,
+          "category": "excellent",
+          "detail": {
+            "numerator": 12355,
+            "denominator": 12480
+          }
+        },
+        "financial_fields": {
+          "value": 79,
+          "category": "very_good",
+          "detail": {
+            "numerator": 9859,
+            "denominator": 12480
+          }
+        },
+        "advanced_fields": {
+          "value": 58,
+          "category": "good",
+          "detail": {
+            "numerator": 7238,
+            "denominator": 12480
+          }
+        }
+      }
+    }
+  }
+}
