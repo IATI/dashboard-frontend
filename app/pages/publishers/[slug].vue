@@ -49,10 +49,8 @@ const INDICATOR_FIELDS = computed(() => [
 const CHECK_COMPONENT_ORDER = [
   'organisation_fields', 'basic_fields', 'financial_fields', 'advanced_fields',
 ]
-const allChecks = computed(() => [
-  ...tests.value,
-  ...(stats.value?.organisationTests ?? []),
-])
+// Organisation checks are the 1.x section of the same list now
+const allChecks = computed(() => tests.value)
 // NB: indicatorGroups is declared further down, after dimensionBands, since it
 // reads component bands from it.
 
