@@ -17,6 +17,7 @@ export function usePublisherList() {
     () => $fetch(`${BASE}/api/reporting-orgs/`, { query: { page_size: 9999 } }),
     {
       default: () => [],
+      server: false,
       transform: res => (res?.results ?? []).map(row => ({
         slug:           row.short_name,
         name:           row.human_readable_name,

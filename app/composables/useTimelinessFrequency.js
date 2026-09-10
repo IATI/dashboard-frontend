@@ -24,7 +24,7 @@ export function useTimelinessFrequency() {
       const { data: rows } = Papa.parse(csv, { header: true, skipEmptyLines: true })
       return adaptFrequencyRows(rows)
     },
-    { default: () => ({}) },
+    { default: () => ({}), server: false },
   )
 
   const { data: timelag } = useAsyncData(
@@ -34,7 +34,7 @@ export function useTimelinessFrequency() {
       const { data: rows } = Papa.parse(csv, { header: true, skipEmptyLines: true })
       return adaptTimelagRows(rows)
     },
-    { default: () => ({}) },
+    { default: () => ({}), server: false },
   )
 
   /** Frequency record for one publisher, by registry id (the page slug). */

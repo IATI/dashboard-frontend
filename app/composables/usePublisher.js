@@ -24,15 +24,36 @@ export function usePublisher(slug, options = {}) {
   const { public: { dashboardBase: BASE } } = useRuntimeConfig()
   const shortName = computed(() => unref(slug))
 
-  const { data, error, status } = useAsyncData(
+  // Returned as the AsyncData object so callers can `await` it: awaiting makes a
+  // fatal error thrown in the handler surface as a 404 page before first render,
+  // rather than being captured into `error` and leaving a blank page behind.
+  // Callers read `.data` (see the publisher page).
+  return useAsyncData(
     () => `publisher:${shortName.value}:${stats ? 'stats' : 'basic'}`,
-    () => $fetch(`${BASE}/api/reporting-orgs/${shortName.value}.json`, {
-      query: stats ? { show_stats: 1 } : undefined,
-    }),
-    { watch: [shortName], default: () => null, transform: raw => adaptPublisher(raw, methodology) },
-  )
+    async () => {
+      const raw = await $fetch(`${BASE}/api/reporting-orgs/${shortName.value}.json`, {
+        query: stats ? { show_stats: 1 } : undefined,
+      }).catch(() => null)
 
-  return { publisher: data, error, status }
+      if (!raw) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: `Publisher "${shortName.value}" not found`,
+          fatal: true,
+        })
+      }
+      return raw
+    },
+    {
+      watch: [shortName],
+      default: () => null,
+      transform: raw => adaptPublisher(raw, methodology),
+      // The password gate mounts the page during hydration, and useAsyncData
+      // skips fetching while hydrating when it finds no SSR payload — so the
+      // request was never made at all. Fetch on the client explicitly.
+      server: false,
+    },
+  )
 }
 
 /**
@@ -47,7 +68,7 @@ export function useCoverage(slug) {
   const { data, error, status } = useAsyncData(
     () => `coverage:${shortName.value}`,
     () => $fetch(`${COVERAGE_BASE}/${shortName.value}.json`).catch(() => null),
-    { watch: [shortName], default: () => null, transform: adaptCoverage },
+    { watch: [shortName], default: () => null, transform: adaptCoverage, server: false },
   )
 
   return { coverage: data, error, status }

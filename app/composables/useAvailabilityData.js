@@ -18,12 +18,12 @@ export function useAvailabilityData(slug) {
   const { data: downloadsRaw } = useAsyncData(
     'download-errors',
     () => $fetch(`${COVERAGE_DATA}/download_errors.json`),
-    { default: () => null },
+    { default: () => null, server: false },
   )
   const { data: validationRaw } = useAsyncData(
     'validation-errors',
     () => $fetch(`${COVERAGE_DATA}/validation_errors.json`),
-    { default: () => null },
+    { default: () => null, server: false },
   )
 
   const downloads  = computed(() => adaptDownloadErrors(downloadsRaw.value, shortName.value))
