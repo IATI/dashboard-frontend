@@ -2,160 +2,183 @@
 import methodology from '~~/sample-data/methodology.json'
 
 definePageMeta({ active: 'org' })
-const { t } = useI18n({ useScope: 'global' })
+const { t, locale } = useI18n({ useScope: 'global' })
 const route = useRoute()
 const slug = route.params.slug
 
-const orgMeta = {
-  usaid: { org: 'USAID', name: 'United States Agency for International Development (USAID)' },
-  eu:    { org: 'EU',    name: 'EU - International Partnerships' },
-}
+// Real data, keyed on the slug (the API's short_name).
+//
+// Deliberately not awaited: a top-level await makes this component suspend, and
+// the password gate mounts the page behind a v-if — together those left the page
+// rendering with no publisher data at all. The 404 is raised from a watcher.
+const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
+watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 
-const meta    = orgMeta[slug] || orgMeta.usaid
-const org     = meta.org
-const orgName = meta.name
+const { coverage }  = useCoverage(slug)
+const { frequencyFor, timelagFor } = useTimelinessFrequency()
+const { downloads, validation } = useAvailabilityData(slug)
+const { lookup: organisationTypeName } = useCodelist('OrganisationType')
 
-const orgData = {
-  usaid: {
-    overall: { category: 'very_good' }, traceability: 0.63,
-    orgIds: 42, publisherID: 'US-GOV-1', publisherType: 'Government', totalDisbursements: '66.6bn',
-    dimensions: {
-      availability: { category: 'excellent', components: {
-        downloadable:       { value: true, category: 'excellent' },
-        no_critical_errors: { value: true, category: 'excellent' },
-        no_errors:          { value: true, category: 'excellent' },
-      }},
-      timeliness: { category: 'excellent', components: {
-        timeliness: { value: 'one_month', category: 'excellent' },
-        frequency:  { value: 'monthly',   category: 'excellent' },
-      }},
-      coverage: { category: 'excellent', components: {
-        coverage:       { value: 95, category: 'excellent' },
-        disaggregation: { value: 4,  category: 'excellent' },
-      }},
-      comprehensiveness: { category: 'very_good', components: {
-        organisation_fields: { value: 88, category: 'very_good' },
-        basic_fields:        { value: 99, category: 'excellent' },
-        financial_fields:    { value: 79, category: 'very_good' },
-        advanced_fields:     { value: 58, category: 'good' },
-      }},
-    },
-    coverageRows: [
-      { y: '2023',       iati: 55.8, ref: 60.4 },
-      { y: '2024',       iati: 66.6, ref: 74.1 },
-      { y: '2025',       iati: 53.7, ref: 66.1 },
-      { y: '2026 (YTD)', iati: 5.4,  ref: 25.3, partial: true },
-    ],
-    indicatorData: [
-      { g: 'indGroupAvailability', items: [
-        { nk: 'indFilesReg',    hk: 'hintFilesReg',    p: 100, w: 'good' },
-        { nk: 'indSchemaValid', hk: 'hintSchemaValid', p: 100, w: 'good' },
-        { nk: 'indOrgFile',     hk: 'hintOrgFile',     p: 100, w: 'good' },
-        { nk: 'indTotalBudget', hk: 'hintTotalBudget', p: 0,   w: 'bad', flag: true },
-      ]},
-      { g: 'indGroupCoverage', items: [
-        { nk: 'indCov2024', hk: 'hintCov2024', p: 81, w: 'good' },
-        { nk: 'indCov2023', hk: 'hintCov2023', p: 74, w: null },
-        { nk: 'indCov2025', hk: 'hintCov2025', p: 64, w: null },
-      ]},
-      { g: 'indGroupFinancial', items: [
-        { nk: 'indCommitments',   p: 97, w: 'good' },
-        { nk: 'indDisbursements', p: 99, w: 'good' },
-        { nk: 'indCapital',       hk: 'hintCapital',   p: 42, w: 'warn' },
-        { nk: 'indDisaggTx',      hk: 'hintDisaggTx',  p: 71, w: null },
-      ]},
-      { g: 'indGroupTraceability', items: [
-        { nk: 'indOutgoing',   hk: 'hintOutgoing',   p: 12, w: 'bad', flag: true },
-        { nk: 'indOrgIDs',     hk: 'hintOrgIDs',     p: 96, w: 'good' },
-        { nk: 'indDownstream', hk: 'hintDownstream', p: 34, w: 'warn' },
-      ]},
-      { g: 'indGroupProjectInfo', items: [
-        { nk: 'indSectors',    p: 99, w: 'good' },
-        { nk: 'indRecipient',  p: 96, w: 'good' },
-        { nk: 'indGeo',        p: 48, w: 'warn' },
-        { nk: 'indDocs',       p: 88, w: 'good' },
-        { nk: 'indResults',    p: 22, w: 'bad' },
-        { nk: 'indConditions', p: 6,  w: 'bad' },
-      ]},
-    ]
-  },
-  eu: {
-    overall: { category: 'good' }, traceability: 100,
-    orgIds: 29, publisherID: 'XI-IATI-EC_INTPA', publisherType: 'Other Public Sector', totalDisbursements: '897m',
-    dimensions: {
-      availability: { category: 'good', components: {
-        downloadable:       { value: true,  category: 'excellent' },
-        no_critical_errors: { value: true,  category: 'excellent' },
-        no_errors:          { value: false, category: 'needs_improvement' },
-      }},
-      timeliness: { category: 'good', components: {
-        timeliness: { value: 'one_quarter', category: 'good' },
-        frequency:  { value: 'quarterly',   category: 'good' },
-      }},
-      coverage: { category: 'needs_improvement', components: {
-        coverage:       { value: 35, category: 'needs_improvement' },
-        disaggregation: { value: 3,  category: 'very_good' },
-      }},
-      comprehensiveness: { category: 'very_good', components: {
-        organisation_fields: { value: 91,  category: 'excellent' },
-        basic_fields:        { value: 100, category: 'excellent' },
-        financial_fields:    { value: 84,  category: 'very_good' },
-        advanced_fields:     { value: 62,  category: 'very_good' },
-      }},
-    },
-    coverageRows: [
-      { y: '2023',       iati: 55.8, ref: 60.4 },
-      { y: '2024',       iati: 66.6, ref: 74.1 },
-      { y: '2025',       iati: 53.7, ref: 66.1 },
-      { y: '2026 (YTD)', iati: 5.4,  ref: 25.3, partial: true },
-    ],
-    indicatorData: [
-      { g: 'indGroupAvailability', items: [
-        { nk: 'indFilesReg',    hk: 'hintFilesReg',    p: 100, w: 'good' },
-        { nk: 'indSchemaValid', hk: 'hintSchemaValid', p: 100, w: 'good' },
-        { nk: 'indOrgFile',     hk: 'hintOrgFile',     p: 100, w: 'good' },
-        { nk: 'indTotalBudget', hk: 'hintTotalBudget', p: 0,   w: 'bad', flag: true },
-      ]},
-      { g: 'indGroupCoverage', items: [
-        { nk: 'indCov2024', hk: 'hintCov2024', p: 35, w: 'good' },
-        { nk: 'indCov2023', hk: 'hintCov2023', p: 35, w: null },
-        { nk: 'indCov2025', hk: 'hintCov2025', p: 35, w: null },
-      ]},
-      { g: 'indGroupFinancial', items: [
-        { nk: 'indCommitments',   p: 91,  w: 'good' },
-        { nk: 'indDisbursements', p: 84,  w: 'good' },
-        { nk: 'indCapital',       hk: 'hintCapital',  p: 100, w: 'good' },
-        { nk: 'indDisaggTx',      hk: 'hintDisaggTx', p: 71,  w: null },
-      ]},
-      { g: 'indGroupTraceability', items: [
-        { nk: 'indOutgoing', hk: 'hintOutgoing', p: 0.32, w: 'bad', flag: true },
-        { nk: 'indOrgIDs',   hk: 'hintOrgIDs',  p: 29,   w: 'good' },
-      ]},
-      { g: 'indGroupComprehensiveness', items: [
-        { nk: 'indSectors',    p: 100, w: 'good' },
-        { nk: 'indRecipient',  p: 100, w: 'good' },
-        { nk: 'indGeo',        p: 58,  w: 'good' },
-        { nk: 'indDocs',       p: 64,  w: 'good' },
-        { nk: 'indResults',    p: 26,  w: 'bad' },
-        { nk: 'indConditions', p: 0,   w: 'bad' },
-      ]},
-    ]
+const identity = computed(() => publisher.value?.identity ?? null)
+const stats    = computed(() => publisher.value?.stats ?? null)
+
+const orgName = computed(() => identity.value?.name ?? '')
+const orgType = computed(() => organisationTypeName(identity.value?.organisationType))
+
+const mostRecentTransaction = computed(() => {
+  const iso = stats.value?.mostRecentTransactionDate
+  if (!iso) return null
+  return new Date(iso).toLocaleDateString(locale.value, {
+    day: 'numeric', month: 'short', year: 'numeric',
+  })
+})
+
+// Activity-level checks. BTable handles sorting; each group opens best-first.
+const tests = computed(() => stats.value?.tests ?? [])
+const testsSortBy = ref([{ key: 'value', order: 'desc' }])
+const expandedIndicators = ref([])
+
+const INDICATOR_FIELDS = computed(() => [
+  { key: 'expand',    label: '',                   thStyle: { width: '34px' } },
+  { key: 'indicator', label: t('orgColIndicator'), sortable: true },
+  { key: 'value',     label: t('orgColScore'),     sortable: true, thStyle: { width: '140px' } },
+])
+
+// One row per indicator (averaging its tests), grouped by the comprehensiveness
+// component those indicators contribute to.
+const CHECK_COMPONENT_ORDER = [
+  'organisation_fields', 'basic_fields', 'financial_fields', 'advanced_fields',
+]
+const allChecks = computed(() => [
+  ...tests.value,
+  ...(stats.value?.organisationTests ?? []),
+])
+// NB: indicatorGroups is declared further down, after dimensionBands, since it
+// reads component bands from it.
+
+// Availability at a glance: how many datasets could not be fetched, and how many
+// documents the Validator flagged. null means "cannot say" (stale or unassessed)
+// rather than zero — the panel renders those as an em dash.
+const availabilityStats = computed(() => {
+  const d = downloads.value
+  const v = validation.value
+  const rows = []
+
+  // Every bar is a full-width split: green for the share that is fine, then the
+  // problem share in red/amber. So a clean measure reads as a solid green bar and
+  // a bad one as a solid coloured one, rather than an empty track either way.
+  const measure = ({ key, label, affected, total, variant }) => ({
+    key, label, variant, affected, total,
+    ok: affected === 0,
+    value: affected === 0 ? t('availNone') : t('availNFiles', { n: affected.toLocaleString() }),
+    okPct:       total ? Math.round(((total - affected) / total) * 100) : null,
+    affectedPct: total ? Math.round((affected / total) * 100) : null,
+    note: total ? t('availOfChecked', { n: total.toLocaleString() }) : null,
+  })
+
+  if (d && !d.stale) {
+    // The registry's dataset_count disagrees with what the bulk service checks
+    // (UNFPA: 124 registered, 130 failures). The Validator's document count is
+    // the consistent denominator — its `undownloadable` matches these failures.
+    const total = v?.documents ?? identity.value?.datasetCount ?? null
+    rows.push(measure({
+      key: 'failed', label: t('availDownloadErrors'),
+      affected: d.errors.length, total, variant: 'bad',
+    }))
   }
+  if (v?.documentsAssessed) {
+    rows.push(measure({ key: 'critical', label: t('availCritical'),
+      affected: v.documentsWithCritical, total: v.documentsAssessed, variant: 'bad' }))
+    rows.push(measure({ key: 'errors', label: t('availErrors'),
+      affected: v.documentsWithError, total: v.documentsAssessed, variant: 'bad' }))
+  }
+  return rows
+})
+
+// Timeliness: how often files are updated, and how current the data in them is.
+// The two month series measure different things — updates vs transactions
+// reported — so both are shown rather than treating one as a proxy.
+const timelinessPanel = computed(() => {
+  const freq = frequencyFor(slug)
+  const lag  = timelagFor(slug)
+  if (!freq && !lag && !stats.value) return null
+
+  const updates = Object.entries(freq?.updatesByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
+  const txns    = Object.entries(lag?.transactionsByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
+  const peak    = Math.max(1, ...txns.map(([, n]) => n))
+
+  return {
+    frequency: freq?.value ? t(labelKey('value', freq.value)) : freq?.label ?? null,
+    timeLag:   stats.value?.timelagValue
+      ? t(labelKey('value', stats.value.timelagValue))
+      : lag?.label ?? null,
+    updates:      updates.map(([month, n]) => ({ month, active: n > 0, count: n })),
+    monthsActive: updates.filter(([, n]) => n > 0).length,
+    txns:         txns.map(([month, n]) => ({ month, count: n, pct: Math.round((n / peak) * 100) })),
+    monthsWithData: txns.filter(([, n]) => n > 0).length,
+  }
+})
+
+// Shape of the published dataset, for the panel beside the spending chart.
+function fmtBytes(n) {
+  if (!n) return null
+  const units = [[1e9, 'GB'], [1e6, 'MB'], [1e3, 'KB']]
+  for (const [size, suffix] of units) {
+    if (n >= size) return `${(n / size).toFixed(n / size >= 10 ? 0 : 1)} ${suffix}`
+  }
+  return `${n} B`
 }
 
-const d = computed(() => orgData[slug] || orgData.usaid)
+const datasetFacts = computed(() => {
+  const st = stats.value
+  if (!st) return []
+  const levels = st.hierarchyLevels ?? []
+  const rows = []
 
-const overall           = computed(() => d.value.overall)
-const publisherID       = computed(() => d.value.publisherID)
-const totalDisbursements = computed(() => d.value.totalDisbursements)
-const coverageRows      = computed(() => d.value.coverageRows)
+  const add = (label, value) => { if (value) rows.push({ label, value }) }
+  add(t('orgDsActivities'),   st.activityCount?.toLocaleString())
+  add(t('orgDsTransactions'), st.transactionTotal?.toLocaleString())
+  add(t('orgDsFiles'),        st.datasetCount?.toLocaleString())
+  add(t('orgDsHierarchy'),    levels.length
+    ? (levels.length === 1 ? t('orgDsOneLevel') : t('orgDsLevels', { n: levels.length }))
+    : null)
+  add(t('orgDsDateRange'), st.earliestDate && st.latestDate
+    ? `${st.earliestDate.slice(0, 4)} – ${st.latestDate.slice(0, 4)}`
+    : null)
+  add(t('orgDsVersion'), st.versions?.join(', '))
+  add(t('orgDsSize'),    fmtBytes(st.fileSizeBytes))
+  return rows
+})
 
-const indicators = computed(() =>
-  d.value.indicatorData.map(group => ({
-    g: t(group.g),
-    items: group.items.map(it => ({ ...it, n: t(it.nk), h: it.hk ? t(it.hk) : '' }))
-  }))
-)
+// Compact USD, e.g. 37461372036 -> "$37.5bn"
+function fmtUsd(value) {
+  if (value == null) return '—'
+  const units = [[1e12, 'tn'], [1e9, 'bn'], [1e6, 'm'], [1e3, 'k']]
+  for (const [size, suffix] of units) {
+    if (Math.abs(value) >= size) return `$${(value / size).toFixed(1)}${suffix}`
+  }
+  return `$${Math.round(value)}`
+}
+
+const coverageDetails = ref(false)
+
+const coverageGenerated = computed(() => {
+  const iso = coverage.value?.generatedAt
+  if (!iso) return null
+  return new Date(iso).toLocaleDateString(locale.value, {
+    day: 'numeric', month: 'short', year: 'numeric',
+  })
+})
+
+function testVariant(pct) {
+  if (pct >= 80) return 'success'
+  if (pct >= 40) return 'warning'
+  return 'danger'
+}
+
+const overall           = computed(() => assessed.value.overall ?? null)
+const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
+
 
 // Dimensions are keyed by id in the API; display order is a presentation concern
 const DIMENSION_ORDER = ['availability', 'timeliness', 'coverage', 'comprehensiveness']
@@ -188,9 +211,61 @@ function starTooltips(id) {
   })
 }
 
+// Placeholder assessment, with the components we can derive from real data laid
+// over the top. When the assessment API lands this merge goes away and its
+// payload is used directly.
+const assessed = computed(() => {
+  const fragment = toAssessmentFragment(
+    {
+      publisher: publisher.value,
+      coverage:  coverage.value,
+      frequency: frequencyFor(slug),
+      downloads: downloads.value,
+      validation: validation.value,
+    },
+    methodology,
+  )
+  return {
+    overall: fragment?.overall?.category ? fragment.overall : null,
+    ...(fragment?.dimensions ?? {}),
+  }
+})
+
+const bandFor = id => dimensionBands.value?.[id]?.category ?? null
+
+// A dimension that earns no stars gets a tinted card, so it is visible while
+// scrolling rather than only on reading the stars.
+const NO_STAR_BANDS = new Set(['needs_improvement'])
+const cardTone = id => (NO_STAR_BANDS.has(bandFor(id)) ? 'iati-card--flag' : null)
+
+// The methodology sets thresholds per component, not per dimension, so a
+// dimension's stars name the band each one represents instead of a requirement.
+const dimensionStarTooltips = () =>
+  STAR_BANDS.map(band => t(labelKey('category', band)))
+
+const componentBandFor = (dimensionId, componentId) =>
+  dimensionBands.value?.[dimensionId]?.components?.[componentId]?.category ?? null
+
+const dimensionBands = computed(() =>
+  Object.fromEntries(Object.entries(assessed.value).filter(([k]) => k !== 'overall')),
+)
+
+// One row per indicator (averaging its tests), grouped by the comprehensiveness
+// component those indicators contribute to. Declared here rather than beside the
+// other check helpers because it reads component bands from dimensionBands.
+const indicatorGroups = computed(() => {
+  const rows = groupTestsByIndicator(allChecks.value)
+  return CHECK_COMPONENT_ORDER.map(id => ({
+    key: id,
+    label: t(labelKey('sub', id)),
+    category: componentBandFor('comprehensiveness', id),
+    items: rows.filter(row => row.component === id),
+  }))
+})
+
 const dimensions = computed(() =>
-  DIMENSION_ORDER.map(id => {
-    const dim = d.value.dimensions[id]
+  DIMENSION_ORDER.filter(id => dimensionBands.value[id]).map(id => {
+    const dim = dimensionBands.value[id]
     return {
       key:      id,
       label:    t(labelKey('dim', id)),
@@ -216,9 +291,14 @@ const dimensions = computed(() =>
     <TitleBar :eyebrow="t('orgEyebrow')" :title="orgName">
       <template #meta>
         <span><strong>{{ t('orgReportingID') }}</strong> {{ publisherID }}</span>
-        <span><strong>{{ t('orgType') }}</strong> {{ d.publisherType }}</span>
-        <span><strong>{{ t('orgLastUpdated') }}</strong> 12 Apr 2026</span>
-        <span><strong>{{ t('orgDisbursed') }}</strong> ${{ totalDisbursements }}</span>
+        <span v-if="orgType"><strong>{{ t('orgType') }}</strong> {{ orgType }}</span>
+        <span v-if="mostRecentTransaction">
+          <strong>{{ t('orgMostRecentTransaction') }}</strong> {{ mostRecentTransaction }}
+        </span>
+        <span v-if="coverage?.iatiSpendingUsd">
+          <strong>{{ t('orgIatiSpendYear', { year: coverage.referenceYear }) }}</strong>
+          {{ fmtUsd(coverage.iatiSpendingUsd) }}
+        </span>
       </template>
     </TitleBar>
 
@@ -228,7 +308,7 @@ const dimensions = computed(() =>
         <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">
           <div class="hero-metrics">
             <div class="hero-metrics__overall">
-              <div class="hero-metrics__badge">
+              <div v-if="overall" class="hero-metrics__badge">
                 <Stars :category="overall.category" size="xl" />
                 <p class="hero-metrics__category">{{ t(labelKey('category', overall.category)) }}</p>
               </div>
@@ -244,39 +324,29 @@ const dimensions = computed(() =>
           </div>
           </Card>
         </BCol>
-        <!--
-        <BCol cols="12" md="3"><div class="col">
-          <OrganisationCallout variant="good" icon="✓" :title="t('orgCalloutAvailTitle')">
-            <p>{{ t('orgCalloutAvailText') }} <a href="#">{{ t('orgViewDetails') }}</a></p>
-          </OrganisationCallout>
-          <OrganisationCallout :title="t('orgCalloutActionTitle')">
-            <template v-if="slug === 'eu'">
-              <i18n-t keypath="orgEUAction" tag="p">
-                <template #emphasis><strong>{{ t('orgEUActionBold') }}</strong></template>
-              </i18n-t>
-            </template>
-            <template v-else>
-              <i18n-t keypath="orgUSAIDAction" tag="p">
-                <template #emphasis><strong>{{ t('orgUSAIDActionBold') }}</strong></template>
-              </i18n-t>
-            </template>
-          </OrganisationCallout>
-          <OrganisationCallout variant="info" icon="i" :title="t('orgCalloutPeersTitle')">
-            <i18n-t keypath="orgCalloutPeersText" tag="p">
-              <template #emphasis><strong>{{ t('orgCalloutPeersTextBold') }}</strong></template>
-            </i18n-t>
-            <a href="#">{{ t('orgOpenGroup') }}</a>
-          </OrganisationCallout>
-        </div></BCol>
-        -->
       </BRow>
 
-      <Card class="mt" :kicker="t('orgSummaryTitle')">
-        <OrgFinancialChart :org-id="d.publisherID" />
-      </Card>
+      <BRow gutter-x="3" gutter-y="3" class="mt">
+        <BCol cols="12" lg="8">
+          <Card :kicker="t('orgSummaryTitle')">
+            <OrgFinancialChart v-if="publisherID" :org-id="publisherID" />
+          </Card>
+        </BCol>
+        <BCol v-if="datasetFacts.length" cols="12" lg="4">
+          <Card :kicker="t('orgDatasetTitle')">
+            <dl class="dataset-facts">
+              <template v-for="fact in datasetFacts" :key="fact.label">
+                <dt>{{ fact.label }}</dt>
+                <dd>{{ fact.value }}</dd>
+              </template>
+            </dl>
+          </Card>
+        </BCol>
+      </BRow>
 
       <!-- Prioritised issues -->
-      <Card class="mt" :kicker="t('orgIssuesTitle')">
+      <!-- Prioritised issues — hidden while it is still placeholder data -->
+      <Card v-if="false" class="mt" :kicker="t('orgIssuesTitle')">
         <div class="iati-table">
         <table>
           <thead>
@@ -329,39 +399,302 @@ const dimensions = computed(() =>
         </div>
       </Card>
 
-      <!-- Coverage chart + all indicators -->
-      <BRow gutter-x="3" gutter-y="3" class="mt">
-        <BCol cols="12" md="6"><Card :kicker="t('orgCoverageTitle')" :title="t('orgIATIvsCRS', { org })">
-          <div class="mt">
-            <div v-for="r in coverageRows" :key="r.y" class="mb-md">
-              <div class="spread spread--sm">
-                <strong>{{ r.y }}</strong>
-                <span>${{ r.iati.toFixed(1) }} bn / ${{ r.ref.toFixed(1) }} bn ({{ Math.round(100 * r.iati / r.ref) }}%)</span>
-              </div>
-              <div class="bar bar--lg bar--track">
-                <span :style="{ width: Math.min(100, 100 * r.iati / r.ref) + '%', background: r.partial ? 'var(--teal-50)' : 'var(--green-50)' }" />
-              </div>
+      <!-- Coverage vs reference -->
+      <!-- Availability — headline counts only; the detail lives in the source files -->
+      <Card v-if="availabilityStats.length" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')">
+        <template v-if="bandFor('availability')" #kicker-actions>
+          <Stars :category="bandFor('availability')" size="md" :tooltips="dimensionStarTooltips()" />
+        </template>
+        <div class="measure-grid measure-grid--3 mt-sm">
+          <div v-for="stat in availabilityStats" :key="stat.key" class="measure">
+            <div class="measure__head">
+              <span class="measure__label">{{ stat.label }}</span>
+              <span class="measure__value" :class="stat.ok ? 'is-ok' : `is-${stat.variant}`">
+                {{ stat.value }}
+              </span>
             </div>
+            <div v-if="stat.okPct !== null" class="avail-bar">
+              <!-- BTooltip renders its target unwrapped, so the flex sizing has to go
+                   on the target itself — on the BTooltip it lands on the popover. -->
+              <BTooltip
+                v-if="stat.okPct > 0"
+                :title="t('availTipOk', { n: (stat.total - stat.affected).toLocaleString(), total: stat.total.toLocaleString() })"
+                placement="top" noninteractive
+              >
+                <template #target>
+                  <BProgress
+                    :max="100" height="1rem" class="avail-bar__seg"
+                    :style="{ flex: `${stat.okPct} 0 0%` }"
+                  >
+                    <BProgressBar :value="100" variant="success" />
+                  </BProgress>
+                </template>
+              </BTooltip>
+              <BTooltip
+                v-if="stat.affectedPct > 0"
+                :title="t('availTipAffected', { n: stat.affected.toLocaleString(), total: stat.total.toLocaleString() })"
+                placement="top" noninteractive
+              >
+                <template #target>
+                  <BProgress
+                    :max="100" height="1rem" class="avail-bar__seg"
+                    :style="{ flex: `${stat.affectedPct} 0 0%` }"
+                  >
+                    <BProgressBar :value="100" :variant="stat.variant === 'warn' ? 'warning' : 'danger'" />
+                  </BProgress>
+                </template>
+              </BTooltip>
+            </div>
+            <p v-if="stat.note" class="measure__note">{{ stat.note }}</p>
           </div>
-          <p class="coverage-note">{{ t('orgCoverageNote') }}</p>
-        </Card></BCol>
+        </div>
+      </Card>
 
-        <BCol cols="12" md="6"><Card :kicker="t('orgAllIndicators')" :title="t('orgByGroup')">
-          <div class="mt-sm">
-            <div v-for="group in indicators" :key="group.g" class="mb-md">
-              <div class="indicator-group-heading">{{ group.g }}</div>
-              <Indicator
-                v-for="(it, i) in group.items"
-                :key="i"
-                :name="it.n"
-                :hint="it.h || ''"
-                :pct="it.p"
-                :variant="it.w"
-              />
+      <!-- Timeliness — update cadence and how current the data is -->
+      <Card v-if="timelinessPanel" :class="['mt', cardTone('timeliness')]" :kicker="t('dimTimeliness')">
+        <template v-if="bandFor('timeliness')" #kicker-actions>
+          <Stars :category="bandFor('timeliness')" size="md" :tooltips="dimensionStarTooltips()" />
+        </template>
+
+        <div class="measure-grid mt-sm">
+          <!-- Each measure sits with the evidence behind it: frequency is how
+               often files change, time lag is how current the data in them is. -->
+          <div v-if="timelinessPanel.updates.length" class="measure">
+            <div class="measure__head">
+              <span class="measure__label">{{ t('orgTlFrequency') }}</span>
+              <span class="measure__value">{{ timelinessPanel.frequency || '—' }}</span>
             </div>
+            <div class="month-strip__cells">
+              <BTooltip
+                v-for="m in timelinessPanel.updates" :key="m.month"
+                :title="`${m.month} — ${t('orgTlUpdatesCount', { n: m.count })}`"
+                placement="top" noninteractive
+              >
+                <template #target>
+                  <span class="month-strip__cell" :class="{ 'is-active': m.active }" />
+                </template>
+              </BTooltip>
+            </div>
+            <p class="measure__note">
+              {{ t('orgTlUpdates') }} · {{ t('orgTlOfMonths', { n: timelinessPanel.monthsActive }) }}
+            </p>
           </div>
-        </Card></BCol>
-      </BRow>
+
+          <div v-if="timelinessPanel.txns.length" class="measure">
+            <div class="measure__head">
+              <span class="measure__label">{{ t('orgTlTimeLag') }}</span>
+              <span class="measure__value">{{ timelinessPanel.timeLag || '—' }}</span>
+            </div>
+            <div class="month-strip__bars">
+              <BTooltip
+                v-for="m in timelinessPanel.txns" :key="m.month"
+                :title="`${m.month} — ${t('orgTlTxnsCount', { n: m.count.toLocaleString() })}`"
+                placement="top" noninteractive
+                class="month-strip__bar-wrap"
+              >
+                <template #target>
+                  <span class="month-strip__bar" :style="{ height: Math.max(3, m.pct) + '%' }" />
+                </template>
+              </BTooltip>
+            </div>
+            <p class="measure__note">
+              {{ t('orgTlTransactions') }} · {{ t('orgTlOfMonths', { n: timelinessPanel.monthsWithData }) }}
+            </p>
+          </div>
+        </div>
+
+        <p v-if="mostRecentTransaction" class="coverage-note">
+          {{ t('orgMostRecentTransaction') }}: {{ mostRecentTransaction }}
+        </p>
+
+      </Card>
+
+      <!-- Coverage vs reference — real figures from the dashboard-coverage dataset -->
+      <Card v-if="coverage" :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')">
+        <template v-if="bandFor('coverage')" #kicker-actions>
+          <Stars :category="bandFor('coverage')" size="md" :tooltips="dimensionStarTooltips()" />
+        </template>
+        <div class="measure-grid mt-sm">
+          <!-- Coverage: IATI spending against the reference total -->
+          <div class="measure">
+            <div class="measure__head">
+              <span class="measure__label">{{ t('subCoverage') }}</span>
+              <span class="measure__value">{{ coverage.coveragePercent }}%</span>
+            </div>
+            <Bar :pct="coverage.coveragePercent" variant="good" label="" height="1rem" />
+            <p class="measure__note measure__note--split">
+              <span>
+                {{ t('orgCovOfReference', {
+                  spend: fmtUsd(coverage.iatiSpendingUsd),
+                  reference: fmtUsd(coverage.referenceValueUsd),
+                }) }}
+                · {{ t(labelKey('coverageBasis', coverage.coverageBasis)) }}
+              </span>
+              <button type="button" class="link-button" @click="coverageDetails = true">
+                {{ t('orgCovMoreDetails') }}
+              </button>
+            </p>
+          </div>
+
+          <!-- Disaggregation: quarters actually reported in, by year -->
+          <div v-if="coverage.quartersByYear" class="measure">
+            <div class="measure__head">
+              <span class="measure__label">{{ t('subDisaggregation') }}</span>
+              <span class="measure__value">
+                {{ t('orgCovQuartersValue', { n: coverage.quartersPerYear }) }}
+              </span>
+            </div>
+            <div class="quarter-grid">
+              <div v-for="(n, year) in coverage.quartersByYear" :key="year" class="quarter-grid__year">
+                <span class="quarter-grid__cells">
+                  <BTooltip
+                    v-for="q in 4" :key="q"
+                    :title="q <= n
+                      ? t('covQuarterReported', { quarter: `Q${q}`, year })
+                      : t('covQuarterNone', { quarter: `Q${q}`, year })"
+                    placement="top" noninteractive
+                  >
+                    <template #target>
+                      <span class="quarter-grid__cell" :class="{ 'is-active': q <= n }" />
+                    </template>
+                  </BTooltip>
+                </span>
+                <span class="quarter-grid__label">{{ year }}</span>
+              </div>
+            </div>
+            <p class="measure__note">
+              {{ t('orgCovQuartersNote', {
+                n: coverage.totalQuarters,
+                total: (coverage.yearsReporting || 0) * 4,
+                years: t('orgCovYearsCount', coverage.yearsReporting || 0),
+              }) }}
+            </p>
+          </div>
+        </div>
+
+
+        <!-- BModal teleports to <body>, outside .iati-design-system--enabled, so
+             neither the design system's styles nor our overrides reach it. Put
+             the wrapper class on the modal itself rather than restyling it. -->
+        <BModal
+          v-model="coverageDetails"
+          :title="t('orgCovDetailsTitle')"
+          modal-class="iati-design-system--enabled"
+        >
+          <template #footer>
+            <button type="button" class="iati-button" @click="coverageDetails = false">
+              {{ t('orgCovClose') }}
+            </button>
+          </template>
+          <dl class="coverage-meta">
+            <div class="coverage-meta__entity">
+              <dt>{{ t('orgCovEntity') }}</dt>
+              <dd>{{ coverage.referenceEntity }}</dd>
+            </div>
+            <div class="coverage-meta__row">
+              <div>
+                <dt>{{ t('orgCovSource') }}</dt>
+                <dd>{{ t(labelKey('coverageSource', coverage.referenceSource)) }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('orgCovYear') }}</dt>
+                <dd>{{ coverage.referenceYear }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('orgCovCurrency') }}</dt>
+                <dd>{{ coverage.referenceCurrency }}</dd>
+              </div>
+            </div>
+            <div class="coverage-meta__row">
+              <div>
+                <dt>{{ t('orgCovIatiLabel') }}</dt>
+                <dd>{{ fmtUsd(coverage.iatiSpendingUsd) }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('orgCovRefLabel') }}</dt>
+                <dd>{{ fmtUsd(coverage.referenceValueUsd) }}</dd>
+              </div>
+            </div>
+          </dl>
+
+          <p v-if="coverage.publishersSharingReference > 1" class="coverage-note mt-sm">
+            {{ t('orgCovShared', { n: coverage.publishersSharingReference }) }}
+          </p>
+          <p v-if="coverageGenerated" class="coverage-note">
+            {{ t('orgCovGenerated', { date: coverageGenerated }) }}
+          </p>
+        </BModal>
+
+      </Card>
+      <!-- Activity checks, straight from stats.gherkin_tests_current -->
+      <Card v-if="tests.length" :class="['mt', cardTone('comprehensiveness')]" :kicker="t('dimComprehensiveness')">
+        <template v-if="bandFor('comprehensiveness')" #kicker-actions>
+          <Stars :category="bandFor('comprehensiveness')" size="md" :tooltips="dimensionStarTooltips()" />
+        </template>
+        <div class="comprehensiveness-grid mt-sm">
+        <div v-for="group in indicatorGroups" :key="group.key" class="comprehensiveness-grid__panel">
+          <div class="indicator-group-heading">
+            <span>{{ group.label }}</span>
+            <Stars
+              v-if="group.category"
+              :category="group.category" size="md"
+              :tooltips="starTooltips(group.key)"
+            />
+          </div>
+          <p v-if="!group.items.length" class="coverage-note">{{ t('orgNoTests') }}</p>
+          <div v-else class="iati-table iati-table--compact">
+            <BTable
+              small
+              :items="group.items"
+              :fields="INDICATOR_FIELDS"
+              v-model:sort-by="testsSortBy"
+              v-model:expanded-items="expandedIndicators"
+              primary-key="id"
+            >
+              <template #cell(expand)="{ toggleExpansion, expansionShowing }">
+                <button
+                  type="button" class="expander"
+                  :aria-expanded="expansionShowing"
+                  :aria-label="t('orgShowTests')"
+                  @click="toggleExpansion()"
+                >{{ expansionShowing ? '▾' : '▸' }}</button>
+              </template>
+              <template #cell(indicator)="{ item }">
+                <span class="org">{{ item.indicator }}</span>
+              </template>
+              <template #cell(value)="{ item }">
+                <div class="check-score">
+                  <BProgress class="check-score__bar" :max="100" height=".9rem">
+                    <BProgressBar :value="item.value" :variant="testVariant(item.value)" />
+                  </BProgress>
+                  <span class="check-score__pct">{{ item.value }}%</span>
+                </div>
+              </template>
+              <template #row-expansion="{ item }">
+                <ul class="test-list">
+                  <li v-for="test in item.tests" :key="test.id" class="test-list__item">
+                    <span class="test-list__name">{{ test.name }}</span>
+                    <div class="test-list__score">
+                      <span v-if="test.boolean" class="test-list__flag" :class="test.passed ? 'is-pass' : 'is-fail'">
+                        {{ test.passed ? '✓' : '✗' }}
+                      </span>
+                      <div v-else class="check-score">
+                        <BProgress class="check-score__bar" :max="100" height=".7rem">
+                          <BProgressBar :value="test.value" :variant="testVariant(test.value)" />
+                        </BProgress>
+                        <span class="check-score__pct">{{ test.value }}%</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </template>
+            </BTable>
+          </div>
+        </div>
+        </div>
+        <p class="coverage-note">{{ t('orgTestsNote', { n: tests[0]?.denominator?.toLocaleString() }) }}</p>
+      </Card>
+
     </main>
   </div>
 </template>

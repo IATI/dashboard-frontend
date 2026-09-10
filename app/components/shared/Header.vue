@@ -51,7 +51,7 @@ const { t, locale, setLocale } = useI18n({ useScope: 'global' })
               <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'overall' }" to="/">{{ t('navOverview') }}</NuxtLink></li>
               <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'groups' }" to="/groups/10">{{ t('navGroups') }}</NuxtLink></li>
               <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'country' }" to="/countries/KE">{{ t('navCountry') }}</NuxtLink></li>
-              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'org' }" to="/publishers/usaid">{{ t('navOrganisations') }}</NuxtLink></li>
+              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'org' }" to="/publishers">{{ t('navOrganisations') }}</NuxtLink></li>
               <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'exploring' }" to="/exploring-data">{{ t('navExploring') }}</NuxtLink></li>
               <li><a class="iati-tool-nav-link" href="#">{{ t('navAbout') }}</a></li>
             </ul>

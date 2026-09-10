@@ -11,6 +11,35 @@
       "_comment": "Band is a joint function of both components, not an aggregate of their individual bands: both monthly/one month => excellent; both quarterly/one quarter, or either one monthly/one month => good; otherwise needs_improvement."
     }
   },
+  "check_groups": {
+    "_comment": "Maps each activity check to a comprehensiveness component, keyed on the check's group prefix (the part before the colon in gherkin_tests_current). Keying on the prefix rather than the full check name keeps this stable when individual checks are reworded, and covers all 44 current checks.",
+    "Actual dates": "basic_fields",
+    "Aid type": "basic_fields",
+    "Budget": "financial_fields",
+    "Budget Alignment": "advanced_fields",
+    "Budget document": "advanced_fields",
+    "Commitment": "financial_fields",
+    "Conditions": "advanced_fields",
+    "Contact details": "advanced_fields",
+    "Current status": "basic_fields",
+    "Description": "basic_fields",
+    "Disbursements and expenditures": "financial_fields",
+    "Finance type": "basic_fields",
+    "Flow type": "basic_fields",
+    "Impact appraisal": "advanced_fields",
+    "Location": "advanced_fields",
+    "Location (with activity-scope exclusion)": "advanced_fields",
+    "Networked Data - Implementors": "advanced_fields",
+    "Objectives": "basic_fields",
+    "Planned dates": "basic_fields",
+    "Procurement": "advanced_fields",
+    "Results": "advanced_fields",
+    "Reviews and evaluations": "advanced_fields",
+    "Sector": "basic_fields",
+    "Tied aid status": "basic_fields",
+    "Title": "basic_fields",
+    "Unique ID": "basic_fields"
+  },
   "components": {
     "downloadable": {
       "unit": "boolean",

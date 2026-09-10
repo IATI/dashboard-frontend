@@ -34,6 +34,10 @@ jobs:
         env:
           NUXT_APP_BASE_URL: /dashboard-frontend/
           NUXT_PUBLIC_DASHBOARD_BASE: https://black-math-8c4c.dashboard-cors-proxy.workers.dev
+          # Keeps the password out of the repo. Note it is still inlined into the
+          # published bundle — NUXT_PUBLIC_* is public by design — so this is a
+          # deterrent, not access control.
+          NUXT_PUBLIC_SITE_PASSWORD: ${{ secrets.NUXT_PUBLIC_SITE_PASSWORD }}
 
       - uses: actions/configure-pages@v6.0.0
 
