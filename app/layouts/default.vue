@@ -1,10 +1,20 @@
 <script setup>
 const route = useRoute()
 const bannerVisible = ref(true)
+
+// Gate the whole site behind a shared password. Rendering the gate INSTEAD of the
+// page means the prerendered HTML carries no dashboard content either.
+const { unlocked, required, restore } = useSiteLock()
+onMounted(restore)
 </script>
 
 <template>
   <div class="iati-design-system--enabled">
+    <ClientOnly>
+      <SiteGate v-if="required && !unlocked" />
+    </ClientOnly>
+
+    <template v-if="!required || unlocked">
     <BAlert
       v-model="bannerVisible"
       variant="primary"
@@ -19,5 +29,6 @@ const bannerVisible = ref(true)
     <Header :active="route.meta.active ?? ''" />
     <slot />
     <Footer />
+    </template>
   </div>
 </template>

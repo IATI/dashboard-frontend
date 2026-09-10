@@ -1,0 +1,13 @@
+# This dashboard is a provisional preview and should not be indexed.
+#
+# NOTE: on a GitHub Pages project site this file is served from
+# /dashboard-frontend/robots.txt, and crawlers only honour robots.txt at the
+# DOMAIN ROOT (iati.github.io/robots.txt) — which this repo does not control.
+# So the <meta name="robots" content="noindex"> tag in nuxt.config.ts is what
+# actually keeps this out of search results. This file is here for correctness
+# and for any deployment served from its own domain.
+#
+# Remove this file and the meta tag when the dashboard goes public.
+
+User-agent: *
+Disallow: /
