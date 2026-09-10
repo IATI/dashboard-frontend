@@ -123,67 +123,65 @@ function adaptIdentity(raw) {
 }
 
 /**
- * The activity-level Gherkin checks, flattened and tagged with the
- * comprehensiveness component each belongs to (per methodology check_groups).
- * `gherkin_current` is the denominator for every test under `iati-activity`.
+ * The Gherkin checks, from stats.gherkin_tests_current.
+ *
+ * Shape is { "<group id>": { "<Test name>": { None, True, False } } }, where the
+ * group id's leading section number is the methodology component it belongs to:
+ * 1.x organisation, 2.x basic, 3.x financial, 4.x advanced. That numbering is
+ * intrinsic to the ids, so no separate mapping table is needed.
+ *
+ * `None` counts activities the check does not apply to, so the denominator is
+ * True + False — scoring against the full activity count would penalise a
+ * publisher for checks that were never relevant to its data.
  */
-function adaptTests(stats, checkGroups = {}) {
-  const denominator = stats.gherkin_current ?? 0
-  const raw = stats.gherkin_tests_current?.['iati-activity'] ?? {}
-
-  return Object.entries(raw)
-    .map(([label, numerator]) => {
-      // Labels arrive as "Group: Test name"
-      const separator = label.indexOf(': ')
-      const group = separator === -1 ? null : label.slice(0, separator)
-      const name  = separator === -1 ? label : label.slice(separator + 2)
-      return {
-        id: label,
-        group,
-        name,
-        component: checkGroups[group] ?? null,
-        numerator,
-        denominator,
-        value: denominator ? Math.round((100 * numerator) / denominator) : null,
-      }
-    })
-    .sort((a, b) => (a.group ?? '').localeCompare(b.group ?? '') || a.name.localeCompare(b.name))
+const COMPONENT_BY_SECTION = {
+  1: 'organisation_fields',
+  2: 'basic_fields',
+  3: 'financial_fields',
+  4: 'advanced_fields',
 }
 
-/**
- * The organisation-file checks, from stats.gherkin_tests['iati-organisation'].
- *
- * These are pass/fail rather than proportions: the count is the number of the
- * publisher's organisation records passing, so it passes only when every one
- * does. `value` is still 0/100 so these average alongside the activity checks.
- */
-function adaptOrganisationTests(stats) {
-  const denominator = stats.organisations ?? 0
-  const raw = stats.gherkin_tests?.['iati-organisation'] ?? {}
+/** '4.8.7_performance_and_evaluation' -> 'Performance and evaluation' */
+function humaniseGroupId(groupId) {
+  const words = groupId.replace(/^[\d.]+_/, '').replace(/_/g, ' ')
+  return words.charAt(0).toUpperCase() + words.slice(1)
+}
 
-  return Object.entries(raw)
-    .map(([label, numerator]) => {
-      const separator = label.indexOf(': ')
-      const group = separator === -1 ? null : label.slice(0, separator)
-      const name  = separator === -1 ? label : label.slice(separator + 2)
-      const passed = denominator > 0 && numerator >= denominator
-      return {
-        id: label,
+function adaptTests(stats) {
+  const groups = stats.gherkin_tests_current ?? {}
+  const rows = []
+
+  for (const [groupId, tests] of Object.entries(groups)) {
+    // Not a check — it reports how many activities count as current
+    if (groupId === 'current_data') continue
+
+    const section = Number(groupId.split('.')[0])
+    const component = COMPONENT_BY_SECTION[section] ?? null
+    const group = humaniseGroupId(groupId)
+
+    for (const [name, counts] of Object.entries(tests ?? {})) {
+      const passed = counts?.True ?? 0
+      const failed = counts?.False ?? 0
+      const denominator = passed + failed
+      rows.push({
+        id: `${groupId}::${name}`,
+        groupId,
         group,
         name,
-        component: 'organisation_fields',
-        boolean: true,
-        passed,
-        numerator,
+        component,
+        notApplicable: counts?.None ?? 0,
+        numerator: passed,
         denominator,
-        value: passed ? 100 : 0,
-      }
-    })
-    .sort((a, b) => (a.group ?? '').localeCompare(b.group ?? '') || a.name.localeCompare(b.name))
+        value: denominator ? Math.round((100 * passed) / denominator) : null,
+      })
+    }
+  }
+
+  return rows.sort((a, b) => a.groupId.localeCompare(b.groupId) || a.name.localeCompare(b.name))
 }
 
 /** The parts of `stats` we actually use, renamed and typed consistently. */
-function adaptStats(stats, checkGroups) {
+function adaptStats(stats) {
   return {
     activityCount:             stats.activities ?? null,
     datasetCount:              stats.activity_files ?? null,
@@ -212,8 +210,7 @@ function adaptStats(stats, checkGroups) {
       fail: stats.validation?.fail ?? 0,
     },
 
-    tests: adaptTests(stats, checkGroups),
-    organisationTests: adaptOrganisationTests(stats),
+    tests: adaptTests(stats),
   }
 }
 
@@ -225,7 +222,7 @@ export function adaptPublisher(raw, methodology) {
   if (!raw) return null
   return {
     identity: adaptIdentity(raw),
-    stats: raw.stats ? adaptStats(raw.stats, methodology?.check_groups) : null,
+    stats: raw.stats ? adaptStats(raw.stats) : null,
   }
 }
 
@@ -482,9 +479,9 @@ export function toAssessmentFragment({ publisher, coverage, frequency, downloads
       dimensions.timeliness = { components: timelinessComponents }
     }
 
-    // Comprehensiveness components are the mean pass rate of their checks —
-    // activity checks for most, organisation-file checks for organisation_fields.
-    const allChecks = [...stats.tests, ...stats.organisationTests]
+    // Comprehensiveness components are the mean pass rate of their checks.
+    // Organisation checks are the 1.x section of the same list.
+    const allChecks = stats.tests
     const byComponent = summariseChecksByComponent(allChecks)
     const comprehensiveness = {}
     for (const [id, value] of Object.entries(byComponent)) {
