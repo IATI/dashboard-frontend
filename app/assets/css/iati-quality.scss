@@ -14,6 +14,7 @@
 @import 'bootstrap/scss/close';
 @import 'bootstrap/scss/alert';
 @import 'bootstrap/scss/tooltip';
+@import 'bootstrap/scss/progress';
 @import 'bootstrap/scss/utilities';
 @import 'bootstrap/scss/utilities/api';
 
@@ -47,8 +48,15 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
   // Table overrides: disable horizontal scroll, remove forced column min-width
   .iati-table {
-    overflow-x: visible;
+    // No forced min-widths — the DS defaults cause needless scrollbars here
     td, th { min-width: 0 }
+    overflow-x: visible;
+    // ...but below the desktop breakpoint the fixed column widths exceed a phone
+    // viewport, so let the table scroll rather than the page.
+    @media (max-width: 991px) {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
   }
 
   // Card modifier classes: prefixed to match DS base specificity (0,2,0)
@@ -62,6 +70,12 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     &--loading { padding: 40px; text-align: center; color: var(--grey-60) }
     &--nav     { display: block; text-decoration: none; color: inherit; cursor: pointer }
     &--header  { padding: 0; border-top: none }
+    // A dimension scoring zero stars: tinted so it stands out while scrolling
+    &--flag {
+      background: #fff6f6;
+      border-top-color: var(--red-50);
+      .iati-card__subtitle { color: #8d1b2d }
+    }
   }
 }
 
@@ -72,14 +86,21 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .crumbs {
   background: #fff;
   border-bottom: 1px solid var(--grey-20);
-  &__inner { max-width: 1280px; margin: 0 auto; padding: 10px 28px; font-size: .9rem; color: var(--grey-70) }
+  &__inner {
+    max-width: 1280px; margin: 0 auto; padding: 10px 28px; font-size: .9rem; color: var(--grey-70);
+    @media (max-width: 575.98px) { padding: 10px 14px }
+  }
 }
 
 // ─── Page title bar ───────────────────────────────────────────────────────────
 .titlebar {
   background: #fff;
   border-bottom: 1px solid var(--grey-20);
-  &__inner  { max-width: 1280px; margin: 0 auto; padding: 20px 28px 24px; border-left: 4px solid var(--blue-50); padding-left: 24px }
+  &__inner  {
+    max-width: 1280px; margin: 0 auto; padding: 20px 28px 24px;
+    border-left: 4px solid var(--blue-50); padding-left: 24px;
+    @media (max-width: 575.98px) { padding: 16px 14px 18px; padding-left: 14px }
+  }
   &__eyebrow { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .6px; color: var(--teal-70); margin: 0 0 6px }
   &__title  { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.9rem; color: var(--teal-90); margin: 0 0 10px; line-height: 1.1 }
   &__meta   { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: .85rem; color: var(--grey-70); margin-top: 4px;
@@ -87,7 +108,10 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
 }
 
-.main { max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px }
+.main {
+  max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px;
+  @media (max-width: 575.98px) { padding: 18px 14px 40px }
+}
 
 // ─── Score badge ──────────────────────────────────────────────────────────────
 .score {
@@ -112,6 +136,12 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   h3 { margin: 0 0 4px }
   // DS provides color, font, weight, uppercase — we add margin and letter-spacing
   &__subtitle { letter-spacing: .4px; margin-bottom: 16px }
+  &__kicker-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    .iati-card__subtitle { margin-bottom: 0 }
+    margin-bottom: 16px;
+  }
 
   &__icon   { font-size: 2rem; margin-bottom: 12px }
   &__header {
@@ -138,16 +168,223 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   small  { display: block; font-size: .7rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--grey-60); margin-top: 6px }
 }
 
-// ─── Bar ──────────────────────────────────────────────────────────────────────
-.bar {
-  position: relative; background: var(--teal-10); height: 18px; border: 1px solid var(--teal-30); overflow: hidden;
-  > span { display: block; height: 100%; background: var(--teal-70); transition: width .4s ease }
-  &.bar--lg { height: 22px }
-  &--track { background: var(--grey-10); border-color: var(--grey-20) }
-  &--good > span { background: var(--green-50) }
-  &--warn > span { background: var(--orange-50) }
-  &--bad  > span { background: var(--red-50) }
-  &__label { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: .78rem; font-weight: 700; color: var(--grey-90) }
+// ─── Progress bars ───────────────────────────────────────────────────────────
+// BProgressBar's `variant` prop emits `text-bg-{variant}` (not `bg-{variant}`),
+// and Bootstrap's text-bg-* utility is not among the ones we generate — so the
+// class lands with no CSS behind it and the bar keeps its default blue.
+// Define them here, in the IATI palette, covering both the `variant` and
+// `bg-variant` prop paths. bg-* utilities carry !important, so these must too.
+.progress { background: var(--grey-10); border: 1px solid var(--grey-20) }
+.progress-bar {
+  &.text-bg-success, &.bg-success { background-color: var(--green-50)  !important; color: #fff !important }
+  &.text-bg-warning, &.bg-warning { background-color: var(--orange-50) !important; color: #fff !important }
+  &.text-bg-danger,  &.bg-danger  { background-color: var(--red-50)    !important; color: #fff !important }
+}
+
+// ─── Check score (progress bar + figure) ─────────────────────────────────────
+// The figure sits beside the bar rather than inside it: an in-bar label is
+// invisible at 0%, which many checks legitimately are.
+.check-score {
+  display: flex; align-items: center; gap: 10px;
+  &__bar { flex: 1; min-width: 60px }
+  &__pct {
+    width: 44px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: var(--grey-90);
+  }
+}
+
+// ─── Availability bar: two hoverable segments reading as one bar ─────────────
+.avail-bar {
+  display: flex; overflow: hidden; border-radius: 3px;
+  border: 1px solid var(--grey-20);
+  &__seg {
+    border: none; border-radius: 0; height: 1rem;
+    .progress-bar { border-radius: 0 }
+  }
+  > * { min-width: 0 }
+}
+
+// ─── Quarters reported, grouped by year ─────────────────────────────────────
+.quarter-grid {
+  display: flex; flex-wrap: wrap; gap: 10px 14px;
+  &__year { display: flex; flex-direction: column; gap: 4px }
+  &__label { font-size: .68rem; color: var(--grey-60); font-variant-numeric: tabular-nums }
+  // BTooltip wraps each cell, so it becomes the flex child
+  &__cells { display: flex; gap: 2px }
+  &__cell {
+    display: block;
+    width: 9px; height: 14px; background: var(--grey-10); border: 1px solid var(--grey-20);
+    &.is-active { background: var(--green-50); border-color: var(--green-50) }
+  }
+}
+
+// ─── Coverage panel ──────────────────────────────────────────────────────────
+.coverage-panel {
+  display: grid; grid-template-columns: 1fr; gap: 24px 32px; align-items: start;
+  @media (min-width: 768px) { grid-template-columns: 1.1fr 1fr }
+  &__figures { min-width: 0 }
+}
+.coverage-headline {
+  font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 800;
+  font-size: 2.4rem; line-height: 1; color: var(--teal-90); margin: 14px 0 0;
+  &__unit { font-size: 1.2rem }
+}
+// Two pairs per row: a flat inline list let "Currency" and "USD" wrap apart,
+// and a two-column grid left the labels ragged. Four columns keeps each pair
+// together and aligns labels and values down the panel.
+.coverage-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 10px;
+  align-items: baseline;
+  margin: 0; font-size: .8rem;
+  @media (min-width: 560px) { grid-template-columns: auto 1fr auto 1fr; column-gap: 22px }
+  dt { font-weight: 700; color: var(--grey-70); white-space: nowrap }
+  dd { margin: 0; color: var(--grey-90); min-width: 0; overflow-wrap: anywhere }
+}
+
+.quarter-chip {
+  display: inline-block; margin: 0 6px 4px 0; padding: 1px 6px;
+  background: var(--teal-10); border: 1px solid var(--teal-30);
+  font-size: .72rem; font-variant-numeric: tabular-nums;
+}
+
+// ─── Dataset facts ───────────────────────────────────────────────────────────
+.dataset-facts {
+  display: grid; grid-template-columns: auto 1fr; gap: 0; margin: 6px 0 0; font-size: .85rem;
+  dt {
+    font-weight: 700; color: var(--grey-70); white-space: nowrap;
+    padding: 7px 16px 7px 0; border-top: 1px solid var(--grey-20);
+  }
+  dd {
+    margin: 0; text-align: right; color: var(--teal-90); font-weight: 700;
+    font-variant-numeric: tabular-nums; padding: 7px 0; border-top: 1px solid var(--grey-20);
+  }
+  dt:first-of-type, dt:first-of-type + dd { border-top: none }
+}
+
+// ─── Paired measure + evidence (timeliness, coverage) ────────────────────────────────────────────────────────
+.measure-grid {
+  display: grid; grid-template-columns: 1fr; gap: 20px 36px; align-items: start;
+  @media (min-width: 768px) { grid-template-columns: 1fr 1fr }
+  &--3 {
+    @media (min-width: 768px)  { grid-template-columns: 1fr 1fr }
+    @media (min-width: 1100px) { grid-template-columns: repeat(3, 1fr) }
+  }
+}
+
+// One measure and the twelve-month series that evidences it
+.measure {
+  min-width: 0;
+  &__head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; padding-bottom: 6px; margin-bottom: 8px;
+    border-bottom: 1px solid var(--grey-20);
+  }
+  &__label {
+    font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 700;
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .4px; color: var(--grey-60);
+  }
+  &__value {
+    font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 800;
+    font-size: 1.05rem; color: var(--teal-90);
+    &.is-ok   { color: var(--green-90) }
+    &.is-bad  { color: var(--red-50) }
+    &.is-warn { color: var(--orange-90) }
+    &.is-good { color: var(--green-90) }
+  }
+  &__note { font-size: .75rem; color: var(--grey-60); margin: 6px 0 0 }
+}
+
+.month-strip {
+  &__head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; margin-bottom: 5px;
+  }
+  &__label {
+    font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .4px; color: var(--grey-60);
+  }
+  &__count { font-size: .75rem; color: var(--grey-60); font-variant-numeric: tabular-nums }
+  // BTooltip wraps each cell, so it becomes the flex child rather than the cell
+  &__cells { display: flex; gap: 2px; > * { flex: 1; min-width: 0 } }
+  &__cell {
+    display: block; height: 14px; background: var(--grey-10); border: 1px solid var(--grey-20);
+    &.is-active { background: var(--green-50); border-color: var(--green-50) }
+  }
+  &__bars {
+    display: flex; gap: 2px; align-items: flex-end; height: 30px;
+    > * { flex: 1; min-width: 0; height: 100%; display: flex; align-items: flex-end }
+  }
+  &__bar {
+    display: block; width: 100%; background: var(--teal-50); min-height: 3px;
+    &:hover { background: var(--teal-70) }
+  }
+}
+
+// ─── Validator severity labels ───────────────────────────────────────────────
+.severity {
+  font-weight: 700;
+  &--critical { color: var(--red-50) }
+  &--error    { color: var(--orange-90) }
+  &--warning  { color: var(--orange-50) }
+  &--advisory { color: var(--grey-60); font-weight: 400 }
+}
+
+// ─── Comprehensiveness panels ────────────────────────────────────────────────
+// A plain grid rather than BRow/BCol: Bootstrap's gutter-y puts margin-top on
+// every .row > *, but the DS rule `.iati-card :first-child { margin-top: 0 }` is
+// a descendant selector, so it strips that margin from the first column only and
+// the panels end up vertically offset from each other.
+.comprehensiveness-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px 32px;
+  align-items: start;
+  // Fill down each column rather than across rows, so the order reads
+  // organisation / basic in the first column, financial / advanced in the second.
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+  }
+  &__panel { min-width: 0 }
+}
+
+// ─── Compact table (two-column comprehensiveness panels) ────────────────────
+.iati-table--compact {
+  th, td { padding-top: 5px; padding-bottom: 5px; font-size: .8rem }
+  th { font-size: .72rem }
+  .check-score__pct { width: 38px; font-size: .78rem }
+  .test-list { padding-left: 12px }
+  .test-list__item { font-size: .76rem; padding: 4px 0 }
+  .test-list__score { width: 140px }
+}
+
+// ─── Indicator row expansion ─────────────────────────────────────────────────
+.expander {
+  background: none; border: none; cursor: pointer; padding: 0 4px;
+  color: var(--teal-70); font-size: .9rem; line-height: 1;
+  &__count { display: block; color: var(--grey-60); font-weight: 400; font-size: .7rem; margin-top: 2px }
+}
+
+.test-list {
+  list-style: none; margin: 0; padding: 4px 0 4px 18px;
+  &__item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 5px 0; font-size: .82rem; color: var(--grey-70);
+    & + & { border-top: 1px solid var(--grey-20) }
+  }
+  &__name  { flex: 1; min-width: 0 }
+  &__score {
+    width: 210px; flex-shrink: 0; display: flex; justify-content: flex-end;
+    @media (max-width: 575.98px) { width: 120px }
+  }
+  &__flag  {
+    font-weight: 700; font-size: .95rem; line-height: 1;
+    &.is-pass { color: var(--green-50) }
+    &.is-fail { color: var(--red-50) }
+  }
 }
 
 // ─── Indicator pill ───────────────────────────────────────────────────────────
@@ -159,7 +396,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     small { display: block; color: var(--grey-60); font-weight: 400; font-size: .78rem; margin-top: 2px }
   }
   .pct   { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .95rem; width: 64px; text-align: right }
-  .meter { width: 140px; .bar { height: 10px } }
+  .meter { width: 140px }
 }
 
 // ─── Section title ────────────────────────────────────────────────────────────
@@ -262,6 +499,8 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   font-family: "Hanken Grotesk"; font-weight: 700; font-size: .82rem;
   text-transform: uppercase; letter-spacing: .4px; color: var(--teal-90);
   border-bottom: 2px solid var(--teal-30); padding-bottom: 4px; margin-bottom: 4px;
+  // stars sit on the heading's right, mirroring the dimension cards
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
@@ -293,13 +532,16 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     padding: 0 24px;
   }
   &__badge {
-    width: 184px; height: 184px; border-radius: 50%; padding: 14px;
+    width: 200px; height: 200px; border-radius: 50%; padding: 18px 22px;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
     background: var(--teal-10); border: 3px solid var(--teal-90);
   }
   &__category {
     font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 800;
-    font-size: 1.5rem; line-height: 1.1; color: var(--teal-90); margin: 0; text-align: center;
+    // Sized so the longest band label ("Needs improvement" / "À améliorer")
+    // wraps to two lines inside the circle rather than spilling past its edge.
+    font-size: 1.15rem; line-height: 1.2; letter-spacing: -.01em;
+    color: var(--teal-90); margin: 0; text-align: center; text-wrap: balance;
   }
   // min-width: 0 lets the cards shrink instead of overflowing — grid items
   // default to min-width: auto, which floors them at their content width
@@ -350,7 +592,12 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   padding: 14px 20px; border-bottom: 1px solid var(--grey-20); display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
   label  { display: block; font-size: .8rem; font-weight: 700; color: var(--grey-70); margin-bottom: 4px }
   input, select { padding: 6px 10px; font-size: .88rem; border: 1px solid var(--grey-20); border-radius: 3px; font-family: inherit }
-  input  { width: 280px }
+  input  { width: 280px; max-width: 100% }
+  @media (max-width: 575.98px) {
+    padding: 12px 14px;
+    > div { width: 100% }
+    input, select { width: 100% }
+  }
   select { background: #fff }
 }
 .filter-count { color: var(--grey-60); font-size: .82rem; padding-bottom: 2px }

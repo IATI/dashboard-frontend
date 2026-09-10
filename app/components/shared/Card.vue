@@ -23,7 +23,12 @@ defineProps({
       <slot name="actions" />
     </div>
     <template v-if="kicker">
-      <p class="iati-card__subtitle">{{ kicker }}</p>
+      <!-- kicker-actions sits on the kicker's baseline, e.g. a dimension's stars -->
+      <div v-if="$slots['kicker-actions']" class="iati-card__kicker-row">
+        <p class="iati-card__subtitle">{{ kicker }}</p>
+        <slot name="kicker-actions" />
+      </div>
+      <p v-else class="iati-card__subtitle">{{ kicker }}</p>
       <h3 v-if="title">{{ title }}</h3>
     </template>
     <slot />

@@ -4,10 +4,11 @@ const props = defineProps({
 })
 
 const C = {
-  budget: '#2b3e4e',
-  spending: '#73adbf',
-  grey20: '#dadada',
-  grey60: '#686868',
+  budget:   '#155366',   // teal-90
+  spending: '#73adbf',   // teal-50
+  grid:     '#ececec',
+  axis:     '#8a8a8a',
+  label:    '#686868',
 }
 
 const CDFD_BASE = 'https://data.countrydata.iatistandard.org/api'
@@ -50,17 +51,21 @@ async function load() {
           label: 'Budget',
           data: years.map(y => (byYear[y]?.['value_usd.sum_budget'] ?? 0) / 1e9),
           backgroundColor: C.budget,
-          borderRadius: 3,
-          categoryPercentage: 0.85,
-          barPercentage: 0.9,
+          borderRadius: { topLeft: 3, topRight: 3 },
+          borderSkipped: false,
+          maxBarThickness: 34,
+          categoryPercentage: 0.7,
+          barPercentage: 0.88,
         },
         {
           label: 'Disbursement + Expenditure',
           data: years.map(y => (byYear[y]?.['value_usd.sum_3-4'] ?? 0) / 1e9),
           backgroundColor: C.spending,
-          borderRadius: 3,
-          categoryPercentage: 0.85,
-          barPercentage: 0.9,
+          borderRadius: { topLeft: 3, topRight: 3 },
+          borderSkipped: false,
+          maxBarThickness: 34,
+          categoryPercentage: 0.7,
+          barPercentage: 0.88,
         },
       ],
     }
@@ -71,28 +76,58 @@ async function load() {
   }
 }
 
+// Values arrive in billions; show sub-billion figures in millions rather than
+// as "$0.04bn", which reads as nothing.
+function fmtBn(v) {
+  if (!v) return '$0'
+  return Math.abs(v) < 1 ? `$${Math.round(v * 1000)}m` : `$${v.toFixed(v < 10 ? 1 : 0)}bn`
+}
+
+const FONT = '"Nunito Sans", system-ui, sans-serif'
+
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   animation: false,
+  layout: { padding: { top: 8 } },
   plugins: {
     legend: {
       display: true,
       position: 'bottom',
-      labels: { font: { size: 12 }, color: C.grey60, boxWidth: 14, padding: 16 },
+      labels: {
+        font: { size: 12, family: FONT },
+        color: C.label, boxWidth: 10, boxHeight: 10, usePointStyle: true,
+        pointStyle: 'rectRounded', padding: 18,
+      },
     },
     tooltip: {
-      callbacks: {
-        label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}bn`,
-      },
+      backgroundColor: '#fff',
+      titleColor: '#1c1c1c',
+      bodyColor: '#3c3c3c',
+      borderColor: C.grid,
+      borderWidth: 1,
+      padding: 10,
+      displayColors: true,
+      usePointStyle: true,
+      titleFont: { family: FONT, weight: '700' },
+      bodyFont: { family: FONT },
+      callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtBn(ctx.parsed.y)}` },
     },
   },
   scales: {
-    x: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: C.grey60 } },
+    x: {
+      grid: { display: false },
+      border: { color: C.grid },
+      ticks: { font: { size: 12, weight: '600', family: FONT }, color: C.label },
+    },
     y: {
       beginAtZero: true,
-      grid: { color: C.grey20 },
-      ticks: { font: { size: 10 }, color: C.grey60, callback: v => `$${v}bn` },
+      border: { display: false },
+      grid: { color: C.grid, drawTicks: false },
+      ticks: {
+        font: { size: 11, family: FONT }, color: C.axis, padding: 8,
+        maxTicksLimit: 5, callback: fmtBn,
+      },
     },
   },
 }
@@ -110,7 +145,7 @@ watch(() => props.orgId, load)
       Could not load data: {{ error }}
     </div>
     <template v-else>
-      <div style="height: 280px; position: relative">
+      <div style="height: 260px; position: relative">
         <BarChart :data="chartData" :options="chartOptions" />
       </div>
       <p style="font-size: .8rem; color: var(--grey-60); margin: 10px 0 0">
