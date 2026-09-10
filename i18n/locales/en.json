@@ -428,5 +428,11 @@
   "gateIntro": "This preview is not yet public. Enter the password to continue.",
   "gatePassword": "Password",
   "gateEnter": "Enter",
-  "gateWrong": "That password is not correct."
+  "gateWrong": "That password is not correct.",
+  "errNotFoundTitle": "Page not found",
+  "errNotFoundIntro": "The page you asked for does not exist. It may have moved, or the publisher may not be in the IATI Registry.",
+  "errGenericTitle": "Something went wrong",
+  "errGenericIntro": "An unexpected error occurred while loading this page.",
+  "errBrowsePublishers": "Browse all publishers",
+  "errGoHome": "Go to the overview"
 }

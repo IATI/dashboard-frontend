@@ -429,5 +429,11 @@
   "gateIntro": "Cet aperçu n’est pas encore public. Saisissez le mot de passe pour continuer.",
   "gatePassword": "Mot de passe",
   "gateEnter": "Entrer",
-  "gateWrong": "Mot de passe incorrect."
+  "gateWrong": "Mot de passe incorrect.",
+  "errNotFoundTitle": "Page introuvable",
+  "errNotFoundIntro": "La page demandée n’existe pas. Elle a peut-être été déplacée, ou le publiant ne figure pas dans le registre IATI.",
+  "errGenericTitle": "Une erreur est survenue",
+  "errGenericIntro": "Une erreur inattendue s’est produite lors du chargement de cette page.",
+  "errBrowsePublishers": "Voir tous les publiants",
+  "errGoHome": "Aller à la vue d’ensemble"
 }
