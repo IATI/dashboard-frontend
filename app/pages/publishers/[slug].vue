@@ -7,7 +7,14 @@ const route = useRoute()
 const slug = route.params.slug
 
 // Real data, keyed on the slug (the API's short_name).
-const { publisher } = usePublisher(slug, { stats: true })
+// Awaited so a missing publisher becomes a 404 before the first render, rather
+// than an empty page under the wrong name — the fetcher throws a fatal error.
+// NOT awaited: a top-level await makes this component suspend, and the password
+// gate mounts the page behind a v-if — the two together left the page rendering
+// with no publisher data at all. The 404 is raised from a watcher instead.
+const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
+watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
+
 const { coverage }  = useCoverage(slug)
 const { frequencyFor, timelagFor } = useTimelinessFrequency()
 const { downloads, validation } = useAvailabilityData(slug)
@@ -47,15 +54,10 @@ const allChecks = computed(() => [
   ...tests.value,
   ...(stats.value?.organisationTests ?? []),
 ])
-const indicatorGroups = computed(() => {
-  const rows = groupTestsByIndicator(allChecks.value)
-  return CHECK_COMPONENT_ORDER.map(id => ({
-    key: id,
-    label: t(labelKey('sub', id)),
-    category: componentBandFor('comprehensiveness', id),
-    items: rows.filter(row => row.component === id),
-  }))
-})
+// NB: indicatorGroups is declared further down, after dimensionBands — it reads
+// component bands, and the top-level await in this setup means a forward
+// reference is evaluated before those are initialised.
+
 // Bootstrap contextual variants for BProgress
 // Availability at a glance: how many datasets could not be fetched, and how many
 // documents the Validator flagged. null means "cannot say" (stale or unassessed)
@@ -175,62 +177,7 @@ function testVariant(pct) {
   return 'danger'
 }
 
-const orgData = {
-  usaid: {
-    overall: { category: 'very_good' }, traceability: 0.63,
-    orgIds: 42, totalDisbursements: '66.6bn',
-    dimensions: {
-      availability: { category: 'excellent', components: {
-        downloadable:       { value: true, category: 'excellent' },
-        no_critical_errors: { value: true, category: 'excellent' },
-        no_errors:          { value: true, category: 'excellent' },
-      }},
-      timeliness: { category: 'excellent', components: {
-        timeliness: { value: 'one_month', category: 'excellent' },
-        frequency:  { value: 'monthly',   category: 'excellent' },
-      }},
-      coverage: { category: 'excellent', components: {
-        coverage:       { value: 95, category: 'excellent' },
-        disaggregation: { value: 4,  category: 'excellent' },
-      }},
-      comprehensiveness: { category: 'very_good', components: {
-        organisation_fields: { value: 88, category: 'very_good' },
-        basic_fields:        { value: 99, category: 'excellent' },
-        financial_fields:    { value: 79, category: 'very_good' },
-        advanced_fields:     { value: 58, category: 'good' },
-      }},
-    },
-},
-  'ec-intpa': {
-    overall: { category: 'good' }, traceability: 100,
-    orgIds: 29, totalDisbursements: '897m',
-    dimensions: {
-      availability: { category: 'good', components: {
-        downloadable:       { value: true,  category: 'excellent' },
-        no_critical_errors: { value: true,  category: 'excellent' },
-        no_errors:          { value: false, category: 'needs_improvement' },
-      }},
-      timeliness: { category: 'good', components: {
-        timeliness: { value: 'one_quarter', category: 'good' },
-        frequency:  { value: 'quarterly',   category: 'good' },
-      }},
-      coverage: { category: 'needs_improvement', components: {
-        coverage:       { value: 35, category: 'needs_improvement' },
-        disaggregation: { value: 3,  category: 'very_good' },
-      }},
-      comprehensiveness: { category: 'very_good', components: {
-        organisation_fields: { value: 91,  category: 'excellent' },
-        basic_fields:        { value: 100, category: 'excellent' },
-        financial_fields:    { value: 84,  category: 'very_good' },
-        advanced_fields:     { value: 62,  category: 'very_good' },
-      }},
-    },
-}
-}
-
-const d = computed(() => orgData[slug] || orgData.usaid)
-
-const overall           = computed(() => assessed.value.overall ?? d.value.overall)
+const overall           = computed(() => assessed.value.overall ?? null)
 const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
 
 
@@ -279,19 +226,10 @@ const assessed = computed(() => {
     },
     methodology,
   )
-  const merged = { overall: fragment?.overall?.category ? fragment.overall : null }
-  for (const [id, dim] of Object.entries(d.value.dimensions)) {
-    const real = fragment?.dimensions?.[id]
-    merged[id] = real
-      ? {
-          ...dim,
-          // real band where derivable, else the placeholder
-          category: real.category ?? dim.category,
-          components: { ...dim.components, ...real.components },
-        }
-      : dim
+  return {
+    overall: fragment?.overall?.category ? fragment.overall : null,
+    ...(fragment?.dimensions ?? {}),
   }
-  return merged
 })
 
 const bandFor = id => dimensionBands.value?.[id]?.category ?? null
@@ -313,8 +251,21 @@ const dimensionBands = computed(() =>
   Object.fromEntries(Object.entries(assessed.value).filter(([k]) => k !== 'overall')),
 )
 
+// One row per indicator (averaging its tests), grouped by the comprehensiveness
+// component those indicators contribute to. Declared here rather than beside the
+// other check helpers because it reads component bands from dimensionBands.
+const indicatorGroups = computed(() => {
+  const rows = groupTestsByIndicator(allChecks.value)
+  return CHECK_COMPONENT_ORDER.map(id => ({
+    key: id,
+    label: t(labelKey('sub', id)),
+    category: componentBandFor('comprehensiveness', id),
+    items: rows.filter(row => row.component === id),
+  }))
+})
+
 const dimensions = computed(() =>
-  DIMENSION_ORDER.map(id => {
+  DIMENSION_ORDER.filter(id => dimensionBands.value[id]).map(id => {
     const dim = dimensionBands.value[id]
     return {
       key:      id,
@@ -358,7 +309,7 @@ const dimensions = computed(() =>
         <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">
           <div class="hero-metrics">
             <div class="hero-metrics__overall">
-              <div class="hero-metrics__badge">
+              <div v-if="overall" class="hero-metrics__badge">
                 <Stars :category="overall.category" size="xl" />
                 <p class="hero-metrics__category">{{ t(labelKey('category', overall.category)) }}</p>
               </div>
