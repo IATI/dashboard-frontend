@@ -435,5 +435,10 @@
   "errGenericTitle": "Une erreur est survenue",
   "errGenericIntro": "Une erreur inattendue s’est produite lors du chargement de cette page.",
   "errBrowsePublishers": "Voir tous les publiants",
-  "errGoHome": "Aller à la vue d’ensemble"
+  "errGoHome": "Aller à la vue d’ensemble",
+  "orgCovMoreDetails": "Plus de détails",
+  "orgCovDetailsTitle": "Comment ce chiffre de couverture est calculé",
+  "orgCovClose": "Fermer",
+  "orgCovIatiLabel": "Dépenses IATI",
+  "orgCovRefLabel": "Total de référence"
 }

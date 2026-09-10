@@ -7,11 +7,10 @@ const route = useRoute()
 const slug = route.params.slug
 
 // Real data, keyed on the slug (the API's short_name).
-// Awaited so a missing publisher becomes a 404 before the first render, rather
-// than an empty page under the wrong name — the fetcher throws a fatal error.
-// NOT awaited: a top-level await makes this component suspend, and the password
-// gate mounts the page behind a v-if — the two together left the page rendering
-// with no publisher data at all. The 404 is raised from a watcher instead.
+//
+// Deliberately not awaited: a top-level await makes this component suspend, and
+// the password gate mounts the page behind a v-if — together those left the page
+// rendering with no publisher data at all. The 404 is raised from a watcher.
 const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
 watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 
@@ -54,11 +53,9 @@ const allChecks = computed(() => [
   ...tests.value,
   ...(stats.value?.organisationTests ?? []),
 ])
-// NB: indicatorGroups is declared further down, after dimensionBands — it reads
-// component bands, and the top-level await in this setup means a forward
-// reference is evaluated before those are initialised.
+// NB: indicatorGroups is declared further down, after dimensionBands, since it
+// reads component bands from it.
 
-// Bootstrap contextual variants for BProgress
 // Availability at a glance: how many datasets could not be fetched, and how many
 // documents the Validator flagged. null means "cannot say" (stale or unassessed)
 // rather than zero — the panel renders those as an em dash.
@@ -162,6 +159,8 @@ function fmtUsd(value) {
   }
   return `$${Math.round(value)}`
 }
+
+const coverageDetails = ref(false)
 
 const coverageGenerated = computed(() => {
   const iso = coverage.value?.generatedAt
@@ -523,23 +522,18 @@ const dimensions = computed(() =>
               <span class="measure__value">{{ coverage.coveragePercent }}%</span>
             </div>
             <Bar :pct="coverage.coveragePercent" variant="good" label="" height="1rem" />
-            <p class="measure__note">
-              {{ t('orgCovOfReference', {
-                spend: fmtUsd(coverage.iatiSpendingUsd),
-                reference: fmtUsd(coverage.referenceValueUsd),
-              }) }}
-              · {{ t(labelKey('coverageBasis', coverage.coverageBasis)) }}
+            <p class="measure__note measure__note--split">
+              <span>
+                {{ t('orgCovOfReference', {
+                  spend: fmtUsd(coverage.iatiSpendingUsd),
+                  reference: fmtUsd(coverage.referenceValueUsd),
+                }) }}
+                · {{ t(labelKey('coverageBasis', coverage.coverageBasis)) }}
+              </span>
+              <button type="button" class="link-button" @click="coverageDetails = true">
+                {{ t('orgCovMoreDetails') }}
+              </button>
             </p>
-            <dl class="coverage-meta mt-sm">
-              <dt>{{ t('orgCovSource') }}</dt>
-              <dd>{{ t(labelKey('coverageSource', coverage.referenceSource)) }}</dd>
-              <dt>{{ t('orgCovEntity') }}</dt>
-              <dd>{{ coverage.referenceEntity }}</dd>
-              <dt>{{ t('orgCovYear') }}</dt>
-              <dd>{{ coverage.referenceYear }}</dd>
-              <dt>{{ t('orgCovCurrency') }}</dt>
-              <dd>{{ coverage.referenceCurrency }}</dd>
-            </dl>
           </div>
 
           <!-- Disaggregation: quarters actually reported in, by year -->
@@ -579,12 +573,57 @@ const dimensions = computed(() =>
         </div>
 
 
-        <p v-if="coverage.publishersSharingReference > 1" class="coverage-note">
-          {{ t('orgCovShared', { n: coverage.publishersSharingReference }) }}
-        </p>
-        <p v-if="coverageGenerated" class="coverage-note">
-          {{ t('orgCovGenerated', { date: coverageGenerated }) }}
-        </p>
+        <!-- BModal teleports to <body>, outside .iati-design-system--enabled, so
+             neither the design system's styles nor our overrides reach it. Put
+             the wrapper class on the modal itself rather than restyling it. -->
+        <BModal
+          v-model="coverageDetails"
+          :title="t('orgCovDetailsTitle')"
+          modal-class="iati-design-system--enabled"
+        >
+          <template #footer>
+            <button type="button" class="iati-button" @click="coverageDetails = false">
+              {{ t('orgCovClose') }}
+            </button>
+          </template>
+          <dl class="coverage-meta">
+            <div class="coverage-meta__entity">
+              <dt>{{ t('orgCovEntity') }}</dt>
+              <dd>{{ coverage.referenceEntity }}</dd>
+            </div>
+            <div class="coverage-meta__row">
+              <div>
+                <dt>{{ t('orgCovSource') }}</dt>
+                <dd>{{ t(labelKey('coverageSource', coverage.referenceSource)) }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('orgCovYear') }}</dt>
+                <dd>{{ coverage.referenceYear }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('orgCovCurrency') }}</dt>
+                <dd>{{ coverage.referenceCurrency }}</dd>
+              </div>
+            </div>
+            <div class="coverage-meta__row">
+              <div>
+                <dt>{{ t('orgCovIatiLabel') }}</dt>
+                <dd>{{ fmtUsd(coverage.iatiSpendingUsd) }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('orgCovRefLabel') }}</dt>
+                <dd>{{ fmtUsd(coverage.referenceValueUsd) }}</dd>
+              </div>
+            </div>
+          </dl>
+
+          <p v-if="coverage.publishersSharingReference > 1" class="coverage-note mt-sm">
+            {{ t('orgCovShared', { n: coverage.publishersSharingReference }) }}
+          </p>
+          <p v-if="coverageGenerated" class="coverage-note">
+            {{ t('orgCovGenerated', { date: coverageGenerated }) }}
+          </p>
+        </BModal>
 
       </Card>
       <!-- Activity checks, straight from stats.gherkin_tests_current -->

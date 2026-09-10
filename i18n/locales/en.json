@@ -434,5 +434,10 @@
   "errGenericTitle": "Something went wrong",
   "errGenericIntro": "An unexpected error occurred while loading this page.",
   "errBrowsePublishers": "Browse all publishers",
-  "errGoHome": "Go to the overview"
+  "errGoHome": "Go to the overview",
+  "orgCovMoreDetails": "More details",
+  "orgCovDetailsTitle": "How this coverage figure is calculated",
+  "orgCovClose": "Close",
+  "orgCovIatiLabel": "IATI spending",
+  "orgCovRefLabel": "Reference total"
 }
