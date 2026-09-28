@@ -1,5 +1,5 @@
 {
-  "_comment": "Fixed methodology definition \u2014 identical for every publisher, so it is served separately from per-publisher results rather than repeated in each payload. Also the home for each component's unit, which the results payload deliberately omits.",
+  "_comment": "Fixed methodology definition — identical for every publisher, so it is served separately from per-publisher results rather than repeated in each payload. Also the home for each component's unit, which the results payload deliberately omits.",
   "bands": {
     "needs_improvement": 0,
     "good": 1,
@@ -8,7 +8,7 @@
   },
   "dimensions": {
     "timeliness": {
-      "_comment": "Band is a joint function of both components, not an aggregate of their individual bands: both monthly/one month => excellent; both quarterly/one quarter, or either one monthly/one month => good; otherwise needs_improvement."
+      "_comment": "Banded on its weakest component, as the API bands it. The frequency component is rescored client-side from stats.frequency_old: frequency_new under-reports recent updates for publishers that in fact publish monthly."
     }
   },
   "components": {
@@ -93,7 +93,7 @@
       }
     },
     "advanced_fields": {
-      "_comment": "No 'good' threshold \u2014 the first star is not required for this component.",
+      "_comment": "No 'good' threshold — the first star is not required for this component.",
       "unit": "percent",
       "thresholds": {
         "very_good": 60,

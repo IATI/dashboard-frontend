@@ -14,13 +14,14 @@ const slug = route.params.slug
 const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
 watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 
-const { coverage }  = useCoverage(slug)
-const { frequencyFor, timelagFor } = useTimelinessFrequency()
 const { downloads, validation } = useAvailabilityData(slug)
 const { lookup: organisationTypeName } = useCodelist('OrganisationType')
 
 const identity = computed(() => publisher.value?.identity ?? null)
 const stats    = computed(() => publisher.value?.stats ?? null)
+// Coverage and update frequency used to need their own fetches (a JSON dataset
+// and a CSV of every publisher); the stats payload now carries both.
+const coverage = computed(() => stats.value?.coverage ?? null)
 
 const orgName = computed(() => identity.value?.name ?? '')
 const orgType = computed(() => organisationTypeName(identity.value?.organisationType))
@@ -97,19 +98,18 @@ const availabilityStats = computed(() => {
 // The two month series measure different things — updates vs transactions
 // reported — so both are shown rather than treating one as a proxy.
 const timelinessPanel = computed(() => {
-  const freq = frequencyFor(slug)
-  const lag  = timelagFor(slug)
-  if (!freq && !lag && !stats.value) return null
+  if (!stats.value) return null
+  const freq = stats.value.frequency
 
   const updates = Object.entries(freq?.updatesByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
-  const txns    = Object.entries(lag?.transactionsByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
+  const txns    = Object.entries(stats.value.transactionsByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
   const peak    = Math.max(1, ...txns.map(([, n]) => n))
 
   return {
     frequency: freq?.value ? t(labelKey('value', freq.value)) : freq?.label ?? null,
-    timeLag:   stats.value?.timelagValue
+    timeLag:   stats.value.timelagValue
       ? t(labelKey('value', stats.value.timelagValue))
-      : lag?.label ?? null,
+      : stats.value.timelag,
     updates:      updates.map(([month, n]) => ({ month, active: n > 0, count: n })),
     monthsActive: updates.filter(([, n]) => n > 0).length,
     txns:         txns.map(([month, n]) => ({ month, count: n, pct: Math.round((n / peak) * 100) })),
@@ -216,8 +216,6 @@ const assessed = computed(() => {
   const fragment = toAssessmentFragment(
     {
       publisher: publisher.value,
-      coverage:  coverage.value,
-      frequency: frequencyFor(slug),
       downloads: downloads.value,
       validation: validation.value,
     },

@@ -26,6 +26,21 @@ const FREQUENCY_TO_VALUE = {
   'less than annual': 'less_than_annual',
 }
 
+/**
+ * The API scores each timeliness component on a 0-4 ordinal, and bands it on the
+ * ladder below — read off the value/category pairs its own components carry.
+ * frequency_old's verdict maps onto the same scale, so a component rebuilt from
+ * it is directly comparable with the timelag component beside it.
+ */
+const FREQUENCY_ORDINAL = {
+  'monthly':          4,
+  'quarterly':        3,
+  'six-monthly':      2,
+  'annual':           1,
+  'less than annual': 0,
+}
+const ORDINAL_BAND = ['needs_improvement', 'needs_improvement', 'good', 'very_good', 'excellent']
+
 // Ordering for enum comparisons — higher is better.
 const ENUM_RANK = {
   one_month: 5, monthly: 5,
@@ -61,53 +76,94 @@ export function deriveCategory(componentId, value, methodology) {
   return 'needs_improvement'
 }
 
-/**
- * Index timeliness_frequency.csv by publisher registry id (which is the page
- * slug). Monthly columns are the update counts behind the Frequency verdict.
- */
-export function adaptFrequencyRows(rows = []) {
-  const byPublisher = {}
-  for (const row of rows) {
-    const slug = row['Publisher Registry Id']
-    if (!slug) continue
-    const label = row.Frequency ?? null
-    byPublisher[slug] = {
-      label,
-      value: FREQUENCY_TO_VALUE[String(label ?? '').toLowerCase()] ?? null,
-      firstPublished: row['First published'] ?? null,
-      updatesByMonth: Object.fromEntries(
-        Object.entries(row)
-          .filter(([key]) => /^\d{4}-\d{2}$/.test(key))
-          .map(([key, count]) => [key, Number(count) || 0]),
-      ),
-    }
-  }
-  return byPublisher
+// The API scores the assessment itself now. Its component ids differ from the
+// methodology file's, so map them once here rather than renaming either side.
+const COMPONENT_ID = {
+  basic: 'basic_fields',
+  advanced: 'advanced_fields',
+  financials: 'financial_fields',
+  organisation: 'organisation_fields',
+  timelag: 'timeliness',
 }
 
+// Values arrive on three different scales: ratios for coverage and the
+// comprehensiveness components, a plain count for disaggregation, and a band
+// number (0-3) for timelag and frequency, whose readable value is an enum.
+const AS_PERCENT = new Set(['coverage', 'basic', 'advanced', 'financials', 'organisation'])
+
 /**
- * Index timeliness_timelag.csv by publisher registry id.
+ * The scored assessment, straight from stats.assessment_new.
  *
- * Distinct from the frequency CSV despite the identical column layout: those
- * monthly numbers count file UPDATES, these count TRANSACTIONS reported with a
- * date in that month. A publisher can update monthly while its data stops months
- * short — the trailing zeros here are what produce a long time lag.
+ * Replaces deriving bands in the client from methodology thresholds: the API
+ * is now authoritative, so the scale and the aggregation rules live in one
+ * place instead of being reimplemented here.
+ *
+ * Availability is absent from the API's assessment, so it is still derived —
+ * see toAssessmentFragment.
  */
-export function adaptTimelagRows(rows = []) {
-  const byPublisher = {}
-  for (const row of rows) {
-    const slug = row['Publisher Registry Id']
-    if (!slug) continue
-    byPublisher[slug] = {
-      label: row['Time lag'] ?? null,
-      transactionsByMonth: Object.fromEntries(
-        Object.entries(row)
-          .filter(([key]) => /^\d{4}-\d{2}$/.test(key))
-          .map(([key, count]) => [key, Number(count) || 0]),
-      ),
+function adaptAssessment(stats) {
+  const raw = stats.assessment_new
+  if (!raw?.dimensions) return null
+
+  const dimensions = {}
+  for (const [dimId, dim] of Object.entries(raw.dimensions)) {
+    // A dimension the API could not score at all comes through as null (e.g.
+    // coverage, for a publisher with no spending figures to compare against).
+    if (!dim) continue
+
+    const components = {}
+    for (const [rawId, comp] of Object.entries(dim.components ?? {})) {
+      const id = COMPONENT_ID[rawId] ?? rawId
+      components[id] = {
+        value: AS_PERCENT.has(rawId) ? Math.round(comp.value * 100) : comp.value,
+        category: comp.category ?? null,
+      }
     }
+    dimensions[dimId] = { category: dim.category ?? null, components }
   }
-  return byPublisher
+
+  return { overall: { category: raw.overall?.category ?? null }, dimensions }
+}
+
+/** Coverage and disaggregation, now carried in the stats payload. */
+function adaptCoverageFromStats(stats) {
+  const raw = stats.coverage_dict_from_external_repo
+  if (!raw?.coverage) return null
+  const c = raw.coverage
+  const d = raw.disaggregation ?? {}
+
+  return {
+    coveragePercent:   c.coverage != null ? Math.round(c.coverage * 100) : null,
+    coverageBasis:     c.coverage_basis ?? null,
+    iatiSpendingUsd:   c.iati_net_spending_usd ?? c.iati_spending_usd ?? null,
+    referenceValueUsd: c.reference_value_usd ?? null,
+    referenceCurrency: c.reference_currency ?? null,
+    referenceSource:   c.reference_source ?? null,
+    referenceEntity:   c.reference_entity ?? null,
+    referenceEntityId: c.reference_entity_id ?? null,
+    referenceYear:     c.reference_year ?? null,
+    publishersSharingReference: c.publishers_sharing_reference ?? null,
+    quartersPerYear: d.quarters_per_year ?? null,
+    quartersByYear:  d.quarters_by_year ?? null,
+    totalQuarters:   d.total_quarters ?? null,
+    yearsReporting:  d.years_reporting ?? null,
+  }
+}
+
+/** The most recent `count` months of a { 'YYYY-MM': n } series, oldest first. */
+function recentMonths(series, count = 12) {
+  const months = Object.keys(series ?? {}).sort()
+  if (!months.length) return {}
+  // Walk back `count` calendar months from the latest, filling gaps with zero:
+  // the series omits months with no activity, and the strip needs every slot.
+  const [y, m] = months[months.length - 1].split('-').map(Number)
+  const out = {}
+  for (let i = count - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(y, m - 1 - i, 1))
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`
+    out[key] = series[key] ?? 0
+  }
+  return out
 }
 
 /** Identity fields for the page header. */
@@ -211,6 +267,20 @@ function adaptStats(stats) {
     },
 
     tests: adaptTests(stats),
+
+    // Now supplied by the API rather than fetched separately or derived here
+    assessment: adaptAssessment(stats),
+    coverage:   adaptCoverageFromStats(stats),
+    // frequency_old, not frequency_new. Checked against the published
+    // timeliness_frequency.csv across 11 publishers: old matched 11/11, new
+    // 7/11 — new under-reports recent updates for AfDB, World Bank, EC-INTPA
+    // and Sida, all of which publish monthly. Revisit when new is fixed.
+    frequency: {
+      label: stats.frequency_old?.frequency ?? null,
+      value: FREQUENCY_TO_VALUE[String(stats.frequency_old?.frequency ?? '').toLowerCase()] ?? null,
+      updatesByMonth: recentMonths(stats.frequency_old?.updates_per_month),
+    },
+    transactionsByMonth: recentMonths(stats.transaction_months_with_year),
   }
 }
 
@@ -224,25 +294,6 @@ export function adaptPublisher(raw, methodology) {
     identity: adaptIdentity(raw),
     stats: raw.stats ? adaptStats(raw.stats) : null,
   }
-}
-
-/**
- * Mean pass rate of the checks belonging to each comprehensiveness component.
- * Components with no checks (organisation_fields is assessed from the
- * organisation file, not activities) are absent from the result.
- */
-export function summariseChecksByComponent(tests = []) {
-  const buckets = {}
-  for (const test of tests) {
-    if (!test.component || test.value === null) continue
-    ;(buckets[test.component] ??= []).push(test.value)
-  }
-  return Object.fromEntries(
-    Object.entries(buckets).map(([component, values]) => [
-      component,
-      Math.round(values.reduce((sum, v) => sum + v, 0) / values.length),
-    ]),
-  )
 }
 
 /**
@@ -268,46 +319,6 @@ export function groupTestsByIndicator(tests = []) {
 }
 
 /**
- * Normalise a record from the dashboard-coverage dataset
- * (iati.github.io/dashboard-coverage/data/publishers/{slug}.json).
- *
- * `coverage.coverage` is a ratio, not a percentage — 1.146 means IATI spending is
- * 114.6% of the CRS reference — so it is scaled here rather than at each use site.
- */
-export function adaptCoverage(raw) {
-  if (!raw) return null
-  const coverage = raw.coverage ?? {}
-  const disaggregation = raw.disaggregation ?? {}
-
-  return {
-    coveragePercent:   coverage.coverage != null ? Math.round(coverage.coverage * 100) : null,
-
-    // How the comparison was made
-    coverageBasis:     coverage.coverage_basis ?? null,        // 'net' | 'gross'
-    iatiSpendingUsd:   coverage.iati_net_spending_usd ?? coverage.iati_spending_usd ?? null,
-    iatiCurrency:      coverage.iati_currency ?? null,
-    referenceValueUsd: coverage.reference_value_usd ?? null,
-    referenceCurrency: coverage.reference_currency ?? null,
-    referenceSource:   coverage.reference_source ?? null,      // e.g. 'crs'
-    referenceEntity:   coverage.reference_entity ?? null,
-    referenceEntityId: coverage.reference_entity_id ?? null,
-    referenceYear:     coverage.reference_year ?? null,
-
-    // >1 when several IATI publishers are compared against the same reference
-    // entity, which makes any single publisher's share hard to read on its own.
-    publishersSharingReference: coverage.publishers_sharing_reference ?? null,
-
-    // Quarters in which the publisher reported, averaged per year — out of 4.
-    quartersPerYear: disaggregation.quarters_per_year ?? null,
-    quartersByYear:  disaggregation.quarters_by_year ?? null,
-    totalQuarters:   disaggregation.total_quarters ?? null,
-    yearsReporting:  disaggregation.years_reporting ?? null,
-
-    generatedAt: raw.generated_at ?? null,
-  }
-}
-
-/**
  * Download failures for one publisher, from dashboard-coverage's download_errors.json.
  *
  * Absence from `publishers` means "no known failures", not "no data" — hence the
@@ -318,25 +329,39 @@ export function adaptCoverage(raw) {
  */
 const MAX_SOURCE_AGE_DAYS = 7
 
-/** Whole days since an ISO timestamp, or null if unparseable. */
-function daysSince(iso) {
-  if (!iso) return null
-  const then = Date.parse(String(iso).replace(' ', 'T'))
-  return Number.isNaN(then) ? null : Math.floor((Date.now() - then) / 86_400_000)
+/**
+ * Upstream timestamps arrive in two shapes: ISO 8601, and a space-separated
+ * variant ("2026-09-10 03:46:45+00:00"). Normalise so consumers see one format.
+ */
+function toIso(value) {
+  if (!value) return null
+  const parsed = Date.parse(String(value).replace(' ', 'T'))
+  return Number.isNaN(parsed) ? null : new Date(parsed).toISOString()
+}
+
+/** Whole days since a timestamp, or null if unparseable. */
+function daysSince(value) {
+  const iso = toIso(value)
+  return iso === null ? null : Math.floor((Date.now() - Date.parse(iso)) / 86_400_000)
 }
 
 export function adaptDownloadErrors(raw, slug) {
   if (!raw?.publishers) return null
-  const sourceAgeDays = raw.source_age_days ?? null
+  // Ages are derived from the timestamps rather than read from the file's own
+  // age_days: that value is only correct at the moment it was written, so a
+  // failed rebuild leaves it reporting 0 while the data quietly ages.
+  const sourceGenerated = toIso(raw.source_index_created)
+  const sourceAgeDays = daysSince(sourceGenerated) ?? raw.source_age_days ?? null
   const stale = sourceAgeDays != null && sourceAgeDays > MAX_SOURCE_AGE_DAYS
   const errors = raw.publishers[unref(slug)] ?? []
 
   return {
     stale,
     sourceAgeDays,
-    ageDays:         raw.age_days ?? daysSince(raw.generated),
+    ageDays:         daysSince(raw.generated) ?? raw.age_days ?? null,
     refreshed:       raw.refreshed ?? null,
-    generated:       raw.generated ?? null,
+    generated:       toIso(raw.generated),
+    sourceGenerated,
     datasetsChecked: raw.datasets_checked ?? null,
     errors,
     // null = cannot say
@@ -361,8 +386,8 @@ const MAX_AGE_DAYS_DEFAULT = 10
 
 export function adaptValidationErrors(raw, slug) {
   if (!raw?.publishers) return null
-  // `generated` is the fallback for age_days; both are published now, and they agree.
-  const ageDays = raw.age_days ?? daysSince(raw.generated)
+  // Derived from the timestamp, not the file's own age_days — see adaptDownloadErrors.
+  const ageDays = daysSince(raw.generated) ?? raw.age_days ?? null
   const refreshed = raw.refreshed ?? null
   const maxAge = MAX_AGE_DAYS_BY_CADENCE[refreshed] ?? MAX_AGE_DAYS_DEFAULT
   const stale = ageDays != null && ageDays > maxAge
@@ -389,7 +414,7 @@ export function adaptValidationErrors(raw, slug) {
     stale,
     ageDays,
     refreshed,
-    generated:  raw.generated ?? null,
+    generated:  toIso(raw.generated),
     unreadable,
     sourceSuspect,
     publishersFailed: failed,
@@ -420,18 +445,17 @@ export function adaptValidationErrors(raw, slug) {
 }
 
 /**
- * The measures we can derive from real data today, in the shape the assessment
- * API will eventually return (see sample-data/publishing-quality.json).
+ * Availability, the one dimension the API does not score.
  *
- * Partial by design — it covers only the components the current sources support.
- * The page merges it over its placeholder data. Once the assessment layer exists,
- * this is deleted and its payload used as-is.
+ * Everything else — coverage, timeliness, comprehensiveness, and the overall
+ * band — now comes scored from stats.assessment_new, so this merges the two
+ * rather than deriving anything the API already decided.
  *
- * @param {object} sources { publisher, coverage } — both already adapted
+ * @param {object} sources { publisher, downloads, validation }
  */
-export function toAssessmentFragment({ publisher, coverage, frequency, downloads, validation }, methodology) {
-  const stats = publisher?.stats
-  const dimensions = {}
+export function toAssessmentFragment({ publisher, downloads, validation }, methodology) {
+  const scored = publisher?.stats?.assessment ?? null
+  const dimensions = { ...(scored?.dimensions ?? {}) }
 
   const component = (id, value, detail) => ({
     value,
@@ -439,13 +463,11 @@ export function toAssessmentFragment({ publisher, coverage, frequency, downloads
     ...(detail ? { detail } : {}),
   })
 
-  // Availability: the Validator's own findings beat the dashboard's pass counts,
-  // which carry no severity split. Components stay absent when unknowable.
   const availability = {}
   if (downloads?.downloadable !== null && downloads?.downloadable !== undefined) {
     availability.downloadable = component('downloadable', downloads.downloadable, {
       failing_datasets: downloads.errors.length,
-      source_age_days:  downloads.sourceAgeDays,
+      source_generated: downloads.sourceGenerated,
     })
   }
   if (validation?.noCriticalErrors !== null && validation?.noCriticalErrors !== undefined) {
@@ -462,102 +484,59 @@ export function toAssessmentFragment({ publisher, coverage, frequency, downloads
       documents:            validation.documents,
     })
   }
-  if (Object.keys(availability).length) dimensions.availability = { components: availability }
-
-  if (stats) {
-
-    const timelinessComponents = {}
-    if (stats.timelagValue) {
-      timelinessComponents.timeliness =
-        component('timeliness', stats.timelagValue, { source_value: stats.timelag })
-    }
-    if (frequency?.value) {
-      timelinessComponents.frequency =
-        component('frequency', frequency.value, { source_value: frequency.label })
-    }
-    if (Object.keys(timelinessComponents).length) {
-      dimensions.timeliness = { components: timelinessComponents }
-    }
-
-    // Comprehensiveness components are the mean pass rate of their checks.
-    // Organisation checks are the 1.x section of the same list.
-    const allChecks = stats.tests
-    const byComponent = summariseChecksByComponent(allChecks)
-    const comprehensiveness = {}
-    for (const [id, value] of Object.entries(byComponent)) {
-      comprehensiveness[id] = component(id, value, {
-        checks: allChecks.filter(test => test.component === id).length,
-      })
-    }
-    if (Object.keys(comprehensiveness).length) {
-      dimensions.comprehensiveness = { components: comprehensiveness }
+  if (Object.keys(availability).length) {
+    dimensions.availability = {
+      components: availability,
+      category: deriveDimensionCategory('availability', availability, methodology),
     }
   }
 
-  if (coverage) {
-    const components = {}
-    if (coverage.coveragePercent != null) {
-      components.coverage = component('coverage', coverage.coveragePercent, {
-        iati_spend_usd:      coverage.iatiSpendingUsd,
-        reference_spend_usd: coverage.referenceValueUsd,
-        reference_source:    coverage.referenceSource,
-        reference_year:      coverage.referenceYear,
-      })
+  // The API scores timeliness from frequency_new, which currently under-reports
+  // updates (see adaptStats). Rescore that one component from frequency_old on
+  // the API's own ordinal scale and re-derive the dimension.
+  const frequency = publisher?.stats?.frequency
+  const ordinal = FREQUENCY_ORDINAL[String(frequency?.label ?? '').toLowerCase()]
+  if (dimensions.timeliness && ordinal !== undefined) {
+    const components = {
+      ...dimensions.timeliness.components,
+      frequency: {
+        value: ordinal,
+        category: ORDINAL_BAND[ordinal],
+        detail: { source_value: frequency.label },
+      },
     }
-    if (coverage.quartersPerYear != null) {
-      components.disaggregation = component('disaggregation', coverage.quartersPerYear, {
-        quarters_by_year: coverage.quartersByYear,
-        years_reporting:  coverage.yearsReporting,
-      })
+    dimensions.timeliness = {
+      components,
+      category: deriveDimensionCategory('timeliness', components, methodology),
     }
-    if (Object.keys(components).length) dimensions.coverage = { components }
-  }
-
-  for (const [id, dim] of Object.entries(dimensions)) {
-    const category = deriveDimensionCategory(id, dim.components, methodology)
-    if (category) dim.category = category
   }
 
   if (!Object.keys(dimensions).length) return null
-  return { dimensions, overall: { category: deriveOverallCategory(dimensions) } }
+
+  // Weakest dimension overall: the API's own overall excludes availability, and
+  // is built on the timeliness band corrected above.
+  const overall = { category: weakestBand(Object.values(dimensions).map(d => d.category)) }
+
+  return { dimensions, overall }
 }
 
-/**
- * The overall band from the dimension bands.
- *
- * The methodology does not specify how dimensions combine into an overall
- * verdict, so — as with dimensions whose rule is unstated — the weakest
- * dimension decides. Revisit once the paper settles this.
- */
-export function deriveOverallCategory(dimensions = {}) {
-  const ladder = ['needs_improvement', 'good', 'very_good', 'excellent']
-  const ranks = Object.values(dimensions)
-    .map(dim => ladder.indexOf(dim.category))
-    .filter(rank => rank >= 0)
-  return ranks.length ? ladder[Math.min(...ranks)] : null
+const BAND_LADDER = ['needs_improvement', 'good', 'very_good', 'excellent']
+
+/** The lowest of the given bands, ignoring anything unrecognised. */
+function weakestBand(bands) {
+  const ranks = bands.map(b => BAND_LADDER.indexOf(b)).filter(r => r >= 0)
+  return ranks.length ? BAND_LADDER[Math.min(...ranks)] : null
 }
 
 /**
  * A dimension's band from its components' values.
  *
- * Timeliness has an explicit rule in the methodology (a joint function of both
- * components, not an aggregate of their bands). For the others the methodology
- * does not yet specify how components combine, so the weakest component decides
- * — a publisher is not "excellent" at coverage while failing disaggregation.
- * Revisit once the paper settles this.
+ * The weakest component decides — a publisher is not "excellent" at coverage
+ * while failing disaggregation. This is also how the API bands the dimensions it
+ * scores itself (verified against every publisher in the sample), so a dimension
+ * re-derived here agrees with one taken straight from the API.
  */
 export function deriveDimensionCategory(dimensionId, components = {}, methodology) {
-  if (dimensionId === 'timeliness') {
-    const lag  = components.timeliness?.value
-    const freq = components.frequency?.value
-    if (!lag || !freq) return null
-    const top = v => ENUM_RANK[v] === 5              // one month / monthly
-    const mid = v => ENUM_RANK[v] === 4              // one quarter / quarterly
-    if (top(lag) && top(freq)) return 'excellent'
-    if ((mid(lag) && mid(freq)) || top(lag) || top(freq)) return 'good'
-    return 'needs_improvement'
-  }
-
   const ladder = ['needs_improvement', 'good', 'very_good', 'excellent']
   const ranks = Object.values(components)
     .map(c => ladder.indexOf(c.category))
