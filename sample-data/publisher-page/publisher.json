@@ -1,0 +1,29 @@
+{
+  "publisher": "afdb",
+  "source": "https://dev2.dashboard.iatistandard.org/api/reporting-orgs/{slug}.json?show_stats=1",
+  "generated": "2026-09-10T03:00:00.000Z",
+  "identity": {
+    "short_name": "afdb",
+    "name": "African Development Bank",
+    "iati_identifier": "XM-DAC-46002",
+    "organisation_type": "40",
+    "registry_dataset_count": 57,
+    "website": "https://www.afdb.org"
+  },
+  "dataset": {
+    "activities": 5606,
+    "transactions": 143295,
+    "files": 56,
+    "organisation_files": 1,
+    "hierarchy_levels": [
+      1
+    ],
+    "iati_versions": [
+      "2.03"
+    ],
+    "earliest_date": "1967-04-21",
+    "latest_date": "2035-01-01",
+    "most_recent_transaction": "2026-07-15",
+    "file_size_bytes": 179834326
+  }
+}

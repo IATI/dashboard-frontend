@@ -1,0 +1,687 @@
+{
+  "publisher": "afdb",
+  "source": "https://dev2.dashboard.iatistandard.org/api/reporting-orgs/{slug}.json?show_stats=1",
+  "generated": "2026-09-10T03:00:00.000Z",
+  "total_checks": 55,
+  "total_indicators": 34,
+  "indicators": [
+    {
+      "indicator": "Organisation strategy",
+      "component": "organisation_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Organisation strategy is present",
+          "group_id": "1.1_organisation_strategy",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Annual report",
+      "component": "organisation_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Annual report is present",
+          "group_id": "1.2_annual_report",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Allocation policy",
+      "component": "organisation_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Allocation policy is present",
+          "group_id": "1.3_allocation_policy",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Procurement policy",
+      "component": "organisation_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Procurement policy is present",
+          "group_id": "1.4_procurement_policy",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Audit",
+      "component": "organisation_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Audit is present",
+          "group_id": "1.6_audit",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Organisation budget",
+      "component": "organisation_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Organisation budget available one year forward",
+          "group_id": "1.7_organisation_budget",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "Organisation budget available three years forward",
+          "group_id": "1.7_organisation_budget",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "Organisation budget available two years forward",
+          "group_id": "1.7_organisation_budget",
+          "passed": 1,
+          "applicable": 1,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Reporting organisation",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Reporting organisation is present",
+          "group_id": "2.1_reporting_organisation",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "Reporting organisation type is valid",
+          "group_id": "2.1_reporting_organisation",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Aid type",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Aid type is present",
+          "group_id": "2.10_aid_type",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        },
+        {
+          "name": "Aid type is valid",
+          "group_id": "2.10_aid_type",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Flow type",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Flow type",
+          "group_id": "2.11_flow_type",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        },
+        {
+          "name": "Flow type uses standard codelist",
+          "group_id": "2.11_flow_type",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Finance type",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Default finance type",
+          "group_id": "2.12_finance_type",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        },
+        {
+          "name": "Finance type uses standard codelist",
+          "group_id": "2.12_finance_type",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Tied status",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Tied aid status",
+          "group_id": "2.13_tied_status",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        },
+        {
+          "name": "Tied aid status uses standard codelist",
+          "group_id": "2.13_tied_status",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Iati identifier",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "IATI Identifier is present",
+          "group_id": "2.2_iati_identifier",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "IATI Identifier starts with reporting org ref",
+          "group_id": "2.2_iati_identifier",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Implementing organisation",
+      "component": "basic_fields",
+      "value": 99,
+      "tests": [
+        {
+          "name": "Implementing organisation",
+          "group_id": "2.3_implementing_organisation",
+          "passed": 4953,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 99
+        }
+      ]
+    },
+    {
+      "indicator": "Title",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Title has at least 10 characters",
+          "group_id": "2.4_title",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "Title is present",
+          "group_id": "2.4_title",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Description",
+      "component": "basic_fields",
+      "value": 99,
+      "tests": [
+        {
+          "name": "Description has at least 80 characters",
+          "group_id": "2.5_description",
+          "passed": 5472,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 98
+        },
+        {
+          "name": "Description is present",
+          "group_id": "2.5_description",
+          "passed": 5573,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 99
+        }
+      ]
+    },
+    {
+      "indicator": "Current status",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Current status is present",
+          "group_id": "2.6_current_status",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "Current status is valid",
+          "group_id": "2.6_current_status",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Dates",
+      "component": "basic_fields",
+      "value": 99,
+      "tests": [
+        {
+          "name": "Actual end date is present",
+          "group_id": "2.7_dates",
+          "passed": 4168,
+          "applicable": 4176,
+          "not_applicable": 1430,
+          "value": 100
+        },
+        {
+          "name": "Actual start date is present",
+          "group_id": "2.7_dates",
+          "passed": 5015,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        },
+        {
+          "name": "Planned end date is present",
+          "group_id": "2.7_dates",
+          "passed": 5398,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 96
+        },
+        {
+          "name": "Planned start date is present",
+          "group_id": "2.7_dates",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Sector",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Publish detailed CRS purpose codes in the sector field",
+          "group_id": "2.8_sector",
+          "passed": 4470,
+          "applicable": 4477,
+          "not_applicable": 1129,
+          "value": 100
+        },
+        {
+          "name": "Sector is present",
+          "group_id": "2.8_sector",
+          "passed": 5605,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        },
+        {
+          "name": "Sector uses DAC CRS 5 digit purpose codes",
+          "group_id": "2.8_sector",
+          "passed": 5605,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Country or region",
+      "component": "basic_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Country or region is present",
+          "group_id": "2.9_country_or_region",
+          "passed": 5606,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Commitments",
+      "component": "financial_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Commitment is present",
+          "group_id": "3.1_commitments",
+          "passed": 5022,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Disbursements and expenditures",
+      "component": "financial_fields",
+      "value": 94,
+      "tests": [
+        {
+          "name": "Disbursements or expenditures are present",
+          "group_id": "3.2_disbursements_and_expenditures",
+          "passed": 4703,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 94
+        }
+      ]
+    },
+    {
+      "indicator": "Project budgets",
+      "component": "financial_fields",
+      "value": 99,
+      "tests": [
+        {
+          "name": "Budget available forward annually",
+          "group_id": "3.4_project_budgets",
+          "passed": 453,
+          "applicable": 459,
+          "not_applicable": 5147,
+          "value": 99
+        },
+        {
+          "name": "Budget available forward quarterly",
+          "group_id": "3.4_project_budgets",
+          "passed": 453,
+          "applicable": 459,
+          "not_applicable": 5147,
+          "value": 99
+        }
+      ]
+    },
+    {
+      "indicator": "Contact info",
+      "component": "advanced_fields",
+      "value": 94,
+      "tests": [
+        {
+          "name": "Contact info is present",
+          "group_id": "4.1_contact_info",
+          "passed": 5278,
+          "applicable": 5606,
+          "not_applicable": 0,
+          "value": 94
+        }
+      ]
+    },
+    {
+      "indicator": "Location",
+      "component": "advanced_fields",
+      "value": 78,
+      "tests": [
+        {
+          "name": "Location",
+          "group_id": "4.2_location",
+          "passed": 3937,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 78
+        },
+        {
+          "name": "Location point or administrative or location-id",
+          "group_id": "4.2_location",
+          "passed": 3937,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 78
+        }
+      ]
+    },
+    {
+      "indicator": "Location activity scope exclusion",
+      "component": "advanced_fields",
+      "value": 76,
+      "tests": [
+        {
+          "name": "Location (with activity-scope exclusion)",
+          "group_id": "4.2_location_activity_scope_exclusion",
+          "passed": 3188,
+          "applicable": 4179,
+          "not_applicable": 1427,
+          "value": 76
+        },
+        {
+          "name": "Location point or administrative or location-id (with activity-scope exclusion)",
+          "group_id": "4.2_location_activity_scope_exclusion",
+          "passed": 3188,
+          "applicable": 4179,
+          "not_applicable": 1427,
+          "value": 76
+        }
+      ]
+    },
+    {
+      "indicator": "Capital spend",
+      "component": "advanced_fields",
+      "value": 100,
+      "tests": [
+        {
+          "name": "Capital spend is present",
+          "group_id": "4.3_capital_spend",
+          "passed": 4476,
+          "applicable": 4477,
+          "not_applicable": 1129,
+          "value": 100
+        }
+      ]
+    },
+    {
+      "indicator": "Results",
+      "component": "advanced_fields",
+      "value": 58,
+      "tests": [
+        {
+          "name": "Results data",
+          "group_id": "4.5_results",
+          "passed": 2634,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 52
+        },
+        {
+          "name": "Results document",
+          "group_id": "4.8.8_results",
+          "passed": 3158,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 63
+        }
+      ]
+    },
+    {
+      "indicator": "Conditions",
+      "component": "advanced_fields",
+      "value": 76,
+      "tests": [
+        {
+          "name": "Conditions data",
+          "group_id": "4.6_conditions",
+          "passed": 5013,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 100
+        },
+        {
+          "name": "Conditions document",
+          "group_id": "4.8.2_conditions",
+          "passed": 2587,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 52
+        }
+      ]
+    },
+    {
+      "indicator": "Budget",
+      "component": "advanced_fields",
+      "value": 49,
+      "tests": [
+        {
+          "name": "Budget document is present",
+          "group_id": "4.8.1_budget",
+          "passed": 2209,
+          "applicable": 4477,
+          "not_applicable": 1129,
+          "value": 49
+        }
+      ]
+    },
+    {
+      "indicator": "Tender",
+      "component": "advanced_fields",
+      "value": 36,
+      "tests": [
+        {
+          "name": "Tender is present",
+          "group_id": "4.8.3_tender",
+          "passed": 1620,
+          "applicable": 4477,
+          "not_applicable": 1129,
+          "value": 36
+        }
+      ]
+    },
+    {
+      "indicator": "Contract",
+      "component": "advanced_fields",
+      "value": 55,
+      "tests": [
+        {
+          "name": "Contract is present",
+          "group_id": "4.8.4_contract",
+          "passed": 2461,
+          "applicable": 4477,
+          "not_applicable": 1129,
+          "value": 55
+        }
+      ]
+    },
+    {
+      "indicator": "Objectives",
+      "component": "advanced_fields",
+      "value": 82,
+      "tests": [
+        {
+          "name": "Objectives of activity document",
+          "group_id": "4.8.5_objectives",
+          "passed": 4139,
+          "applicable": 5023,
+          "not_applicable": 583,
+          "value": 82
+        }
+      ]
+    },
+    {
+      "indicator": "Impact appraisal",
+      "component": "advanced_fields",
+      "value": 44,
+      "tests": [
+        {
+          "name": "Pre- and/or post-project impact appraisal documents",
+          "group_id": "4.8.6_impact_appraisal",
+          "passed": 1356,
+          "applicable": 3051,
+          "not_applicable": 2555,
+          "value": 44
+        }
+      ]
+    },
+    {
+      "indicator": "Performance and evaluation",
+      "component": "advanced_fields",
+      "value": 55,
+      "tests": [
+        {
+          "name": "Project performance and evaluation document",
+          "group_id": "4.8.7_performance_and_evaluation",
+          "passed": 2742,
+          "applicable": 4957,
+          "not_applicable": 649,
+          "value": 55
+        }
+      ]
+    }
+  ]
+}

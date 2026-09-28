@@ -1,0 +1,43 @@
+{
+  "publisher": "afdb",
+  "source": "https://data.countrydata.iatistandard.org/api/babbage/cubes/iatiline/aggregate/",
+  "generated": "2026-09-10T03:00:00.000Z",
+  "currency": "USD",
+  "years": [
+    {
+      "year": "2023",
+      "budget": 9395117515.143604,
+      "disbursement_and_expenditure": 4823214444.484943
+    },
+    {
+      "year": "2024",
+      "budget": 11803280227.264366,
+      "disbursement_and_expenditure": 6348520410.293202
+    },
+    {
+      "year": "2025",
+      "budget": 12764234610.593258,
+      "disbursement_and_expenditure": 5394595390.464488
+    },
+    {
+      "year": "2026",
+      "budget": 13321177500.020384,
+      "disbursement_and_expenditure": 2587821219.223793
+    },
+    {
+      "year": "2027",
+      "budget": 8338789900.312416,
+      "disbursement_and_expenditure": 0
+    },
+    {
+      "year": "2028",
+      "budget": 5199947665.042875,
+      "disbursement_and_expenditure": 0
+    },
+    {
+      "year": "2029",
+      "budget": 3608987566.235562,
+      "disbursement_and_expenditure": 0
+    }
+  ]
+}

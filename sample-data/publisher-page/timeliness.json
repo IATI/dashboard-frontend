@@ -1,0 +1,40 @@
+{
+  "publisher": "afdb",
+  "source": "https://dev2.dashboard.iatistandard.org/generated/data/csv/timeliness_{frequency,timelag}.csv",
+  "generated": "2026-09-10T03:00:00.000Z",
+  "frequency": {
+    "verdict": "Monthly",
+    "first_published": "More than 5 years ago",
+    "file_updates_by_month": {
+      "2025-09": 3,
+      "2025-10": 0,
+      "2025-11": 1,
+      "2025-12": 1,
+      "2026-01": 1,
+      "2026-02": 2,
+      "2026-03": 1,
+      "2026-04": 1,
+      "2026-05": 0,
+      "2026-06": 2,
+      "2026-07": 0,
+      "2026-08": 1
+    }
+  },
+  "time_lag": {
+    "verdict": "One month",
+    "transactions_by_month": {
+      "2025-09": 949,
+      "2025-10": 1549,
+      "2025-11": 1204,
+      "2025-12": 982,
+      "2026-01": 971,
+      "2026-02": 1093,
+      "2026-03": 1186,
+      "2026-04": 1473,
+      "2026-05": 1122,
+      "2026-06": 882,
+      "2026-07": 590,
+      "2026-08": 0
+    }
+  }
+}

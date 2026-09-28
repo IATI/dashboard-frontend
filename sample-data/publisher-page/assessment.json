@@ -1,0 +1,128 @@
+{
+  "publisher": "afdb",
+  "generated": "2026-09-10T03:00:00.000Z",
+  "derived_from": [
+    "https://dev2.dashboard.iatistandard.org/api/reporting-orgs/{slug}.json?show_stats=1",
+    "https://iati.github.io/dashboard-coverage/data/publishers/{slug}.json",
+    "https://iati.github.io/dashboard-coverage/data/download_errors.json",
+    "https://iati.github.io/dashboard-coverage/data/validation_errors.json",
+    "timeliness_frequency.csv"
+  ],
+  "dimensions": {
+    "availability": {
+      "components": {
+        "downloadable": {
+          "value": true,
+          "category": "excellent",
+          "detail": {
+            "failing_datasets": 0,
+            "source_generated": "2026-09-10T03:46:45.000Z"
+          }
+        },
+        "no_critical_errors": {
+          "value": true,
+          "category": "excellent",
+          "detail": {
+            "documents_with_critical": 0,
+            "total_critical": 0,
+            "documents": 57
+          }
+        },
+        "no_errors": {
+          "value": false,
+          "category": "needs_improvement",
+          "detail": {
+            "documents_with_error": 16,
+            "total_error": 105,
+            "documents": 57
+          }
+        }
+      },
+      "category": "needs_improvement"
+    },
+    "timeliness": {
+      "components": {
+        "timeliness": {
+          "value": "one_month",
+          "category": "excellent",
+          "detail": {
+            "source_value": "One month"
+          }
+        },
+        "frequency": {
+          "value": "monthly",
+          "category": "excellent",
+          "detail": {
+            "source_value": "Monthly"
+          }
+        }
+      },
+      "category": "excellent"
+    },
+    "comprehensiveness": {
+      "components": {
+        "organisation_fields": {
+          "value": 100,
+          "category": "excellent",
+          "detail": {
+            "checks": 8
+          }
+        },
+        "basic_fields": {
+          "value": 100,
+          "category": "excellent",
+          "detail": {
+            "checks": 27
+          }
+        },
+        "financial_fields": {
+          "value": 98,
+          "category": "excellent",
+          "detail": {
+            "checks": 4
+          }
+        },
+        "advanced_fields": {
+          "value": 68,
+          "category": "very_good",
+          "detail": {
+            "checks": 16
+          }
+        }
+      },
+      "category": "very_good"
+    },
+    "coverage": {
+      "components": {
+        "coverage": {
+          "value": 115,
+          "category": "excellent",
+          "detail": {
+            "iati_spend_usd": 6346054324.61334,
+            "reference_spend_usd": 5534177128,
+            "reference_source": "crs",
+            "reference_year": 2024
+          }
+        },
+        "disaggregation": {
+          "value": 4,
+          "category": "excellent",
+          "detail": {
+            "quarters_by_year": {
+              "2021": 4,
+              "2022": 4,
+              "2023": 4,
+              "2024": 4,
+              "2025": 4
+            },
+            "years_reporting": 5
+          }
+        }
+      },
+      "category": "excellent"
+    }
+  },
+  "overall": {
+    "category": "needs_improvement"
+  }
+}
