@@ -439,9 +439,8 @@ export function adaptValidationErrors(raw, slug) {
     totalCritical:         record?.total_critical ?? null,
     totalError:            record?.total_error ?? null,
     // null = cannot say (stale, unreadable, or publisher absent)
-    // Only critical errors carry a verdict. Plain errors are still reported as
-    // counts above, but are no longer part of the availability assessment.
     noCriticalErrors: usable ? record.documents_with_critical === 0 : null,
+    noErrors:         usable ? record.documents_with_error === 0 : null,
   }
 }
 
@@ -476,6 +475,13 @@ export function toAssessmentFragment({ publisher, downloads, validation }, metho
       documents_with_critical: validation.documentsWithCritical,
       total_critical:          validation.totalCritical,
       documents:               validation.documents,
+    })
+  }
+  if (validation?.noErrors !== null && validation?.noErrors !== undefined) {
+    availability.no_errors = component('no_errors', validation.noErrors, {
+      documents_with_error: validation.documentsWithError,
+      total_error:          validation.totalError,
+      documents:            validation.documents,
     })
   }
   if (Object.keys(availability).length) {

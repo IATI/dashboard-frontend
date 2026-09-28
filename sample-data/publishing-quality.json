@@ -28,6 +28,13 @@
           "detail": {
             "critical_errors": 0
           }
+        },
+        "no_errors": {
+          "value": true,
+          "category": "excellent",
+          "detail": {
+            "errors": 0
+          }
         }
       }
     },

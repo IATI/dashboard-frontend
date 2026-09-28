@@ -56,8 +56,8 @@ const allChecks = computed(() => tests.value)
 // reads component bands from it.
 
 // Availability at a glance: how many datasets could not be fetched, and how many
-// documents the Validator flagged as critical. null means "cannot say" (stale or
-// unassessed) rather than zero — the panel renders those as an em dash.
+// documents the Validator flagged. null means "cannot say" (stale or unassessed)
+// rather than zero — the panel renders those as an em dash.
 const availabilityStats = computed(() => {
   const d = downloads.value
   const v = validation.value
@@ -88,6 +88,8 @@ const availabilityStats = computed(() => {
   if (v?.documentsAssessed) {
     rows.push(measure({ key: 'critical', label: t('availCritical'),
       affected: v.documentsWithCritical, total: v.documentsAssessed, variant: 'bad' }))
+    rows.push(measure({ key: 'errors', label: t('availErrors'),
+      affected: v.documentsWithError, total: v.documentsAssessed, variant: 'bad' }))
   }
   return rows
 })
@@ -399,7 +401,7 @@ const dimensions = computed(() =>
         <template v-if="bandFor('availability')" #kicker-actions>
           <Stars :category="bandFor('availability')" size="md" :tooltips="dimensionStarTooltips()" />
         </template>
-        <div class="measure-grid mt-sm">
+        <div class="measure-grid measure-grid--3 mt-sm">
           <div v-for="stat in availabilityStats" :key="stat.key" class="measure">
             <div class="measure__head">
               <span class="measure__label">{{ stat.label }}</span>
