@@ -28,14 +28,6 @@
         "excellent": true
       }
     },
-    "no_errors": {
-      "unit": "boolean",
-      "thresholds": {
-        "good": true,
-        "very_good": true,
-        "excellent": true
-      }
-    },
     "timeliness": {
       "unit": "enum",
       "thresholds": {

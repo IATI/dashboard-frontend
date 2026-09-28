@@ -5,8 +5,7 @@
     "https://dev2.dashboard.iatistandard.org/api/reporting-orgs/{slug}.json?show_stats=1",
     "https://iati.github.io/dashboard-coverage/data/publishers/{slug}.json",
     "https://iati.github.io/dashboard-coverage/data/download_errors.json",
-    "https://iati.github.io/dashboard-coverage/data/validation_errors.json",
-    "timeliness_frequency.csv"
+    "https://iati.github.io/dashboard-coverage/data/validation_errors.json"
   ],
   "dimensions": {
     "availability": {
@@ -27,18 +26,9 @@
             "total_critical": 0,
             "documents": 57
           }
-        },
-        "no_errors": {
-          "value": false,
-          "category": "needs_improvement",
-          "detail": {
-            "documents_with_error": 16,
-            "total_error": 105,
-            "documents": 57
-          }
         }
       },
-      "category": "needs_improvement"
+      "category": "excellent"
     },
     "timeliness": {
       "components": {
@@ -123,6 +113,6 @@
     }
   },
   "overall": {
-    "category": "needs_improvement"
+    "category": "very_good"
   }
 }
