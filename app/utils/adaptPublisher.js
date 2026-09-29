@@ -32,15 +32,6 @@ const FREQUENCY_TO_VALUE = {
  * frequency_old's verdict maps onto the same scale, so a component rebuilt from
  * it is directly comparable with the timelag component beside it.
  */
-const FREQUENCY_ORDINAL = {
-  'monthly':          4,
-  'quarterly':        3,
-  'six-monthly':      2,
-  'annual':           1,
-  'less than annual': 0,
-}
-const ORDINAL_BAND = ['needs_improvement', 'needs_improvement', 'good', 'very_good', 'excellent']
-
 /**
  * Ordinal back to the named value, for the two components the API scores that
  * way. Everything downstream — the methodology thresholds, displayValue, the
@@ -115,7 +106,7 @@ const AS_PERCENT = new Set(['coverage', 'basic', 'advanced', 'financials', 'orga
  * Availability is absent from the API's assessment, so it is still derived —
  * see toAssessmentFragment.
  */
-function adaptAssessment(stats) {
+function adaptAssessment(stats, methodology) {
   const raw = stats.assessment_new
   if (!raw?.dimensions) return null
 
@@ -129,14 +120,25 @@ function adaptAssessment(stats) {
     for (const [rawId, comp] of Object.entries(dim.components ?? {})) {
       const id = COMPONENT_ID[rawId] ?? rawId
       const scale = ORDINAL_VALUE[rawId]
+      // Band the exact value but display it rounded: 98.51% shows as "99%",
+      // and banding the rounded figure would hand it the 99% star it has not
+      // earned.
+      const exact = scale ? (scale[comp.value] ?? null)
+        : AS_PERCENT.has(rawId) ? comp.value * 100
+        : comp.value
+      // Banded from the methodology, not from comp.category. The API is
+      // currently generous on two components — see the note above adaptStats —
+      // so its own band is deliberately ignored. Delete the deriveCategory call
+      // and read comp.category once that is fixed upstream.
       components[id] = {
-        value: scale ? (scale[comp.value] ?? null)
-          : AS_PERCENT.has(rawId) ? Math.round(comp.value * 100)
-          : comp.value,
-        category: comp.category ?? null,
+        value: AS_PERCENT.has(rawId) ? Math.round(exact) : exact,
+        category: deriveCategory(id, exact, methodology) ?? comp.category ?? null,
       }
     }
-    dimensions[dimId] = { category: dim.category ?? null, components }
+    dimensions[dimId] = {
+      category: deriveDimensionCategory(dimId, components, methodology),
+      components,
+    }
   }
 
   return { overall: { category: raw.overall?.category ?? null }, dimensions }
@@ -254,7 +256,7 @@ function adaptTests(stats) {
 }
 
 /** The parts of `stats` we actually use, renamed and typed consistently. */
-function adaptStats(stats) {
+function adaptStats(stats, methodology) {
   return {
     activityCount:             stats.activities ?? null,
     datasetCount:              stats.activity_files ?? null,
@@ -286,7 +288,7 @@ function adaptStats(stats) {
     tests: adaptTests(stats),
 
     // Now supplied by the API rather than fetched separately or derived here
-    assessment: adaptAssessment(stats),
+    assessment: adaptAssessment(stats, methodology),
     coverage:   adaptCoverageFromStats(stats),
     // frequency_old, not frequency_new. Checked against the published
     // timeliness_frequency.csv across 11 publishers: old matched 11/11, new
@@ -309,7 +311,7 @@ export function adaptPublisher(raw, methodology) {
   if (!raw) return null
   return {
     identity: adaptIdentity(raw),
-    stats: raw.stats ? adaptStats(raw.stats) : null,
+    stats: raw.stats ? adaptStats(raw.stats, methodology) : null,
   }
 }
 
@@ -509,18 +511,15 @@ export function toAssessmentFragment({ publisher, downloads, validation }, metho
   }
 
   // The API scores timeliness from frequency_new, which currently under-reports
-  // updates (see adaptStats). Rescore that one component from frequency_old on
-  // the API's own ordinal scale and re-derive the dimension.
+  // updates (see adaptStats). Rescore that one component from frequency_old, and
+  // band it from the methodology rather than taking the API's band: the API is
+  // one to two bands generous here (it never emits `good` for this component at
+  // all — six-monthly and quarterly both come back very_good).
   const frequency = publisher?.stats?.frequency
-  const ordinal = FREQUENCY_ORDINAL[String(frequency?.label ?? '').toLowerCase()]
-  if (dimensions.timeliness && ordinal !== undefined) {
+  if (dimensions.timeliness && frequency?.value) {
     const components = {
       ...dimensions.timeliness.components,
-      frequency: {
-        value: frequency.value,
-        category: ORDINAL_BAND[ordinal],
-        detail: { source_value: frequency.label },
-      },
+      frequency: component('frequency', frequency.value, { source_value: frequency.label }),
     }
     dimensions.timeliness = {
       components,
