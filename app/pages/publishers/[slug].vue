@@ -177,6 +177,13 @@ function testVariant(pct) {
 const overall           = computed(() => assessed.value.overall ?? null)
 const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
 
+// Headline spending figure. Declared after publisherID because it keys off it.
+// This is deliberately not coverage.iatiSpendingUsd: that figure is pinned to
+// whichever year the comparison dataset covers (2024 for USAID), because its job
+// is to be the numerator of the coverage ratio. The headline wants the most
+// recent complete year instead, so it comes straight from CDFD.
+const { spending } = useCdfdSpending(publisherID)
+
 
 // Dimensions are keyed by id in the API; display order is a presentation concern
 const DIMENSION_ORDER = ['availability', 'timeliness', 'coverage', 'comprehensiveness']
@@ -291,9 +298,9 @@ const dimensions = computed(() =>
         <span v-if="mostRecentTransaction">
           <strong>{{ t('orgMostRecentTransaction') }}</strong> {{ mostRecentTransaction }}
         </span>
-        <span v-if="coverage?.iatiSpendingUsd">
-          <strong>{{ t('orgIatiSpendYear', { year: coverage.referenceYear }) }}</strong>
-          {{ fmtUsd(coverage.iatiSpendingUsd) }}
+        <span v-if="spending">
+          <strong>{{ t('orgIatiSpendYear', { year: spending.year }) }}</strong>
+          {{ fmtUsd(spending.usd) }}
         </span>
       </template>
     </TitleBar>
