@@ -20,11 +20,26 @@ export default defineNuxtConfig({
       // protect anything. Override with NUXT_PUBLIC_SITE_PASSWORD; set it empty
       // to disable the gate entirely.
       sitePassword: 'development',
+      // IATI Account SSO (Asgardeo/WSO2). Defaults are the ones the IATI SPA
+      // example publishes; override per environment with NUXT_PUBLIC_AUTH_*.
+      //
+      // Asgardeo matches signInRedirectURL exactly, and it is derived at runtime
+      // from the app's own origin, so every origin this is served from has to be
+      // registered against the client: http://localhost:3000/ for development
+      // and the deployed URL for production.
+      auth: {
+        clientId: 'nXxAqpsEf4sucq12XfjXWwUWYzMa',
+        baseUrl:  'https://api.eu.asgardeo.io/t/iati',
+        scope:    'openid profile ryd ryd:reporting_org',
+      },
+      // Register Your Data — the source of which publishers a user may administer.
+      // Enforces an origin allowlist, so the same origins need registering here too.
+      rydBase: 'https://dev.api.registeryourdata.iatistandard.org',
     },
   },
   vite: {
     optimizeDeps: {
-      include: ['bootstrap-vue-next', 'chart.js', 'vue-chartjs', 'papaparse'],
+      include: ['bootstrap-vue-next', 'chart.js', 'vue-chartjs', 'papaparse', '@asgardeo/auth-spa'],
     },
     css: {
       preprocessorOptions: {

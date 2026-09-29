@@ -1,6 +1,11 @@
 <script setup>
 defineProps({ active: { type: String, default: '' } })
 const { t, locale, setLocale } = useI18n({ useScope: 'global' })
+
+// IATI Account sign-in. `ready` is false until the session has been checked, so
+// the button stays neutral rather than flashing "Sign in" at someone who is
+// already signed in.
+const { user, ready, isSignedIn, signIn, signOut } = useAuth()
 </script>
 
 <template>
@@ -37,9 +42,25 @@ const { t, locale, setLocale } = useI18n({ useScope: 'global' })
             <span>{{ t('navHelp') }}</span>
             <i class="iati-icon iati-icon--info"></i>
           </a>
-          <a href="#" class="iati-button iati-button--light">
-            <span>{{ t('navSignIn') }}</span>
-          </a>
+          <ClientOnly>
+            <button
+              v-if="isSignedIn" type="button" class="iati-button iati-button--light"
+              :title="user?.email || undefined" @click="signOut()"
+            >
+              <span>{{ t('navSignOutAs', { name: user?.name || t('navAccount') }) }}</span>
+            </button>
+            <button
+              v-else-if="ready" type="button" class="iati-button iati-button--light"
+              @click="signIn()"
+            >
+              <span>{{ t('navSignIn') }}</span>
+            </button>
+            <template #fallback>
+              <span class="iati-button iati-button--light is-placeholder">
+                <span>{{ t('navSignIn') }}</span>
+              </span>
+            </template>
+          </ClientOnly>
         </div>
         <div class="iati-header-title">
           <p class="iati-header-title__eyebrow">{{ t('brandEyebrow') }}</p>
