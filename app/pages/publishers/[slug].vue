@@ -704,7 +704,6 @@ const dimensions = computed(() =>
           </div>
         </div>
         </div>
-        <p class="coverage-note">{{ t('orgTestsNote', { n: tests[0]?.denominator?.toLocaleString() }) }}</p>
       </Card>
 
     </main>
