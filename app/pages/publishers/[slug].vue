@@ -686,11 +686,22 @@ const dimensions = computed(() =>
                 <ul class="test-list">
                   <li v-for="test in item.tests" :key="test.id" class="test-list__item">
                     <span class="test-list__name">{{ test.name }}</span>
+                    <!-- Each check has its own denominator: `None` excludes the
+                         activities it does not apply to, so this is not the
+                         publisher's activity count and varies check to check. -->
+                    <span
+                      class="test-list__count"
+                      :title="test.notApplicable
+                        ? t('orgTestExcluded', { n: test.notApplicable.toLocaleString() })
+                        : undefined"
+                    >
+                      {{ t('orgTestCount', {
+                        n: test.numerator.toLocaleString(),
+                        total: test.denominator.toLocaleString(),
+                      }) }}
+                    </span>
                     <div class="test-list__score">
-                      <span v-if="test.boolean" class="test-list__flag" :class="test.passed ? 'is-pass' : 'is-fail'">
-                        {{ test.passed ? '✓' : '✗' }}
-                      </span>
-                      <div v-else class="check-score">
+                      <div class="check-score">
                         <BProgress class="check-score__bar" :max="100" height=".7rem">
                           <BProgressBar :value="test.value" :variant="testVariant(test.value)" />
                         </BProgress>

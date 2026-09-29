@@ -327,7 +327,7 @@
   "orgColIndicator": "Indicateur",
   "orgColTest": "Test",
   "orgShowTests": "Afficher les tests",
-  "orgTestCount": "1 test | {n} tests",
+  "orgTestCount": "{n} sur {total}",
   "orgNoTests": "Aucun test disponible pour ce composant.",
   "coverageBasisNet": "Net",
   "coverageBasisGross": "Brut",
@@ -444,5 +444,6 @@
   "navAccount": "Compte IATI",
   "pubScopedToYou": "Affichage des {n} organisations que votre compte IATI peut administrer. Déconnectez-vous pour parcourir tous les publiants.",
   "pubScopeUnavailable": "Connecté, mais votre liste d’organisations n’a pas pu être chargée ; tous les publiants sont affichés. L’adresse de cette application doit être ajoutée aux origines autorisées de Register Your Data.",
-  "availValidatorLink": "Voir ces problèmes dans le validateur IATI"
+  "availValidatorLink": "Voir ces problèmes dans le validateur IATI",
+  "orgTestExcluded": "{n} activités ne sont pas concernées par cette vérification"
 }
