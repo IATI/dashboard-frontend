@@ -323,11 +323,10 @@
   "orgColScore": "Passing",
   "valueSixMonths": "Six months",
   "valueMoreThanOneYear": "More than one year",
-  "orgTestsNote": "Denominator: {n} current activities.",
   "orgColIndicator": "Indicator",
   "orgColTest": "Test",
   "orgShowTests": "Show tests",
-  "orgTestCount": "1 test | {n} tests",
+  "orgTestCount": "{n} of {total}",
   "orgNoTests": "No tests available for this component.",
   "coverageBasisNet": "Net",
   "coverageBasisGross": "Gross",
@@ -443,5 +442,7 @@
   "navSignOutAs": "Sign out ({name})",
   "navAccount": "IATI Account",
   "pubScopedToYou": "Showing the {n} organisations your IATI Account can administer. Sign out to browse all publishers.",
-  "pubScopeUnavailable": "Signed in, but your list of organisations could not be loaded, so all publishers are shown. This app’s address needs adding to the Register Your Data allowed origins."
+  "pubScopeUnavailable": "Signed in, but your list of organisations could not be loaded, so all publishers are shown. This app’s address needs adding to the Register Your Data allowed origins.",
+  "availValidatorLink": "See these issues in the IATI Validator",
+  "orgTestExcluded": "{n} activities are not applicable to this check"
 }

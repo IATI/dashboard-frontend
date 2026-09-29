@@ -58,6 +58,11 @@ const allChecks = computed(() => tests.value)
 // Availability at a glance: how many datasets could not be fetched, and how many
 // documents the Validator flagged. null means "cannot say" (stale or unassessed)
 // rather than zero — the panel renders those as an em dash.
+// The Validator keys its organisation pages on the same short name we use as
+// the page slug, so the counts in this panel link straight through to the
+// findings behind them.
+const validatorUrl = computed(() => `https://validator.iatistandard.org/organisation/${slug}`)
+
 const availabilityStats = computed(() => {
   const d = downloads.value
   const v = validation.value
@@ -451,6 +456,10 @@ const dimensions = computed(() =>
             <p v-if="stat.note" class="measure__note">{{ stat.note }}</p>
           </div>
         </div>
+
+        <p class="coverage-note mt-sm">
+          <a :href="validatorUrl" target="_blank" rel="noopener">{{ t('availValidatorLink') }}</a>
+        </p>
       </Card>
 
       <!-- Timeliness — update cadence and how current the data is -->
@@ -677,11 +686,22 @@ const dimensions = computed(() =>
                 <ul class="test-list">
                   <li v-for="test in item.tests" :key="test.id" class="test-list__item">
                     <span class="test-list__name">{{ test.name }}</span>
+                    <!-- Each check has its own denominator: `None` excludes the
+                         activities it does not apply to, so this is not the
+                         publisher's activity count and varies check to check. -->
+                    <span
+                      class="test-list__count"
+                      :title="test.notApplicable
+                        ? t('orgTestExcluded', { n: test.notApplicable.toLocaleString() })
+                        : undefined"
+                    >
+                      {{ t('orgTestCount', {
+                        n: test.numerator.toLocaleString(),
+                        total: test.denominator.toLocaleString(),
+                      }) }}
+                    </span>
                     <div class="test-list__score">
-                      <span v-if="test.boolean" class="test-list__flag" :class="test.passed ? 'is-pass' : 'is-fail'">
-                        {{ test.passed ? '✓' : '✗' }}
-                      </span>
-                      <div v-else class="check-score">
+                      <div class="check-score">
                         <BProgress class="check-score__bar" :max="100" height=".7rem">
                           <BProgressBar :value="test.value" :variant="testVariant(test.value)" />
                         </BProgress>
@@ -695,7 +715,6 @@ const dimensions = computed(() =>
           </div>
         </div>
         </div>
-        <p class="coverage-note">{{ t('orgTestsNote', { n: tests[0]?.denominator?.toLocaleString() }) }}</p>
       </Card>
 
     </main>
