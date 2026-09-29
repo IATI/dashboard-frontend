@@ -58,6 +58,11 @@ const allChecks = computed(() => tests.value)
 // Availability at a glance: how many datasets could not be fetched, and how many
 // documents the Validator flagged. null means "cannot say" (stale or unassessed)
 // rather than zero — the panel renders those as an em dash.
+// The Validator keys its organisation pages on the same short name we use as
+// the page slug, so the counts in this panel link straight through to the
+// findings behind them.
+const validatorUrl = computed(() => `https://validator.iatistandard.org/organisation/${slug}`)
+
 const availabilityStats = computed(() => {
   const d = downloads.value
   const v = validation.value
@@ -451,6 +456,10 @@ const dimensions = computed(() =>
             <p v-if="stat.note" class="measure__note">{{ stat.note }}</p>
           </div>
         </div>
+
+        <p class="coverage-note mt-sm">
+          <a :href="validatorUrl" target="_blank" rel="noopener">{{ t('availValidatorLink') }}</a>
+        </p>
       </Card>
 
       <!-- Timeliness — update cadence and how current the data is -->
