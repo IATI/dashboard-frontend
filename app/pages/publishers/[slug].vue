@@ -14,13 +14,14 @@ const slug = route.params.slug
 const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
 watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 
-const { coverage }  = useCoverage(slug)
-const { frequencyFor, timelagFor } = useTimelinessFrequency()
 const { downloads, validation } = useAvailabilityData(slug)
 const { lookup: organisationTypeName } = useCodelist('OrganisationType')
 
 const identity = computed(() => publisher.value?.identity ?? null)
 const stats    = computed(() => publisher.value?.stats ?? null)
+// Coverage and update frequency used to need their own fetches (a JSON dataset
+// and a CSV of every publisher); the stats payload now carries both.
+const coverage = computed(() => stats.value?.coverage ?? null)
 
 const orgName = computed(() => identity.value?.name ?? '')
 const orgType = computed(() => organisationTypeName(identity.value?.organisationType))
@@ -97,19 +98,18 @@ const availabilityStats = computed(() => {
 // The two month series measure different things — updates vs transactions
 // reported — so both are shown rather than treating one as a proxy.
 const timelinessPanel = computed(() => {
-  const freq = frequencyFor(slug)
-  const lag  = timelagFor(slug)
-  if (!freq && !lag && !stats.value) return null
+  if (!stats.value) return null
+  const freq = stats.value.frequency
 
   const updates = Object.entries(freq?.updatesByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
-  const txns    = Object.entries(lag?.transactionsByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
+  const txns    = Object.entries(stats.value.transactionsByMonth ?? {}).sort(([a], [b]) => a.localeCompare(b))
   const peak    = Math.max(1, ...txns.map(([, n]) => n))
 
   return {
     frequency: freq?.value ? t(labelKey('value', freq.value)) : freq?.label ?? null,
-    timeLag:   stats.value?.timelagValue
+    timeLag:   stats.value.timelagValue
       ? t(labelKey('value', stats.value.timelagValue))
-      : lag?.label ?? null,
+      : stats.value.timelag,
     updates:      updates.map(([month, n]) => ({ month, active: n > 0, count: n })),
     monthsActive: updates.filter(([, n]) => n > 0).length,
     txns:         txns.map(([month, n]) => ({ month, count: n, pct: Math.round((n / peak) * 100) })),
@@ -177,6 +177,13 @@ function testVariant(pct) {
 const overall           = computed(() => assessed.value.overall ?? null)
 const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
 
+// Headline spending figure. Declared after publisherID because it keys off it.
+// This is deliberately not coverage.iatiSpendingUsd: that figure is pinned to
+// whichever year the comparison dataset covers (2024 for USAID), because its job
+// is to be the numerator of the coverage ratio. The headline wants the most
+// recent complete year instead, so it comes straight from CDFD.
+const { spending } = useCdfdSpending(publisherID)
+
 
 // Dimensions are keyed by id in the API; display order is a presentation concern
 const DIMENSION_ORDER = ['availability', 'timeliness', 'coverage', 'comprehensiveness']
@@ -216,8 +223,6 @@ const assessed = computed(() => {
   const fragment = toAssessmentFragment(
     {
       publisher: publisher.value,
-      coverage:  coverage.value,
-      frequency: frequencyFor(slug),
       downloads: downloads.value,
       validation: validation.value,
     },
@@ -293,9 +298,9 @@ const dimensions = computed(() =>
         <span v-if="mostRecentTransaction">
           <strong>{{ t('orgMostRecentTransaction') }}</strong> {{ mostRecentTransaction }}
         </span>
-        <span v-if="coverage?.iatiSpendingUsd">
-          <strong>{{ t('orgIatiSpendYear', { year: coverage.referenceYear }) }}</strong>
-          {{ fmtUsd(coverage.iatiSpendingUsd) }}
+        <span v-if="spending">
+          <strong>{{ t('orgIatiSpendYear', { year: spending.year }) }}</strong>
+          {{ fmtUsd(spending.usd) }}
         </span>
       </template>
     </TitleBar>

@@ -1,0 +1,44 @@
+{
+  "publisher": "afdb",
+  "source": {
+    "downloads": "https://iati.github.io/dashboard-coverage/data/download_errors.json",
+    "validator": "https://iati.github.io/dashboard-coverage/data/validation_errors.json"
+  },
+  "generated": "2026-09-10T02:35:14.000Z",
+  "downloads": {
+    "failing": 0,
+    "errors": [],
+    "generated": "2026-09-10T04:34:00.000Z",
+    "source_generated": "2026-09-10T03:46:45.000Z"
+  },
+  "validator": {
+    "documents": 57,
+    "documents_assessed": 57,
+    "undownloadable": 0,
+    "download_failed": 0,
+    "never_fetched": 0,
+    "severities": [
+      {
+        "level": "critical",
+        "documents": 0,
+        "instances": 0
+      },
+      {
+        "level": "error",
+        "documents": 16,
+        "instances": 105
+      },
+      {
+        "level": "warning",
+        "documents": 56,
+        "instances": 14486
+      },
+      {
+        "level": "advisory",
+        "documents": 0,
+        "instances": 0
+      }
+    ],
+    "generated": "2026-09-10T02:35:14.000Z"
+  }
+}

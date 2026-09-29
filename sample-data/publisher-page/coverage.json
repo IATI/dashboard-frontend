@@ -1,0 +1,27 @@
+{
+  "publisher": "afdb",
+  "source": "https://iati.github.io/dashboard-coverage/data/publishers/{slug}.json",
+  "coverage_percent": 115,
+  "coverage_basis": "net",
+  "iati_spending_usd": 6346054324.61334,
+  "reference_value_usd": 5534177128,
+  "reference_currency": "USD",
+  "reference_source": "crs",
+  "reference_entity": "African Development Bank",
+  "reference_entity_id": "crs-95",
+  "reference_year": 2024,
+  "publishers_sharing_reference": 1,
+  "disaggregation": {
+    "quarters_per_year": 4,
+    "quarters_by_year": {
+      "2021": 4,
+      "2022": 4,
+      "2023": 4,
+      "2024": 4,
+      "2025": 4
+    },
+    "total_quarters": 20,
+    "years_reporting": 5
+  },
+  "generated": "2026-09-10T04:34:02.000Z"
+}

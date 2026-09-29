@@ -1,8 +1,5 @@
 import methodology from '~~/sample-data/methodology.json'
 
-// Coverage figures come from a separate published dataset. It sends
-// Access-Control-Allow-Origin: *, so it is fetched directly, not via the proxy.
-const COVERAGE_BASE = 'https://iati.github.io/dashboard-coverage/data/publishers'
 
 /**
  * Fetches one reporting organisation from the dashboard API by its short_name
@@ -56,20 +53,3 @@ export function usePublisher(slug, options = {}) {
   )
 }
 
-/**
- * Fetches the published coverage and disaggregation figures for one publisher.
- * Returns null (rather than throwing) for publishers absent from the dataset.
- *
- * @param {import('vue').Ref<string>|string} slug
- */
-export function useCoverage(slug) {
-  const shortName = computed(() => unref(slug))
-
-  const { data, error, status } = useAsyncData(
-    () => `coverage:${shortName.value}`,
-    () => $fetch(`${COVERAGE_BASE}/${shortName.value}.json`).catch(() => null),
-    { watch: [shortName], default: () => null, transform: adaptCoverage, server: false },
-  )
-
-  return { coverage: data, error, status }
-}

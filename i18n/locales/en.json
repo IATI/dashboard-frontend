@@ -318,7 +318,7 @@
   "categoryGood": "Good",
   "categoryNeedsImprovement": "Needs improvement",
   "subNoCriticalErrors": "No critical errors",
-  "subDownloadable": "Downloadable",
+  "subDownloadable": "No download errors",
   "orgMostRecentTransaction": "Most recent transaction",
   "orgColScore": "Passing",
   "valueSixMonths": "Six months",
@@ -439,5 +439,9 @@
   "orgCovDetailsTitle": "How this coverage figure is calculated",
   "orgCovClose": "Close",
   "orgCovIatiLabel": "IATI spending",
-  "orgCovRefLabel": "Reference total"
+  "orgCovRefLabel": "Reference total",
+  "navSignOutAs": "Sign out ({name})",
+  "navAccount": "IATI Account",
+  "pubScopedToYou": "Showing the {n} organisations your IATI Account can administer. Sign out to browse all publishers.",
+  "pubScopeUnavailable": "Signed in, but your list of organisations could not be loaded, so all publishers are shown. This app’s address needs adding to the Register Your Data allowed origins."
 }

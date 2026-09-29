@@ -5,6 +5,15 @@ const { t, locale } = useI18n({ useScope: 'global' })
 const { publishers, status } = usePublisherList()
 const { lookup: organisationTypeName, map: orgTypeMap } = useCodelist('OrganisationType')
 
+// Signed in with an IATI Account, the list narrows to the organisations that
+// account administers. Signed out, it stays the full public list — the site's
+// password gate is the access control there, and this is the same data the
+// dashboard already publishes.
+const { isSignedIn } = useAuth()
+const { slugs: mySlugs, blocked: rydBlocked, status: myStatus } = useMyPublishers()
+
+const scoped = computed(() => isSignedIn.value && myStatus.value === 'success' && !rydBlocked.value)
+
 const PER_PAGE = 50
 const search = ref('')
 const filterType = ref('')
@@ -27,9 +36,10 @@ const orgTypes = computed(() => {
     .sort((a, b) => a.label.localeCompare(b.label, locale.value))
 })
 
-const rows = computed(() =>
-  publishers.value.map(p => ({ ...p, orgType: organisationTypeName(p.organisationType) })),
-)
+const rows = computed(() => {
+  const all = publishers.value.map(p => ({ ...p, orgType: organisationTypeName(p.organisationType) }))
+  return scoped.value ? all.filter(p => mySlugs.value.has(p.slug)) : all
+})
 
 const filtered = computed(() => {
   const term = search.value.trim().toLowerCase()
@@ -57,6 +67,15 @@ watch([search, filterType], () => { currentPage.value = 1 })
     <TitleBar :eyebrow="t('orgEyebrow')" :title="t('navOrganisations')" />
 
     <main class="main">
+      <ClientOnly>
+        <BAlert v-if="scoped" :model-value="true" variant="info" class="mb-sm">
+          {{ t('pubScopedToYou', { n: mySlugs.size }) }}
+        </BAlert>
+        <BAlert v-else-if="isSignedIn && rydBlocked" :model-value="true" variant="warning" class="mb-sm">
+          {{ t('pubScopeUnavailable') }}
+        </BAlert>
+      </ClientOnly>
+
       <Card flush>
         <div class="filter-bar">
           <div>
