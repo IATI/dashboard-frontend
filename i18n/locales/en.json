@@ -318,7 +318,7 @@
   "categoryGood": "Good",
   "categoryNeedsImprovement": "Needs improvement",
   "subNoCriticalErrors": "No critical errors",
-  "subDownloadable": "Downloadable",
+  "subDownloadable": "No download errors",
   "orgMostRecentTransaction": "Most recent transaction",
   "orgColScore": "Passing",
   "valueSixMonths": "Six months",
