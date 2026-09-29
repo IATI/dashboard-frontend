@@ -41,6 +41,20 @@ const FREQUENCY_ORDINAL = {
 }
 const ORDINAL_BAND = ['needs_improvement', 'needs_improvement', 'good', 'very_good', 'excellent']
 
+/**
+ * Ordinal back to the named value, for the two components the API scores that
+ * way. Everything downstream — the methodology thresholds, displayValue, the
+ * star tooltips — works in named values, so "3" has to come back as
+ * 'one_quarter' rather than being rendered as a bare number.
+ *
+ * Verified against stats.timelag and frequency_new over 30 publishers: every
+ * ordinal 0-4 round-trips to the string the API itself displays.
+ */
+const ORDINAL_VALUE = {
+  timelag:   ['more_than_one_year', 'one_year', 'six_months', 'one_quarter', 'one_month'],
+  frequency: ['less_than_annual', 'annually', 'six_monthly', 'quarterly', 'monthly'],
+}
+
 // Ordering for enum comparisons — higher is better.
 const ENUM_RANK = {
   one_month: 5, monthly: 5,
@@ -114,8 +128,11 @@ function adaptAssessment(stats) {
     const components = {}
     for (const [rawId, comp] of Object.entries(dim.components ?? {})) {
       const id = COMPONENT_ID[rawId] ?? rawId
+      const scale = ORDINAL_VALUE[rawId]
       components[id] = {
-        value: AS_PERCENT.has(rawId) ? Math.round(comp.value * 100) : comp.value,
+        value: scale ? (scale[comp.value] ?? null)
+          : AS_PERCENT.has(rawId) ? Math.round(comp.value * 100)
+          : comp.value,
         category: comp.category ?? null,
       }
     }
@@ -500,7 +517,7 @@ export function toAssessmentFragment({ publisher, downloads, validation }, metho
     const components = {
       ...dimensions.timeliness.components,
       frequency: {
-        value: ordinal,
+        value: frequency.value,
         category: ORDINAL_BAND[ordinal],
         detail: { source_value: frequency.label },
       },
