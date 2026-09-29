@@ -15,6 +15,21 @@
 let clientPromise = null
 
 /**
+ * Where to return after sign-in. Asgardeo always sends us back to the app root
+ * (one registered redirect URL covers the whole site), so the page the user
+ * started on is remembered here and restored once the redirect completes.
+ *
+ * sessionStorage rather than localStorage: it should not outlive the tab, and a
+ * second tab signing in should not hijack this one's destination.
+ */
+const RETURN_KEY = 'iati-dq-signin-return'
+
+/** Only ever a path within this app — never an absolute or protocol-relative URL. */
+function isSafeReturnPath(path) {
+  return typeof path === 'string' && path.startsWith('/') && !path.startsWith('//')
+}
+
+/**
  * Asgardeo matches this against the app's registered redirect URLs exactly, so
  * it is derived from wherever the app is actually being served rather than
  * hardcoded — localhost in development, the Pages URL in production. Both have
@@ -45,6 +60,8 @@ function getClient() {
 }
 
 export function useAuth() {
+  const router = useRouter()
+
   // Shared across components; `ready` distinguishes "not signed in" from
   // "we have not looked yet", so the header does not flash a Sign in button at
   // someone who is already signed in.
@@ -63,12 +80,19 @@ export function useAuth() {
     const client = await getClient()
     if (!client) return
 
+    // Read this before the SDK processes and cleans the URL: it is what
+    // distinguishes "just came back from Asgardeo" from an ordinary page load,
+    // and only the former should navigate anywhere.
+    const returning = new URLSearchParams(window.location.search).has('code')
+
     try {
       // No-op unless the URL carries an authorization code.
       await client.signIn({ callOnlyOnRedirect: true })
     } catch (e) {
       error.value = e?.message ?? 'Sign-in failed'
     }
+
+    if (returning) restoreReturnPath()
 
     try {
       if (await client.isAuthenticated()) {
@@ -83,8 +107,26 @@ export function useAuth() {
     }
   }
 
+  /** Navigate back to wherever sign-in was started from, once only. */
+  function restoreReturnPath() {
+    let path = null
+    try {
+      path = sessionStorage.getItem(RETURN_KEY)
+      sessionStorage.removeItem(RETURN_KEY)
+    } catch { /* blocked storage — stay on the root */ }
+
+    if (isSafeReturnPath(path) && path !== router.currentRoute.value.fullPath) {
+      // replace, not push: the redirect should not leave a back-button trap.
+      router.replace(path)
+    }
+  }
+
   async function signIn() {
     error.value = null
+    // Stash before redirecting — signIn() navigates away and nothing after it runs.
+    try {
+      sessionStorage.setItem(RETURN_KEY, router.currentRoute.value.fullPath)
+    } catch { /* blocked storage — sign-in still works, just returns to the root */ }
     const client = await getClient()
     await client?.signIn()
   }
