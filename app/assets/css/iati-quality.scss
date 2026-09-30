@@ -663,3 +663,13 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   .iati-header-title { flex: 1 1 auto; min-width: 0 }
 }
+
+// The button is `align-self: stretch` with its label pushed to the bottom, sized
+// for the short actions row it normally sits in. Beside the taller title block
+// that stretches it to full height and strands "Menu" far below the icon. Pin it
+// to its own height instead. The selector carries the design system's own
+// ancestor so it outranks the rule it is correcting regardless of load order.
+.iati-design-system--enabled .header-title-row .iati-menu-toggle {
+  align-self: center;
+  height: 3rem;
+}
