@@ -6,6 +6,28 @@ const { t, locale, setLocale } = useI18n({ useScope: 'global' })
 // the button stays neutral rather than flashing "Sign in" at someone who is
 // already signed in.
 const { user, ready, isSignedIn, signIn, signOut } = useAuth()
+
+// One list, rendered twice: the horizontal tool nav on desktop and the slide-in
+// panel on mobile. Keeping them separate is how they drift apart.
+const navItems = computed(() => [
+  { key: 'overall',   to: '/',              label: t('navOverview') },
+  { key: 'groups',    to: '/groups/10',     label: t('navGroups') },
+  { key: 'country',   to: '/countries/KE',  label: t('navCountry') },
+  { key: 'org',       to: '/publishers',    label: t('navOrganisations') },
+  { key: 'exploring', to: '/exploring-data', label: t('navExploring') },
+])
+
+// The design system hides .iati-header__nav below 768px and expects this panel
+// to take its place; without it there is no navigation at all on a phone. Its
+// CSS is driven entirely by the --open class, so it is toggled from here rather
+// than by loading the design system's own JS.
+const menuOpen = ref(false)
+watch(menuOpen, open => {
+  if (import.meta.client) document.body.style.overflow = open ? 'hidden' : ''
+})
+onBeforeUnmount(() => {
+  if (import.meta.client) document.body.style.overflow = ''
+})
 </script>
 
 <template>
@@ -42,6 +64,13 @@ const { user, ready, isSignedIn, signIn, signOut } = useAuth()
             <span>{{ t('navHelp') }}</span>
             <i class="iati-icon iati-icon--info"></i>
           </a>
+          <button
+            type="button" class="iati-menu-toggle iati-menu-toggle--open"
+            aria-controls="iati-mobile-nav" :aria-expanded="menuOpen"
+            @click="menuOpen = true"
+          >
+            <span class="iati-menu-toggle__label">{{ t('navMenu') }}</span>
+          </button>
           <ClientOnly>
             <button
               v-if="isSignedIn" type="button" class="iati-button iati-button--light"
@@ -69,15 +98,44 @@ const { user, ready, isSignedIn, signIn, signOut } = useAuth()
         <div class="iati-header__nav">
           <nav>
             <ul class="iati-tool-nav">
-              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'overall' }" to="/">{{ t('navOverview') }}</NuxtLink></li>
-              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'groups' }" to="/groups/10">{{ t('navGroups') }}</NuxtLink></li>
-              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'country' }" to="/countries/KE">{{ t('navCountry') }}</NuxtLink></li>
-              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'org' }" to="/publishers">{{ t('navOrganisations') }}</NuxtLink></li>
-              <li><NuxtLink class="iati-tool-nav-link" :class="{ active: active === 'exploring' }" to="/exploring-data">{{ t('navExploring') }}</NuxtLink></li>
+              <li v-for="item in navItems" :key="item.key">
+                <NuxtLink class="iati-tool-nav-link" :class="{ active: active === item.key }" :to="item.to">
+                  {{ item.label }}
+                </NuxtLink>
+              </li>
               <li><a class="iati-tool-nav-link" href="#">{{ t('navAbout') }}</a></li>
             </ul>
           </nav>
         </div>
+      </div>
+    </div>
+
+    <div
+      id="iati-mobile-nav" class="iati-mobile-nav"
+      :class="{ 'iati-mobile-nav--open': menuOpen }"
+      @keydown.esc="menuOpen = false"
+    >
+      <div class="iati-mobile-nav__overlay" @click="menuOpen = false"></div>
+      <div class="iati-mobile-nav__menu">
+        <div class="iati-mobile-nav__header">
+          <p class="iati-mobile-nav__label">{{ t('navMenu') }}</p>
+          <button
+            type="button" class="iati-menu-toggle iati-menu-toggle--close"
+            :aria-label="t('navCloseMenu')" @click="menuOpen = false"
+          ></button>
+        </div>
+        <nav>
+          <ul>
+            <li v-for="item in navItems" :key="item.key" class="iati-mobile-nav__item">
+              <NuxtLink class="iati-mobile-nav__link" :to="item.to" @click="menuOpen = false">
+                {{ item.label }}
+              </NuxtLink>
+            </li>
+            <li class="iati-mobile-nav__item">
+              <a class="iati-mobile-nav__link" href="#" @click="menuOpen = false">{{ t('navAbout') }}</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </header>

@@ -448,5 +448,7 @@
   "orgTestExcluded": "{n} activités ne sont pas concernées par cette vérification",
   "pubScopedNone": "Votre compte IATI n'administre aucune organisation ; il n'y a donc rien à afficher. Déconnectez-vous pour parcourir tous les organisations déclarantes.",
   "pubScopedNotPublished": "Aucune donnée dans le tableau de bord pour {orgs}. Cela signifie généralement qu'aucune donnée IATI n'a encore été publiée. Déconnectez-vous pour parcourir tous les organisations déclarantes.",
-  "pubScopedSomeMissing": "Non affiché : {orgs} — aucune donnée dans le tableau de bord."
+  "pubScopedSomeMissing": "Non affiché : {orgs} — aucune donnée dans le tableau de bord.",
+  "navMenu": "Menu",
+  "navCloseMenu": "Fermer le menu"
 }
