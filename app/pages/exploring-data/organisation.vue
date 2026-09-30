@@ -124,7 +124,7 @@ const PREVIEW = 40
               </div>
             </Card>
             <Card>
-              <p class="iati-card__subtitle">Total publishers</p>
+              <p class="iati-card__subtitle">Total reporting organisations</p>
               <div class="bignum">{{ stats.total.toLocaleString() }}</div>
             </Card>
           </div></BCol>

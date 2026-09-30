@@ -117,7 +117,7 @@ function toggleAll(v) { showAll.value = { ...showAll.value, [v]: !showAll.value[
         <!-- Other / non-standard versions -->
         <Card v-if="otherVersions.length">
           <h3>Reporting orgs by version — non-standard</h3>
-          <p class="iati-card__subtitle" style="margin: 0 0 20px">Publishers using a non-recognised version string.</p>
+          <p class="iati-card__subtitle" style="margin: 0 0 20px">Reporting organisations using a non-recognised version string.</p>
           <BRow cols="2" cols-lg="4" gutter-x="3" gutter-y="3">
             <BCol v-for="v in otherVersions" :key="v">
               <div class="panel">

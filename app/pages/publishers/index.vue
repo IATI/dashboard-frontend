@@ -9,9 +9,21 @@ const { lookup: organisationTypeName, map: orgTypeMap } = useCodelist('Organisat
 // account administers. Signed out, it stays the full public list — the site's
 // password gate is the access control there, and this is the same data the
 // dashboard already publishes.
-const { slugs: mySlugs, state: scopeState, error: scopeError } = useMyPublishers()
+const { publishers: myOrgs, slugs: mySlugs, state: scopeState, error: scopeError } = useMyPublishers()
 
 const scoped = computed(() => scopeState.value === 'scoped')
+
+// An account can administer an organisation the dashboard has no record of —
+// it is registered in RYD but has never published IATI data, so there are no
+// statistics to show. Without this the page would just say "0 publishers".
+const notPublished = computed(() => {
+  if (!scoped.value) return []
+  const known = new Set(publishers.value.map(p => p.slug))
+  return (myOrgs.value ?? []).filter(o => !known.has(o.slug))
+})
+const notPublishedNames = computed(() =>
+  notPublished.value.map(o => o.name || o.slug).join(', '),
+)
 
 const PER_PAGE = 50
 const search = ref('')
@@ -63,12 +75,19 @@ watch([search, filterType], () => { currentPage.value = 1 })
       { label: t('breadPublishingQuality'), href: '/' },
       { label: t('navOrganisations') },
     ]" />
-    <TitleBar :eyebrow="t('orgEyebrow')" :title="t('navOrganisations')" />
+    <TitleBar :title="t('navOrganisations')" />
 
     <main class="main">
       <ClientOnly>
-        <BAlert v-if="scoped" :model-value="true" :variant="mySlugs.size ? 'info' : 'warning'" class="mb-sm">
-          {{ mySlugs.size ? t('pubScopedToYou', { n: mySlugs.size }) : t('pubScopedNone') }}
+        <BAlert v-if="scoped" :model-value="true" :variant="rows.length ? 'info' : 'warning'" class="mb-sm">
+          <template v-if="!mySlugs.size">{{ t('pubScopedNone') }}</template>
+          <template v-else-if="!rows.length">{{ t('pubScopedNotPublished', { orgs: notPublishedNames }) }}</template>
+          <template v-else>
+            {{ t('pubScopedToYou', mySlugs.size) }}
+            <span v-if="notPublished.length" class="scope-error">
+              {{ t('pubScopedSomeMissing', { orgs: notPublishedNames }) }}
+            </span>
+          </template>
         </BAlert>
         <BAlert v-else-if="scopeState === 'failed'" :model-value="true" variant="warning" class="mb-sm">
           {{ t('pubScopeUnavailable') }}

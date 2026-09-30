@@ -202,7 +202,7 @@ const FIELDS = [
         <!-- Filters -->
         <div class="filter-bar">
           <div>
-            <label>Search by name or registry ID</label>
+            <label>Search by name or short name</label>
             <input v-model="search" type="text" placeholder="e.g. USAID or us-gov-1" />
           </div>
           <div>
