@@ -444,5 +444,6 @@
   "pubScopedToYou": "Showing the {n} organisations your IATI Account can administer. Sign out to browse all publishers.",
   "pubScopeUnavailable": "Signed in, but your list of organisations could not be loaded, so all publishers are shown. This app’s address needs adding to the Register Your Data allowed origins.",
   "availValidatorLink": "See these issues in the IATI Validator",
-  "orgTestExcluded": "{n} activities are not applicable to this check"
+  "orgTestExcluded": "{n} activities are not applicable to this check",
+  "pubScopedNone": "Your IATI Account does not administer any organisations, so there is nothing to show. Sign out to browse all publishers."
 }

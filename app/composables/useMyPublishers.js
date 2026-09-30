@@ -13,7 +13,7 @@
  * change at IATI, not a retry.
  */
 export function useMyPublishers() {
-  const { token } = useAuth()
+  const { token, isSignedIn } = useAuth()
   const { public: { rydBase } } = useRuntimeConfig()
 
   const { data, error, status, refresh } = useAsyncData(
@@ -33,11 +33,29 @@ export function useMyPublishers() {
     { watch: [token], default: () => null, server: false },
   )
 
-  /** True when the request never reached RYD — almost always the origin allowlist. */
-  const blocked = computed(() => Boolean(error.value) && !error.value?.statusCode)
-
   /** Slugs only, for the membership checks. */
   const slugs = computed(() => new Set((data.value ?? []).map(p => p.slug)))
 
-  return { publishers: data, slugs, blocked, error, status, refresh }
+  /**
+   * What the caller should actually do, rather than leaving them to infer it
+   * from status/error/data:
+   *
+   *   public  — signed out; show everything
+   *   loading — signed in, no answer from RYD yet
+   *   failed  — signed in, RYD did not answer; show everything and say so
+   *   scoped  — signed in and we know the list
+   *
+   * `failed` covers any failure, not just the CORS one. An earlier version
+   * tested for a missing statusCode to single out the origin block, which was
+   * too clever: the request failed, the page could not narrow, and that is all
+   * the page needs to know to explain itself.
+   */
+  const state = computed(() => {
+    if (!isSignedIn.value) return 'public'
+    if (error.value) return 'failed'
+    if (status.value === 'success' && data.value) return 'scoped'
+    return 'loading'
+  })
+
+  return { publishers: data, slugs, state, error, status, refresh }
 }

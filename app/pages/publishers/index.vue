@@ -9,10 +9,9 @@ const { lookup: organisationTypeName, map: orgTypeMap } = useCodelist('Organisat
 // account administers. Signed out, it stays the full public list — the site's
 // password gate is the access control there, and this is the same data the
 // dashboard already publishes.
-const { isSignedIn } = useAuth()
-const { slugs: mySlugs, blocked: rydBlocked, status: myStatus } = useMyPublishers()
+const { slugs: mySlugs, state: scopeState, error: scopeError } = useMyPublishers()
 
-const scoped = computed(() => isSignedIn.value && myStatus.value === 'success' && !rydBlocked.value)
+const scoped = computed(() => scopeState.value === 'scoped')
 
 const PER_PAGE = 50
 const search = ref('')
@@ -68,11 +67,12 @@ watch([search, filterType], () => { currentPage.value = 1 })
 
     <main class="main">
       <ClientOnly>
-        <BAlert v-if="scoped" :model-value="true" variant="info" class="mb-sm">
-          {{ t('pubScopedToYou', { n: mySlugs.size }) }}
+        <BAlert v-if="scoped" :model-value="true" :variant="mySlugs.size ? 'info' : 'warning'" class="mb-sm">
+          {{ mySlugs.size ? t('pubScopedToYou', { n: mySlugs.size }) : t('pubScopedNone') }}
         </BAlert>
-        <BAlert v-else-if="isSignedIn && rydBlocked" :model-value="true" variant="warning" class="mb-sm">
+        <BAlert v-else-if="scopeState === 'failed'" :model-value="true" variant="warning" class="mb-sm">
           {{ t('pubScopeUnavailable') }}
+          <span v-if="scopeError" class="scope-error">{{ scopeError.message }}</span>
         </BAlert>
       </ClientOnly>
 

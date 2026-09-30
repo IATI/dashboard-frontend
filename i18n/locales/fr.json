@@ -445,5 +445,6 @@
   "pubScopedToYou": "Affichage des {n} organisations que votre compte IATI peut administrer. Déconnectez-vous pour parcourir tous les publiants.",
   "pubScopeUnavailable": "Connecté, mais votre liste d’organisations n’a pas pu être chargée ; tous les publiants sont affichés. L’adresse de cette application doit être ajoutée aux origines autorisées de Register Your Data.",
   "availValidatorLink": "Voir ces problèmes dans le validateur IATI",
-  "orgTestExcluded": "{n} activités ne sont pas concernées par cette vérification"
+  "orgTestExcluded": "{n} activités ne sont pas concernées par cette vérification",
+  "pubScopedNone": "Votre compte IATI n'administre aucune organisation ; il n'y a donc rien à afficher. Déconnectez-vous pour parcourir tous les publiants."
 }
