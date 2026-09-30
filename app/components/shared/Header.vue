@@ -64,13 +64,6 @@ onBeforeUnmount(() => {
             <span>{{ t('navHelp') }}</span>
             <i class="iati-icon iati-icon--info"></i>
           </a>
-          <button
-            type="button" class="iati-menu-toggle iati-menu-toggle--open"
-            aria-controls="iati-mobile-nav" :aria-expanded="menuOpen"
-            @click="menuOpen = true"
-          >
-            <span class="iati-menu-toggle__label">{{ t('navMenu') }}</span>
-          </button>
           <ClientOnly>
             <button
               v-if="isSignedIn" type="button" class="iati-button iati-button--light"
@@ -91,9 +84,18 @@ onBeforeUnmount(() => {
             </template>
           </ClientOnly>
         </div>
-        <div class="iati-header-title">
-          <p class="iati-header-title__eyebrow">{{ t('brandEyebrow') }}</p>
-          <p class="iati-header-title__heading">{{ t('brandDashboard') }}</p>
+        <div class="header-title-row">
+          <div class="iati-header-title">
+            <p class="iati-header-title__eyebrow">{{ t('brandEyebrow') }}</p>
+            <p class="iati-header-title__heading">{{ t('brandDashboard') }}</p>
+          </div>
+          <button
+            type="button" class="iati-menu-toggle iati-menu-toggle--open"
+            aria-controls="iati-mobile-nav" :aria-expanded="menuOpen"
+            @click="menuOpen = true"
+          >
+            <span class="iati-menu-toggle__label">{{ t('navMenu') }}</span>
+          </button>
         </div>
         <div class="iati-header__nav">
           <nav>

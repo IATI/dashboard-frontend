@@ -653,3 +653,13 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   display: block; margin-top: 4px;
   font-size: .8rem; color: var(--grey-60); word-break: break-word;
 }
+
+// Mobile menu button, beside the tool title rather than in the actions row.
+// It does not belong in .iati-header__actions: the design system gives that
+// row's LAST child `margin-inline-start: auto`, so anything added before the
+// sign-in button ends up stranded in the middle. The design system hides the
+// button itself at 768px and up, so no media query is needed here.
+.header-title-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  .iati-header-title { flex: 1 1 auto; min-width: 0 }
+}
