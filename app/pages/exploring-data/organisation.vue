@@ -91,7 +91,7 @@ const PREVIEW = 40
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: '#' },
+      { label: t('breadPublishingQuality'), href: '/' },
       { label: t('exploreBreadcrumb'), href: '/exploring-data' },
       { label: t('exploreOrgTitle') }
     ]" />

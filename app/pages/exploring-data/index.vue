@@ -14,7 +14,7 @@ const sections = [
 
 <template>
   <div>
-    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '#' }, { label: t('exploreBreadcrumb') }]" />
+    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '/' }, { label: t('exploreBreadcrumb') }]" />
     <TitleBar :eyebrow="t('exploreEyebrow')" :title="t('exploreTitle')">
       <template #meta>
         <span>{{ t('exploreSubtitle') }}</span>

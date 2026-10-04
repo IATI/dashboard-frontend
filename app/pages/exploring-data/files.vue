@@ -94,7 +94,7 @@ function fmtGB(gb) { return gb ? `${gb.toFixed(1)} GB` : '—' }
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: '#' },
+      { label: t('breadPublishingQuality'), href: '/' },
       { label: t('exploreBreadcrumb'), href: '/exploring-data' },
       { label: t('exploreFilesTitle') }
     ]" />

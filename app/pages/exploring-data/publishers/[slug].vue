@@ -316,7 +316,7 @@ const recipientCountries = computed(() => {
 <template>
   <div>
     <Crumbs :path="[
-      { label: 'Publishing Quality', href: '#' },
+      { label: 'Publishing Quality', href: '/' },
       { label: 'Exploring Data', href: '/exploring-data' },
       { label: 'Publishers', href: '/exploring-data/publishers' },
       { label: pubName },

@@ -127,7 +127,7 @@ const byTypeOpts = {
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: '#' },
+      { label: t('breadPublishingQuality'), href: '/' },
       { label: t('exploreBreadcrumb'), href: '/exploring-data' },
       { label: t('exploreActivitiesTitle') }
     ]" />

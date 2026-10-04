@@ -48,7 +48,7 @@ function coverageVariant(cov) { return cov >= 60 ? 'good' : cov >= 30 ? null : '
 
 <template>
   <div>
-    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '#' }, { label: t('navOverview') }]" />
+    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '/' }, { label: t('navOverview') }]" />
     <TitleBar :eyebrow="t('overallEyebrow')" :title="t('overallTitle')">
       <template #meta>
         <span style="display: inline-flex; align-items: center; gap: 6px">

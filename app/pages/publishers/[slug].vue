@@ -353,8 +353,8 @@ const dimensions = computed(() =>
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: '#' },
-      { label: t('navOrganisations'), href: '#' },
+      { label: t('breadPublishingQuality'), href: '/' },
+      { label: t('navOrganisations'), href: '/publishers' },
       { label: orgName },
     ]" />
     <TitleBar :eyebrow="t('orgEyebrow')" :title="orgName">

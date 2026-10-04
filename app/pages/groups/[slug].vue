@@ -140,7 +140,7 @@ function changeClass(change) {
 
 <template>
   <div>
-    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '#' }, { label: t('navGroups') }]" />
+    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '/' }, { label: t('navGroups') }]" />
     <TitleBar :eyebrow="t('groupEyebrow')" :title="t('groupTitle')">
       <template #meta>
         <span><strong>{{ g.n }}</strong> {{ t('groupPublishers') }}</span>

@@ -99,7 +99,7 @@ function metricLevel(v) {
 
 <template>
   <div>
-    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '#' }, { label: t('navCountry') }, { label: countryName(country.id) }]" />
+    <Crumbs :path="[{ label: t('breadPublishingQuality'), href: '/' }, { label: t('navCountry') }, { label: countryName(country.id) }]" />
     <TitleBar :eyebrow="t('countryEyebrow')" :title="countryName(country.id)">
       <template #meta>
         <span><strong>{{ country.partners.length }}</strong> {{ t('countryMetaPartners') }}</span>
