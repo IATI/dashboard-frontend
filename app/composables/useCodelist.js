@@ -20,7 +20,16 @@ export function useCodelist(name) {
   const { data, error, status } = useAsyncData(
     `codelist:${name}`,
     () => $fetch(`${CODELIST_BASE}/${locale.value}/${name}.json`),
-    { watch: [locale], default: () => null },
+    {
+      watch: [locale],
+      default: () => null,
+      // The password gate mounts pages during hydration, and useAsyncData skips
+      // fetching while hydrating when it finds no SSR payload — so this request
+      // was never made and every lookup fell back to the raw code, which is why
+      // the organisation type filter listed 10, 15, 21 instead of names. Every
+      // other composable on these pages already does this.
+      server: false,
+    },
   )
 
   // { '10': 'Government', '40': 'Multilateral', ... }
