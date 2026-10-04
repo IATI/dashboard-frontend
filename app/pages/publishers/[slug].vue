@@ -56,6 +56,11 @@ const publishingStopped = computed(() =>
   && monthsSincePublished.value > STALE_AFTER_MONTHS,
 )
 
+// Whole years, for the heading. Always at least 2, since that is the threshold.
+const yearsSincePublished = computed(() =>
+  monthsSincePublished.value === null ? null : Math.floor(monthsSincePublished.value / 12),
+)
+
 const lastPublishedLabel = computed(() => {
   const last = stats.value?.lastPublished
   if (!last) return null
@@ -424,7 +429,7 @@ const dimensions = computed(() =>
       <OrganisationCallout
         v-if="publishingStopped" class="mb"
         heading-level="h2" variant="info" icon="i"
-        :title="t('orgStoppedTitle')"
+        :title="t('orgStoppedTitle', yearsSincePublished)"
       >
         <p>{{ t('orgStoppedText', { date: lastPublishedLabel }) }}</p>
         <p class="mt-sm">

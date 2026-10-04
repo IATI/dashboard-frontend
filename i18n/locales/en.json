@@ -478,7 +478,7 @@
   "orgChartSpending": "Disbursement + expenditure",
   "orgTlNoUpdates": "No updates in the last 12 months",
   "orgTlNoTransactions": "No transactions reported in the last 12 months",
-  "orgStoppedTitle": "Publishing appears to have stopped",
-  "orgStoppedText": "This organisation last updated its IATI data in {date}. Publishing regularly keeps the information useful to the people who rely on it.",
+  "orgStoppedTitle": "This organisation last published more than one year ago | This organisation last published more than {count} years ago",
+  "orgStoppedText": "It last updated its IATI data in {date}. Publishing regularly keeps the information useful to the people who rely on it.",
   "orgStoppedLink": "Learn more about publishing to IATI"
 }
