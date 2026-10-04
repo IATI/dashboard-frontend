@@ -451,5 +451,6 @@
   "pubScopedSomeMissing": "Non affiché : {orgs} — aucune donnée dans le tableau de bord.",
   "navMenu": "Menu",
   "navCloseMenu": "Fermer le menu",
-  "orgTestNotApplicable": "Non applicable"
+  "orgTestNoActivities": "Aucune activité concernée",
+  "orgTestNoOrganisations": "Aucune organisation concernée"
 }

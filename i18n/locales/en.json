@@ -450,5 +450,6 @@
   "pubScopedSomeMissing": "Not shown: {orgs} — no dashboard data.",
   "navMenu": "Menu",
   "navCloseMenu": "Close menu",
-  "orgTestNotApplicable": "Not applicable"
+  "orgTestNoActivities": "No relevant activities",
+  "orgTestNoOrganisations": "No relevant organisations"
 }

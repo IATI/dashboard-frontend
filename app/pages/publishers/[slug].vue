@@ -193,6 +193,13 @@ const coverageGenerated = computed(() => {
   })
 })
 
+// A check with nothing to assess says what it found none of. Organisation
+// checks are counted against organisation records, every other component
+// against activities — confirmed by their denominators (USAID: 2 organisations
+// against 56,577 activities).
+const notApplicableLabel = component =>
+  t(component === 'organisation_fields' ? 'orgTestNoOrganisations' : 'orgTestNoActivities')
+
 function testVariant(pct) {
   if (pct >= 80) return 'success'
   if (pct >= 40) return 'warning'
@@ -690,7 +697,7 @@ const dimensions = computed(() =>
               </template>
               <template #cell(value)="{ item }">
                 <div v-if="item.value === null" class="check-score">
-                  <span class="check-score__na">{{ t('orgTestNotApplicable') }}</span>
+                  <span class="check-score__na">{{ notApplicableLabel(item.component) }}</span>
                 </div>
                 <div v-else class="check-score">
                   <BProgress class="check-score__bar" :max="100" height=".9rem">
@@ -722,7 +729,7 @@ const dimensions = computed(() =>
                       <!-- Nothing this check applies to: "0 of 0" and a bare "%"
                            read as a failure rather than as not assessed. -->
                       <div v-if="!test.denominator" class="check-score">
-                        <span class="check-score__na">{{ t('orgTestNotApplicable') }}</span>
+                        <span class="check-score__na">{{ notApplicableLabel(test.component) }}</span>
                       </div>
                       <div v-else class="check-score">
                         <BProgress class="check-score__bar" :max="100" height=".7rem">
