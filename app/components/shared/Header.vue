@@ -28,17 +28,12 @@ const navItems = computed(() =>
     .map(item => ({ ...item, label: t(item.labelKey) })),
 )
 
-// The design system hides .iati-header__nav below 768px and expects this panel
-// to take its place; without it there is no navigation at all on a phone. Its
-// CSS is driven entirely by the --open class, so it is toggled from here rather
-// than by loading the design system's own JS.
+// The design system hides .iati-header__nav below 768px and expects a menu to
+// take its place; without one there is no navigation at all on a phone.
+// BNavbarToggle drives the BCollapse by id; this mirror of its state exists only
+// because the toggle does not set aria-expanded itself, and a control that opens
+// something has to say whether it is open.
 const menuOpen = ref(false)
-watch(menuOpen, open => {
-  if (import.meta.client) document.body.style.overflow = open ? 'hidden' : ''
-})
-onBeforeUnmount(() => {
-  if (import.meta.client) document.body.style.overflow = ''
-})
 </script>
 
 <template>
@@ -95,19 +90,36 @@ onBeforeUnmount(() => {
             </template>
           </ClientOnly>
         </div>
-        <div class="header-title-row">
+        <!-- The title row is the navbar: bootstrap-vue-next documents a
+             BNavbarToggle targeting a BCollapse, and .header-title-row is
+             already a flex row with space-between, so the burger lands to the
+             right of the title and the menu wraps below it when open. The
+             design system's own .iati-mobile-nav markup is CSS-only and expects
+             the design system's JavaScript, so driving it from here meant
+             re-implementing the backdrop, Escape handling and scroll locking by
+             hand, with no focus trap and a close button the design system gives
+             a height but no width, so it rendered 0px wide and invisible.
+             `is-nav` inside a BNavbar closes the menu when a link is followed.
+             The IATI colours are restated in iati-quality.scss. -->
+        <BNavbar toggleable :container="false" class="header-title-row iati-mobile-menu">
           <div class="iati-header-title">
             <p class="iati-header-title__eyebrow">{{ t('brandEyebrow') }}</p>
             <p class="iati-header-title__heading">{{ t('brandDashboard') }}</p>
           </div>
-          <button
-            type="button" class="iati-menu-toggle iati-menu-toggle--open"
+          <BNavbarToggle
+            target="iati-mobile-nav" :label="t('navMenu')"
             aria-controls="iati-mobile-nav" :aria-expanded="menuOpen"
-            @click="menuOpen = true"
-          >
-            <span class="iati-menu-toggle__label">{{ t('navMenu') }}</span>
-          </button>
-        </div>
+          />
+          <BCollapse id="iati-mobile-nav" v-model="menuOpen" is-nav>
+            <BNavbarNav :aria-label="t('navMobileLabel')" tag="ul">
+              <BNavItem
+                v-for="item in navItems" :key="item.key"
+                :to="item.to" :active="active === item.key"
+              >{{ item.label }}</BNavItem>
+              <BNavItem v-if="fullSite" href="#">{{ t('navAbout') }}</BNavItem>
+            </BNavbarNav>
+          </BCollapse>
+        </BNavbar>
         <div class="iati-header__nav">
           <nav :aria-label="t('navToolLabel')">
             <ul class="iati-tool-nav">
@@ -123,33 +135,5 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div
-      id="iati-mobile-nav" class="iati-mobile-nav"
-      :class="{ 'iati-mobile-nav--open': menuOpen }"
-      @keydown.esc="menuOpen = false"
-    >
-      <div class="iati-mobile-nav__overlay" @click="menuOpen = false"></div>
-      <div class="iati-mobile-nav__menu">
-        <div class="iati-mobile-nav__header">
-          <p class="iati-mobile-nav__label">{{ t('navMenu') }}</p>
-          <button
-            type="button" class="iati-menu-toggle iati-menu-toggle--close"
-            :aria-label="t('navCloseMenu')" @click="menuOpen = false"
-          ></button>
-        </div>
-        <nav :aria-label="t('navMobileLabel')">
-          <ul>
-            <li v-for="item in navItems" :key="item.key" class="iati-mobile-nav__item">
-              <NuxtLink class="iati-mobile-nav__link" :to="item.to" @click="menuOpen = false">
-                {{ item.label }}
-              </NuxtLink>
-            </li>
-            <li v-if="fullSite" class="iati-mobile-nav__item">
-              <a class="iati-mobile-nav__link" href="#" @click="menuOpen = false">{{ t('navAbout') }}</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
   </header>
 </template>
