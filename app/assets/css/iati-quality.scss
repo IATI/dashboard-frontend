@@ -113,9 +113,25 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
 }
 
+// `main` no longer holds the container: the hero band spans the window, so the
+// width is applied by the inner wrappers on either side of it instead.
 .main {
-  max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px;
-  @media (max-width: 575.98px) { padding: 18px 14px 40px }
+  padding-bottom: 60px;
+  @media (max-width: 575.98px) { padding-bottom: 40px }
+
+  &__inner {
+    max-width: 1280px; margin: 0 auto; padding: 28px 28px 0;
+    @media (max-width: 575.98px) { padding: 18px 14px 0 }
+  }
+
+  // The wrapper above the hero holds callouts that usually are not there. Its
+  // padding sits on its children, so with nothing in it the band stays flush
+  // against the title bar.
+  &__inner--top {
+    padding-top: 0;
+    > * { margin-top: 28px }
+    @media (max-width: 575.98px) { > * { margin-top: 18px } }
+  }
 }
 
 // ─── Score badge ──────────────────────────────────────────────────────────────
@@ -736,21 +752,37 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // Each background clears 4.5:1 against the white heading on it, which is what
 // fixes the ramp's bright end: --green-70 is only 3.96:1, so Excellent uses the
 // brightest green that still clears it.
-.iati-design-system--enabled .hero-card {
-  background: var(--teal-90);
-  border-color: var(--teal-90);
-
-  // `title` puts iati-card--header on the card, and that modifier zeroes the
-  // padding so a full-bleed header bar can sit flush. This card's heading is not
-  // a bar, so the design system's own padding goes back and the content stops
-  // running into the edges.
-  padding: 1rem;
-
-  // The band is not known until the assessment has loaded, so the card starts
-  // teal and settles into its colour rather than snapping. The medallion lands
-  // with it, slightly overshooting — on all but six pages the colour does not
-  // change at all, so the movement is what makes the arrival register.
+// The band paints the colour edge to edge; the card inside it is only a
+// container now, so it gives up its own background, border and shadow.
+// Light, now that the heading is not painted on it: nothing sits directly on
+// this colour as text, so it no longer has to clear 4.5:1 against white. What it
+// does have to do is hold its own against the white cards lying on it and the
+// medallion in front of it, which is what sets the floor — a tint much paler
+// than teal-20 and the cards stop reading as separate surfaces.
+//
+// Still the design system's own ramp, and still spaced by eye rather than by
+// contrast ratio: 16.8 / 16.2 / 21.2 apart in CIELAB.
+.hero-band {
+  --band-ink: var(--teal-90);
+  background: var(--color-teal-20);
   transition: background-color 1.1s cubic-bezier(.2, .7, .3, 1);
+  @media (prefers-reduced-motion: reduce) { transition: none }
+
+  &__inner { max-width: 1280px; margin: 0 auto; padding: 26px 28px }
+  @media (max-width: 575.98px) { &__inner { padding: 18px 14px } }
+}
+
+.hero-band--good      { background: var(--color-green-20); --band-ink: #0f775f }
+.hero-band--very_good { background: var(--color-green-30); --band-ink: #0a5f4c }
+.hero-band--excellent { background: var(--color-green-50); --band-ink: #0a5241 }
+
+.iati-design-system--enabled .hero-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  // The band's inner wrapper provides the padding now.
+  padding: 0;
 
   .hero-metrics__badge { animation: hero-settle .75s cubic-bezier(.34, 1.56, .64, 1) both }
 
@@ -773,26 +805,32 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     .stars__star { animation: none }
   }
 
-  // The card already carries the colour, so the heading bar does not repeat it.
-  // It also styles h3, while Card renders the title as h2.
+  // The heading is kept but not painted. It says what the medallion and the four
+  // labelled cards already say, and on a band this wide it sat alone against a
+  // lot of empty colour. It stays in the markup because dropping it would leave
+  // the band an unlabelled region between the page's h1 and the panels' h2s.
   .iati-card__header {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 18px;
-    h2 {
-      margin: 0; color: #fff;
-      font-family: "Hanken Grotesk", system-ui, sans-serif;
-      font-weight: 700; font-size: 1.2rem; letter-spacing: .3px;
-    }
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: 0; padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   // The design system's cards are transparent, which would show the colour
   // through; these stay light to keep their own contrast.
   .dimension-card { background: #fff }
 
-  // The ring was there to separate a pale disc from a white card. On a coloured
-  // ground the disc separates itself.
-  .hero-metrics__badge { border: none }
+  // White with a ring, because the band is now light: the pale disc sat only 8
+  // apart in CIELAB from the commonest band and all but vanished into it.
+  .hero-metrics__badge {
+    background: #fff;
+    border: 3px solid var(--band-ink);
+  }
+
+  // A hairline so a white card still reads as a card on the palest band.
+  .dimension-card { border: 1px solid rgba(0, 0, 0, .07) }
 }
 
 // Spaced by how different they actually look, not by contrast ratio: the first
@@ -802,16 +840,10 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // with saturation rising) and widening the lightness spread puts the steps at
 // 18.7 / 16.8 / 17.1, roughly even and all clearly distinct. Every one still
 // clears 4.5:1 against the white heading on it.
-.iati-design-system--enabled .hero-card--good      { background: #0c4b43; border-color: #0c4b43 }
-.iati-design-system--enabled .hero-card--very_good { background: #096a53; border-color: #096a53 }
-.iati-design-system--enabled .hero-card--excellent { background: #01865a; border-color: #01865a }
 
-// On the green cards the medallion goes pale green rather than pale blue, so it
-// reads as part of the same family instead of a leftover.
-.hero-card--good, .hero-card--very_good, .hero-card--excellent {
-  .hero-metrics__badge   { background: var(--color-green-10) }
-  .hero-metrics__category { color: var(--color-green-90) }
-}
+
+// The band word takes the band's own ink, so it darkens as the colour deepens.
+.hero-metrics__category { color: var(--band-ink) }
 
 .hero-metrics {
   display: flex;
@@ -969,7 +1001,8 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   // The hero's dark ground earns its place on screen, where it marks the
   // assessment out from the panels below. On paper it is a slab of ink, and the
   // page break below already separates it, so it prints as an ordinary card.
-  .hero-card {
+  // The colour is on the band now, not the card.
+  .hero-band {
     background: #fff !important;
     .iati-card__header h2 { color: var(--teal-90) !important }
     .hero-metrics__badge { border: 3px solid var(--teal-90) !important }
@@ -984,8 +1017,10 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   h1, h2, h3 { break-after: avoid; page-break-after: avoid }
 
   // The hero is the summary; start the detail panels on a fresh page so the
-  // assessment reads as one piece.
-  .main > .iati-card:first-of-type { break-after: page; page-break-after: always }
+  // assessment reads as one piece. Keyed on the band, since the hero is no
+  // longer a direct child of main — it is the full-width section between the
+  // two inner wrappers.
+  .hero-band { break-after: page; page-break-after: always }
 
   // A printed link cannot be followed, so name where it goes. Internal links
   // are left alone — their hrefs are relative and would print as noise.

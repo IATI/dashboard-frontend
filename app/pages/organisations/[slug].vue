@@ -297,7 +297,7 @@ const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
 // Teal is the base. The three bands above it tint the hero card progressively
 // greener — see iati-quality.scss for why the common band stays neutral.
 const heroBandClass = computed(() =>
-  (overall.value?.category ? `hero-card--${overall.value.category}` : null))
+  (overall.value?.category ? `hero-band--${overall.value.category}` : null))
 
 
 // Headline spending figure. Declared after publisherID because it keys off it.
@@ -445,6 +445,9 @@ const dimensions = computed(() =>
     </TitleBar>
 
     <main class="main" :aria-busy="loading">
+      <!-- Anything above the hero. Takes no height of its own when empty,
+           so the band stays flush against the title bar. -->
+      <div class="main__inner main__inner--top">
       <OrganisationCallout
         v-if="noActivities" class="mb"
         heading-level="h2" variant="info" icon="i"
@@ -484,40 +487,50 @@ const dimensions = computed(() =>
         </p>
       </OrganisationCallout>
 
-      <!-- Hero — score + alerts -->
-      <BRow gutter-x="4" class="mb-sm">
-        <BCol cols="12" md="12"><Card :title="t('orgOverallQuality')" :class="['hero-card', heroBandClass]">
-          <div v-if="loading" class="hero-metrics">
-            <div class="hero-metrics__overall">
-              <Skeleton width="150px" height="150px" />
-            </div>
-            <div class="hero-metrics__cards">
-              <Card v-for="n in 4" :key="n" flat class="dimension-card">
-                <Skeleton width="60%" height="1.4rem" />
-                <Skeleton width="100%" height="3.2rem" class="mt-sm" />
-              </Card>
-            </div>
-          </div>
-          <div v-else class="hero-metrics">
-            <div class="hero-metrics__overall">
-              <div v-if="overall" class="hero-metrics__badge">
-                <Stars :category="overall.category" size="xl" decorative />
-                <p class="hero-metrics__category">{{ t(labelKey('category', overall.category)) }}</p>
+      </div>
+
+      <!-- Hero — the assessment, as a band across the page.
+           Full width so it reads as part of the page's identity block rather
+           than the first of five panels, with the content held at the same
+           1280px as everything else: let the four dimension cards span a wide
+           monitor and the medallion-plus-cards arrangement falls apart. Same
+           shape as .titlebar above it, which is flush against this. -->
+      <section class="hero-band" :class="heroBandClass">
+        <div class="hero-band__inner">
+          <Card :title="t('orgOverallQuality')" class="hero-card">
+            <div v-if="loading" class="hero-metrics">
+              <div class="hero-metrics__overall">
+                <Skeleton width="150px" height="150px" />
+              </div>
+              <div class="hero-metrics__cards">
+                <Card v-for="n in 4" :key="n" flat class="dimension-card">
+                  <Skeleton width="60%" height="1.4rem" />
+                  <Skeleton width="100%" height="3.2rem" class="mt-sm" />
+                </Card>
               </div>
             </div>
-            <div class="hero-metrics__cards">
-              <DimensionCard
-                v-for="dim in dimensions" :key="dim.key"
-                :label="dim.label"
-                :category="dim.category"
-                :metrics="dim.metrics"
-                :href="dim.href"
-              />
+            <div v-else class="hero-metrics">
+              <div class="hero-metrics__overall">
+                <div v-if="overall" class="hero-metrics__badge">
+                  <Stars :category="overall.category" size="xl" decorative />
+                  <p class="hero-metrics__category">{{ t(labelKey('category', overall.category)) }}</p>
+                </div>
+              </div>
+              <div class="hero-metrics__cards">
+                <DimensionCard
+                  v-for="dim in dimensions" :key="dim.key"
+                  :label="dim.label"
+                  :category="dim.category"
+                  :metrics="dim.metrics"
+                  :href="dim.href"
+                />
+              </div>
             </div>
-          </div>
           </Card>
-        </BCol>
-      </BRow>
+        </div>
+      </section>
+
+      <div class="main__inner">
 
       <BRow gutter-x="3" gutter-y="3" class="mt">
         <BCol cols="12" lg="8">
@@ -1023,6 +1036,7 @@ const dimensions = computed(() =>
         </div>
       </Card>
 
+      </div>
     </main>
   </div>
 </template>
