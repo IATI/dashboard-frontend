@@ -476,5 +476,7 @@
   "orgChartAlt": "Graphique à barres des budgets et dépenses par année, de {from} à {to}. Budgets au total {budget} ; décaissements et dépenses au total {spending}.",
   "orgChartYear": "Année",
   "orgChartBudget": "Budget",
-  "orgChartSpending": "Décaissement + dépenses"
+  "orgChartSpending": "Décaissement + dépenses",
+  "orgTlNoUpdates": "Aucune mise à jour au cours des 12 derniers mois",
+  "orgTlNoTransactions": "Aucune transaction déclarée au cours des 12 derniers mois"
 }

@@ -588,12 +588,15 @@ const dimensions = computed(() =>
         <div class="measure-grid mt-sm">
           <!-- Each measure sits with the evidence behind it: frequency is how
                often files change, time lag is how current the data in them is. -->
-          <div v-if="timelinessPanel.updates.length" class="measure">
+          <!-- Gated on the verdict, not on the month strip below it: a
+               publisher with no updates in the last twelve months still has a
+               frequency, and hiding the measure left an empty panel. -->
+          <div v-if="timelinessPanel.frequency" class="measure">
             <div class="measure__head">
               <span class="measure__label">{{ t('orgTlFrequency') }}</span>
-              <span class="measure__value">{{ timelinessPanel.frequency || '—' }}</span>
+              <span class="measure__value">{{ timelinessPanel.frequency }}</span>
             </div>
-            <div class="month-strip__cells">
+            <div v-if="timelinessPanel.updates.length" class="month-strip__cells">
               <BTooltip
                 v-for="m in timelinessPanel.updates" :key="m.month"
                 :title="`${m.month} — ${t('orgTlUpdatesCount', { n: m.count })}`"
@@ -604,17 +607,18 @@ const dimensions = computed(() =>
                 </template>
               </BTooltip>
             </div>
-            <p class="measure__note">
+            <p v-if="timelinessPanel.updates.length" class="measure__note">
               {{ t('orgTlUpdates') }} · {{ t('orgTlOfMonths', { n: timelinessPanel.monthsActive }) }}
             </p>
+            <p v-else class="measure__note">{{ t('orgTlNoUpdates') }}</p>
           </div>
 
-          <div v-if="timelinessPanel.txns.length" class="measure">
+          <div v-if="timelinessPanel.timeLag" class="measure">
             <div class="measure__head">
               <span class="measure__label">{{ t('orgTlTimeLag') }}</span>
-              <span class="measure__value">{{ timelinessPanel.timeLag || '—' }}</span>
+              <span class="measure__value">{{ timelinessPanel.timeLag }}</span>
             </div>
-            <div class="month-strip__bars">
+            <div v-if="timelinessPanel.txns.length" class="month-strip__bars">
               <BTooltip
                 v-for="m in timelinessPanel.txns" :key="m.month"
                 :title="`${m.month} — ${t('orgTlTxnsCount', { n: m.count.toLocaleString() })}`"
@@ -626,9 +630,10 @@ const dimensions = computed(() =>
                 </template>
               </BTooltip>
             </div>
-            <p class="measure__note">
+            <p v-if="timelinessPanel.txns.length" class="measure__note">
               {{ t('orgTlTransactions') }} · {{ t('orgTlOfMonths', { n: timelinessPanel.monthsWithData }) }}
             </p>
+            <p v-else class="measure__note">{{ t('orgTlNoTransactions') }}</p>
           </div>
         </div>
 

@@ -524,12 +524,6 @@ export function toAssessmentFragment({ publisher }, methodology) {
     }
   }
 
-  // Timeliness is measured from how often activity data is published and how
-  // current it is. With no activity file there is no publishing history, and
-  // the API's values — a time lag of more than one year, less than annual
-  // updates — describe the absence rather than anything the publisher did.
-  if (!publisher?.stats?.activityCount) delete dimensions.timeliness
-
   if (!Object.keys(dimensions).length) return null
 
   // Weakest dimension overall: the API's own overall excludes availability, and

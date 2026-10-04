@@ -475,5 +475,7 @@
   "orgChartAlt": "Bar chart of budget and spending by year, {from} to {to}. Budgets total {budget}; disbursements and expenditure total {spending}.",
   "orgChartYear": "Year",
   "orgChartBudget": "Budget",
-  "orgChartSpending": "Disbursement + expenditure"
+  "orgChartSpending": "Disbursement + expenditure",
+  "orgTlNoUpdates": "No updates in the last 12 months",
+  "orgTlNoTransactions": "No transactions reported in the last 12 months"
 }
