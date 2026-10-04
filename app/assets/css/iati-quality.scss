@@ -692,3 +692,12 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   align-self: center;
   height: 3rem;
 }
+
+// Dimension panels are jump targets from the summary cards at the top. The
+// margin keeps the panel's kicker clear of the viewport edge on arrival, and
+// the outline is suppressed because focus is moved there programmatically —
+// the panel is not itself interactive.
+.iati-card[id^="dimension-"] {
+  scroll-margin-top: 16px;
+  &:focus { outline: none }
+}

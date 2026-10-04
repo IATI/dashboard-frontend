@@ -1,11 +1,33 @@
 <script setup>
-defineProps({
+const props = defineProps({
   label:    { type: String, required: true },
   category: { type: String, default: null },
   // Sub-metrics (components) shown alongside the dimension band.
   // Each: { label, display, category, tooltips }
   metrics:  { type: Array, default: () => [] },
+  // Anchor of this dimension's panel further down the page, e.g. '#dimension-coverage'
+  href:     { type: String, default: null },
 })
+
+/**
+ * Scroll to the panel rather than jumping, and move focus with it so the link
+ * behaves for a keyboard or screen reader the way a plain anchor would.
+ *
+ * The markup is a real anchor, so if this never runs — no JS, or the target is
+ * missing — the browser still navigates to it.
+ */
+function jump(event) {
+  if (!props.href) return
+  const el = document.querySelector(props.href)
+  if (!el) return
+
+  event.preventDefault()
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
+  el.focus({ preventScroll: true })
+  // Keep the link shareable, and the back button working.
+  history.pushState(null, '', props.href)
+}
 </script>
 
 <template>
@@ -13,7 +35,10 @@ defineProps({
     <div class="dimension-card__body">
       <div class="dimension-card__band">
         <Stars :category="category" size="lg" />
-        <p class="dimension-card__label">{{ label }}</p>
+        <p class="dimension-card__label">
+          <a v-if="href" :href="href" class="dimension-card__link" @click="jump">{{ label }}</a>
+          <template v-else>{{ label }}</template>
+        </p>
       </div>
 
       <ul v-if="metrics.length" class="dimension-card__metrics">
@@ -38,6 +63,17 @@ defineProps({
 }
 
 .dimension-card__band { display: flex; flex-direction: column; gap: 8px }
+
+/* Inherits the label's styling; underlined only on hover so the cards stay calm */
+.dimension-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+.dimension-card__link:hover,
+.dimension-card__link:focus-visible {
+  text-decoration: underline;
+  color: var(--teal-70);
+}
 .dimension-card__label {
   font-family: "Hanken Grotesk", system-ui, sans-serif;
   font-weight: 700;

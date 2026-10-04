@@ -220,6 +220,9 @@ const { spending } = useCdfdSpending(publisherID)
 // Dimensions are keyed by id in the API; display order is a presentation concern
 const DIMENSION_ORDER = ['availability', 'timeliness', 'coverage', 'comprehensiveness']
 
+// Dimensions with a panel further down the page, which the summary cards link to.
+const PANEL_DIMENSIONS = new Set(DIMENSION_ORDER)
+
 // API ids are snake_case; i18n keys are the same id camel-cased behind a prefix,
 // e.g. ('sub', 'passes_validation') -> 'subPassesValidation'
 const labelKey = (prefix, id) =>
@@ -306,6 +309,8 @@ const dimensions = computed(() =>
       key:      id,
       label:    t(labelKey('dim', id)),
       category: dim.category,
+      // Only link to a dimension that actually rendered a panel below.
+      href:     PANEL_DIMENSIONS.has(id) ? `#dimension-${id}` : null,
       metrics:  orderedComponents(id, dim.components).map(([cid, c]) => ({
         label:    t(labelKey('sub', cid)),
         display:  displayValue(cid, c.value),
@@ -355,6 +360,7 @@ const dimensions = computed(() =>
                 :label="dim.label"
                 :category="dim.category"
                 :metrics="dim.metrics"
+                :href="dim.href"
               />
             </div>
           </div>
@@ -437,7 +443,7 @@ const dimensions = computed(() =>
 
       <!-- Coverage vs reference -->
       <!-- Availability — headline counts only; the detail lives in the source files -->
-      <Card v-if="availabilityStats.length" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')">
+      <Card v-if="availabilityStats.length" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')" :id="`dimension-availability`" tabindex="-1">
         <template v-if="bandFor('availability')" #kicker-actions>
           <DimensionBand :category="bandFor('availability')" :tooltips="dimensionStarTooltips()" />
         </template>
@@ -491,7 +497,7 @@ const dimensions = computed(() =>
       </Card>
 
       <!-- Timeliness — update cadence and how current the data is -->
-      <Card v-if="timelinessPanel" :class="['mt', cardTone('timeliness')]" :kicker="t('dimTimeliness')">
+      <Card v-if="timelinessPanel" :class="['mt', cardTone('timeliness')]" :kicker="t('dimTimeliness')" :id="`dimension-timeliness`" tabindex="-1">
         <template v-if="bandFor('timeliness')" #kicker-actions>
           <DimensionBand :category="bandFor('timeliness')" :tooltips="dimensionStarTooltips()" />
         </template>
@@ -550,7 +556,7 @@ const dimensions = computed(() =>
       </Card>
 
       <!-- Coverage vs reference — real figures from the dashboard-coverage dataset -->
-      <Card v-if="coverage" :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')">
+      <Card v-if="coverage" :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')" :id="`dimension-coverage`" tabindex="-1">
         <template v-if="bandFor('coverage')" #kicker-actions>
           <DimensionBand :category="bandFor('coverage')" :tooltips="dimensionStarTooltips()" />
         </template>
@@ -667,7 +673,7 @@ const dimensions = computed(() =>
 
       </Card>
       <!-- Activity checks, straight from stats.gherkin_tests_current -->
-      <Card v-if="tests.length" :class="['mt', cardTone('comprehensiveness')]" :kicker="t('dimComprehensiveness')">
+      <Card v-if="tests.length" :class="['mt', cardTone('comprehensiveness')]" :kicker="t('dimComprehensiveness')" :id="`dimension-comprehensiveness`" tabindex="-1">
         <template v-if="bandFor('comprehensiveness')" #kicker-actions>
           <DimensionBand :category="bandFor('comprehensiveness')" :tooltips="dimensionStarTooltips()" />
         </template>
