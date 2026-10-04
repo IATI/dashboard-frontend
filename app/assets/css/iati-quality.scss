@@ -717,3 +717,66 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   button { font-size: inherit }
   button[disabled] { opacity: .6; cursor: default; text-decoration: none }
 }
+
+// ─── Print / save as PDF ────────────────────────────────────────────────────
+// An organisation page is something a publisher will hand to colleagues, so it
+// has to survive Save as PDF: no site chrome, nothing clipped, and the bands
+// still legible when the browser drops backgrounds.
+@media print {
+  @page { margin: 14mm 12mm }
+
+  html, body { background: #fff }
+
+  // Site furniture carries nothing on paper, and the controls do nothing there.
+  .iati-header,
+  .iati-footer,
+  .iati-mobile-nav,
+  .crumbs,
+  .alert,
+  .link-button,
+  .expander,
+  .filter-bar,
+  .b-pagination,
+  .site-gate { display: none !important }
+
+  // Stars, bars and the band tints are the content here, not decoration, so
+  // keep them when the browser would otherwise strip backgrounds to save ink.
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important }
+
+  // Cards become plain blocks: shadows and tints turn to grey mush in print.
+  .iati-card {
+    box-shadow: none !important;
+    border: 1px solid var(--grey-30) !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  // Keep a panel with its heading rather than orphaning one at a page foot.
+  .dimension-card,
+  .measure,
+  .comprehensiveness-grid__panel,
+  .callout { break-inside: avoid; page-break-inside: avoid }
+
+  h1, h2, h3 { break-after: avoid; page-break-after: avoid }
+
+  // The hero is the summary; start the detail panels on a fresh page so the
+  // assessment reads as one piece.
+  .main > .iati-card:first-of-type { break-after: page; page-break-after: always }
+
+  // A printed link cannot be followed, so name where it goes. Internal links
+  // are left alone — their hrefs are relative and would print as noise.
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: .8em;
+    font-weight: 400;
+    word-break: break-all;
+  }
+
+  // The spending chart is a canvas: let it size to the page rather than being
+  // clipped by the fixed height it uses on screen.
+  .org-chart__canvas { height: auto !important; min-height: 200px }
+
+  // Tables repeat their headers across pages
+  thead { display: table-header-group }
+  tr { break-inside: avoid; page-break-inside: avoid }
+}
