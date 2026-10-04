@@ -44,8 +44,13 @@ function jump(event) {
       <ul v-if="metrics.length" class="dimension-card__metrics">
         <li v-for="m in metrics" :key="m.label" class="dimension-card__metric">
           <span class="dimension-card__metric-label">{{ m.label }}</span>
-          <span class="dimension-card__metric-value">{{ m.display }}</span>
-          <Stars :category="m.category" size="md" :tooltips="m.tooltips || []" />
+          <!-- Value and stars travel together: when the row runs out of room
+               they wrap onto their own line rather than the value breaking
+               mid-phrase ("1.6 / quarters"). -->
+          <span class="dimension-card__metric-score">
+            <span class="dimension-card__metric-value">{{ m.display }}</span>
+            <Stars :category="m.category" size="md" :tooltips="m.tooltips || []" />
+          </span>
         </li>
       </ul>
     </div>
@@ -94,14 +99,24 @@ function jump(event) {
   gap: 6px;
 }
 .dimension-card__metric {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
+  /* Flex rather than fixed columns: a three-column grid squeezes the value
+     column until long values wrap mid-phrase. */
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 2px 10px;
   font-size: .78rem;
   line-height: 1.3;
 }
-.dimension-card__metric-label { color: var(--grey-70) }
+.dimension-card__metric-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;   /* stays right-aligned, on its own line or sharing one */
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.dimension-card__metric-label { color: var(--grey-70); min-width: 0 }
 .dimension-card__metric-value {
   font-weight: 700;
   color: var(--teal-90);
