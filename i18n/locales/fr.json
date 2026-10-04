@@ -302,7 +302,7 @@
   "subFinancialFields": "Champs financiers",
   "subAdvancedFields": "Champs avancés",
   "subDisaggregation": "Désagrégation",
-  "subNoErrors": "Aucune erreur",
+  "subNoErrors": "Aucune autre erreur",
   "valueOneMonth": "Un mois",
   "valueMonthly": "Mensuelle",
   "valueOneQuarter": "Un trimestre",
@@ -401,8 +401,8 @@
   "orgCovQuartersNote": "Déclaré sur {n} trimestres sur {total}, en {years}",
   "orgCovQuartersValue": "{n} trimestres sur 4",
   "availDownloadable": "Téléchargeables",
-  "availCritical": "Problèmes critiques",
-  "availErrors": "Erreurs",
+  "availCritical": "Erreurs critiques",
+  "availErrors": "Autres erreurs",
   "availNone": "Aucun",
   "availNFiles": "{n} fichiers",
   "availOfChecked": "sur {n} fichiers vérifiés",
@@ -452,5 +452,6 @@
   "navMenu": "Menu",
   "navCloseMenu": "Fermer le menu",
   "orgTestNoActivities": "Aucune activité concernée",
-  "orgTestNoOrganisations": "Aucune organisation concernée"
+  "orgTestNoOrganisations": "Aucune organisation concernée",
+  "unitQuarters": "{count} trimestre | {count} trimestres"
 }

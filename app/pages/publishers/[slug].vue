@@ -228,9 +228,14 @@ const PANEL_DIMENSIONS = new Set(DIMENSION_ORDER)
 const labelKey = (prefix, id) =>
   prefix + id.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase())
 
+// Counts whose number means nothing on its own. Disaggregation is quarters per
+// year, so "1.6" alone reads as a score out of something unstated.
+const COMPONENT_UNIT = { disaggregation: 'unitQuarters' }
+
 function displayValue(id, value) {
   if (typeof value === 'boolean') return value ? '✓' : '✗'
   if (typeof value === 'string')  return t(labelKey('value', value))
+  if (COMPONENT_UNIT[id])         return t(COMPONENT_UNIT[id], value)
   return methodology.components[id]?.unit === 'percent' ? `${value}%` : String(value)
 }
 
