@@ -2,7 +2,6 @@
   "publisher": "afdb",
   "source": "https://iati.github.io/dashboard-coverage/data/publishers/{slug}.json",
   "coverage_percent": 115,
-  "coverage_basis": "net",
   "iati_spending_usd": 6346054324.61334,
   "reference_value_usd": 5534177128,
   "reference_currency": "USD",

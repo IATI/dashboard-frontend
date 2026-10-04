@@ -489,5 +489,5 @@
   "pubLoadedAt": "Chargé à {time} ·",
   "pubRefresh": "Actualiser",
   "pubRefreshing": "Actualisation…",
-  "orgCovNoReferenceDetail": "L'identifiant de l'organisation est comparé à des données de dépenses de référence externes — OCDE CRS, UN CEB ou un organisme national de réglementation des associations. À défaut de correspondance, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Ni l'un ni l'autre n'est disponible ici."
+  "orgCovNoReferenceDetail": "La couverture compare les dépenses IATI de cette organisation à un chiffre de référence indépendant — un relevé officiel de bailleur, les statistiques financières d'une agence des Nations unies ou le dépôt auprès d'un organisme national de réglementation des associations. À défaut, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Aucun chiffre exploitable n'a été trouvé parmi ces sources."
 }

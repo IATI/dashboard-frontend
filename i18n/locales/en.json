@@ -488,5 +488,5 @@
   "pubLoadedAt": "Loaded at {time} ·",
   "pubRefresh": "Refresh",
   "pubRefreshing": "Refreshing…",
-  "orgCovNoReferenceDetail": "The organisation's identifier is matched against external reference spend data — OECD CRS, UN CEB, or a national charity regulator. Where none matches, the total budget it declares in its own IATI organisation file is used instead. Neither is available here."
+  "orgCovNoReferenceDetail": "Coverage compares this organisation's IATI spending against an independent reference figure — an official donor record, a UN agency's own finance statistics, or a national charity regulator's filing. Where none is found, the total budget it declares in its own IATI organisation file is used instead. No usable figure was found from any of these."
 }

@@ -169,10 +169,15 @@ function adaptCoverageFromStats(stats) {
     && c.reference_source != null
     && c.coverage != null
 
-  // Show the spending figure the ratio was actually computed from. The basis
-  // says which, and preferring net regardless was wrong: Oxfam GB is compared
-  // on a gross basis, so its 34% comes from +$159.0m, while the panel showed
-  // the net figure of -$2.9m beside it.
+  // Show the spending figure the ratio was actually computed from, so the three
+  // numbers on the panel agree. dashboard-coverage has dropped the net basis
+  // (IATI/dashboard-coverage f992f49) and coverage is gross for every source,
+  // which is what the missing-basis branch resolves to.
+  //
+  // The net branch is kept until the API picks that up: the dashboard refreshes
+  // coverage_by_slug.json once a night, so for now it still serves net-based
+  // ratios for a handful of entities, and pairing one of those with the gross
+  // figure would reintroduce the mismatch this was written to fix.
   const grossUsd = c.iati_spending_usd ?? null
   const netUsd = c.iati_net_spending_usd ?? null
   const spendingUsd = c.coverage_basis === 'net' ? (netUsd ?? grossUsd) : (grossUsd ?? netUsd)
