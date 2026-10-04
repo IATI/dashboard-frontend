@@ -3,6 +3,12 @@ const props = defineProps({
   orgId: { type: String, required: true },
 })
 
+// Country Development Finance Data keys an organisation's page on the same
+// organisation identifier the spending query uses — 44000 for the World Bank,
+// XM-DAC-46002 for AfDB.
+const cdfdUrl = computed(() =>
+  `https://countrydata.iatistandard.org/data/reporting-organisation/${encodeURIComponent(props.orgId)}/`)
+
 const C = {
   budget:   '#155366',   // teal-90
   spending: '#73adbf',   // teal-50
@@ -227,7 +233,10 @@ watch(() => props.orgId, load)
       <p class="org-chart__note">
         {{ t('orgChartNote') }}
         {{ t('orgChartSource') }}
-        <a href="https://countrydata.iatistandard.org/" target="_blank" rel="noopener">countrydata.iatistandard.org</a>.
+        <!-- Straight to this organisation's own page, keyed by the same
+             identifier the figures are queried with, rather than the site's
+             front door. -->
+        <a :href="cdfdUrl" target="_blank" rel="noopener">countrydata.iatistandard.org</a>.
       </p>
     </template>
   </div>
