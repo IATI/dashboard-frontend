@@ -34,6 +34,10 @@ const label = computed(() =>
   bandLabel.value ? t('ariaStars', { band: bandLabel.value, lit: lit.value }) : null)
 
 const starClass = n => ['stars__star', { 'stars__star--lit': n <= lit.value }]
+
+// Position, for whoever wants to stagger them. Only the hero card does; see
+// iati-quality.scss. Set here because the index is not available from CSS.
+const starStyle = n => ({ '--star-index': n - 1 })
 </script>
 
 <template>
@@ -46,10 +50,10 @@ const starClass = n => ['stars__star', { 'stars__star--lit': n <= lit.value }]
     <template v-for="n in 3" :key="n">
       <BTooltip v-if="tooltips[n - 1]" :title="tooltips[n - 1]" placement="top" noninteractive>
         <template #target>
-          <span :class="[starClass(n), 'stars__star--help']">★</span>
+          <span :class="[starClass(n), 'stars__star--help']" :style="starStyle(n)">★</span>
         </template>
       </BTooltip>
-      <span v-else :class="starClass(n)">★</span>
+      <span v-else :class="starClass(n)" :style="starStyle(n)">★</span>
     </template>
   </span>
 </template>

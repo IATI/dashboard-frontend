@@ -62,7 +62,7 @@ function jump(event) {
                they wrap onto their own line rather than the value breaking
                mid-phrase ("1.6 / quarters"). -->
           <span class="dimension-card__metric-score">
-            <span class="dimension-card__metric-value">{{ m.display }}</span>
+            <span class="dimension-card__metric-value"><CountUp :value="m.display" /></span>
             <Stars :category="m.category" size="md" :tooltips="m.tooltips || []" />
           </span>
         </li>

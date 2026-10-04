@@ -704,6 +704,17 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .flex-1       { flex: 1; min-width: 0 }
 
 // Hero metric row: overall band on left, divider, 2×2 grid of cards on right
+// Stars in the hero light up one after another as the assessment lands. Only
+// here: the page carries two dozen more further down, and animating all of them
+// would be a page that will not sit still. `backwards` fill so each star holds
+// its starting state through its delay instead of flashing in and then
+// restarting, and no `forwards`, so hover still owns the colour afterwards.
+@keyframes star-light {
+  0%   { transform: scale(.3); opacity: 0 }
+  65%  { transform: scale(1.18); opacity: 1 }
+  100% { transform: scale(1); opacity: 1 }
+}
+
 @keyframes hero-settle {
   0%   { transform: scale(.86); opacity: .4 }
   60%  { transform: scale(1.05); opacity: 1 }
@@ -743,9 +754,23 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
   .hero-metrics__badge { animation: hero-settle .75s cubic-bezier(.34, 1.56, .64, 1) both }
 
+  .stars__star {
+    display: inline-block;   // scale has nothing to act on while inline
+    animation: star-light .45s cubic-bezier(.34, 1.56, .64, 1) backwards;
+    animation-delay: calc(260ms + var(--star-index, 0) * 110ms);
+  }
+
+  // The medallion's own stars are the headline, so they wait for it to land
+  // and then take their time.
+  .hero-metrics__badge .stars__star {
+    animation-duration: .55s;
+    animation-delay: calc(420ms + var(--star-index, 0) * 150ms);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     transition: none;
-    .hero-metrics__badge { animation: none }
+    .hero-metrics__badge,
+    .stars__star { animation: none }
   }
 
   // The card already carries the colour, so the heading bar does not repeat it.
@@ -770,9 +795,16 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   .hero-metrics__badge { border: none }
 }
 
-.iati-design-system--enabled .hero-card--good      { background: #145d4c; border-color: #145d4c }
-.iati-design-system--enabled .hero-card--very_good { background: #0f775f; border-color: #0f775f }
-.iati-design-system--enabled .hero-card--excellent { background: #0c866a; border-color: #0c866a }
+// Spaced by how different they actually look, not by contrast ratio: the first
+// ramp stepped only in lightness over the narrow range white text allows, and
+// Very good and Excellent came out 6.6 apart in CIELAB — close enough to read as
+// the same colour. Drifting the hue across the design system's green (172 -> 160,
+// with saturation rising) and widening the lightness spread puts the steps at
+// 18.7 / 16.8 / 17.1, roughly even and all clearly distinct. Every one still
+// clears 4.5:1 against the white heading on it.
+.iati-design-system--enabled .hero-card--good      { background: #0c4b43; border-color: #0c4b43 }
+.iati-design-system--enabled .hero-card--very_good { background: #096a53; border-color: #096a53 }
+.iati-design-system--enabled .hero-card--excellent { background: #01865a; border-color: #01865a }
 
 // On the green cards the medallion goes pale green rather than pale blue, so it
 // reads as part of the same family instead of a leftover.
