@@ -28,6 +28,41 @@ const availabilityLoading = computed(() => loading.value || validationPending.va
 // this page is derived from activities, so rather than leaving it to be inferred
 // from empty panels, say so and point at the guidance.
 const noActivities = computed(() => stats.value != null && !stats.value.activityCount)
+
+/**
+ * Published once, but not for a long time.
+ *
+ * Two years, not one: plenty of organisations publish annually, and flagging
+ * them the month before their yearly update would be wrong. The threshold is
+ * not finely balanced either way — across a 120-publisher sample the population
+ * splits in two, 43% having published within the year and 42% not for over
+ * three years, with little in between.
+ */
+const STALE_AFTER_MONTHS = 24
+
+const monthsSincePublished = computed(() => {
+  const last = stats.value?.lastPublished
+  if (!last) return null
+  const [y, m] = last.split('-').map(Number)
+  const now = new Date()
+  return (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - m)
+})
+
+// Only for publishers that did start: one with no activity file gets the other
+// callout, and telling them to resume would be wrong.
+const publishingStopped = computed(() =>
+  !noActivities.value
+  && monthsSincePublished.value !== null
+  && monthsSincePublished.value > STALE_AFTER_MONTHS,
+)
+
+const lastPublishedLabel = computed(() => {
+  const last = stats.value?.lastPublished
+  if (!last) return null
+  const [y, m] = last.split('-').map(Number)
+  return new Date(Date.UTC(y, m - 1, 1))
+    .toLocaleDateString(locale.value, { month: 'long', year: 'numeric', timeZone: 'UTC' })
+})
 const publishGuidanceUrl = computed(() =>
   `https://iatistandard.org/${locale.value}/guidance/publishing-data/how-to-publish-data/`,
 )
@@ -382,6 +417,19 @@ const dimensions = computed(() =>
         <p class="mt-sm">
           <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
             {{ t('orgNoActivitiesLink') }}
+          </a>
+        </p>
+      </OrganisationCallout>
+
+      <OrganisationCallout
+        v-if="publishingStopped" class="mb"
+        heading-level="h2" variant="info" icon="i"
+        :title="t('orgStoppedTitle')"
+      >
+        <p>{{ t('orgStoppedText', { date: lastPublishedLabel }) }}</p>
+        <p class="mt-sm">
+          <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
+            {{ t('orgStoppedLink') }}
           </a>
         </p>
       </OrganisationCallout>

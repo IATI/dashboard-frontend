@@ -225,6 +225,12 @@ function adaptDownloadsByType(byType) {
   }
 }
 
+/** The most recent "YYYY-MM" key in an update series, or null if it is empty. */
+function latestMonth(series) {
+  const months = Object.keys(series ?? {}).filter(k => /^\d{4}-\d{2}$/.test(k))
+  return months.length ? months.sort().at(-1) : null
+}
+
 /** Identity fields for the page header. */
 function adaptIdentity(raw) {
   return {
@@ -341,6 +347,13 @@ function adaptStats(stats, methodology) {
     // timeliness_frequency.csv across 11 publishers: old matched 11/11, new
     // 7/11 — new under-reports recent updates for AfDB, World Bank, EC-INTPA
     // and Sida, all of which publish monthly. Revisit when new is fixed.
+    // The month this publisher last updated a file, from the same update history
+    // the frequency verdict is derived from — "YYYY-MM", or null when there is
+    // no history at all. This is when they last PUBLISHED, which is a different
+    // question from how current the data is (timelag) or when money last moved
+    // (mostRecentTransactionDate).
+    lastPublished: latestMonth(stats.frequency_old?.updates_per_month),
+
     frequency: {
       label: stats.frequency_old?.frequency ?? null,
       value: FREQUENCY_TO_VALUE[String(stats.frequency_old?.frequency ?? '').toLowerCase()] ?? null,

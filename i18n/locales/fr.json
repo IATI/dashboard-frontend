@@ -478,5 +478,8 @@
   "orgChartBudget": "Budget",
   "orgChartSpending": "Décaissement + dépenses",
   "orgTlNoUpdates": "Aucune mise à jour au cours des 12 derniers mois",
-  "orgTlNoTransactions": "Aucune transaction déclarée au cours des 12 derniers mois"
+  "orgTlNoTransactions": "Aucune transaction déclarée au cours des 12 derniers mois",
+  "orgStoppedTitle": "La publication semble interrompue",
+  "orgStoppedText": "Cette organisation a mis à jour ses données IATI pour la dernière fois en {date}. Une publication régulière permet aux personnes qui s'appuient sur ces données de continuer à les utiliser.",
+  "orgStoppedLink": "En savoir plus sur la publication dans IATI"
 }
