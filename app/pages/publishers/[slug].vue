@@ -314,7 +314,11 @@ const dimensionBands = computed(() =>
 // other check helpers because it reads component bands from dimensionBands.
 const indicatorGroups = computed(() => {
   const rows = groupTestsByIndicator(allChecks.value)
-  return CHECK_COMPONENT_ORDER.map(id => ({
+  return CHECK_COMPONENT_ORDER
+    // A component with neither a score nor any checks was not assessed; an
+    // empty panel saying "No tests available" is noise, not information.
+    .filter(id => componentBandFor('comprehensiveness', id) || rows.some(r => r.component === id))
+    .map(id => ({
     key: id,
     label: t(labelKey('sub', id)),
     category: componentBandFor('comprehensiveness', id),

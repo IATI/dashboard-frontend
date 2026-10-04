@@ -122,6 +122,11 @@ function adaptAssessment(stats, methodology) {
     for (const [rawId, comp] of Object.entries(dim.components ?? {})) {
       const id = COMPONENT_ID[rawId] ?? rawId
       const scale = ORDINAL_VALUE[rawId]
+
+      // Checked before any arithmetic: `null * 100` is 0 in JavaScript, so a
+      // component the API could not measure would otherwise become a real 0
+      // here and render as "0%  Needs improvement" beside "No tests available".
+      if (comp.value === null || comp.value === undefined) continue
       // Band the exact value but display it rounded: 98.51% shows as "99%",
       // and banding the rounded figure would hand it the 99% star it has not
       // earned.
@@ -136,6 +141,11 @@ function adaptAssessment(stats, methodology) {
         category: comp.category ?? null,
       }
     }
+
+    // Nothing measurable in the whole dimension — leave it out rather than
+    // showing an empty panel with a band on it.
+    if (!Object.keys(components).length) continue
+
     dimensions[dimId] = { category: dim.category ?? null, components }
   }
 
@@ -513,6 +523,12 @@ export function toAssessmentFragment({ publisher }, methodology) {
       category: deriveTimeliness(components.timeliness?.value, components.frequency?.value),
     }
   }
+
+  // Timeliness is measured from how often activity data is published and how
+  // current it is. With no activity file there is no publishing history, and
+  // the API's values — a time lag of more than one year, less than annual
+  // updates — describe the absence rather than anything the publisher did.
+  if (!publisher?.stats?.activityCount) delete dimensions.timeliness
 
   if (!Object.keys(dimensions).length) return null
 

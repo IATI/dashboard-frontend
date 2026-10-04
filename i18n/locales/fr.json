@@ -467,5 +467,14 @@
   "orgColExpand": "Afficher les vérifications",
   "orgNoActivitiesTitle": "Aucun fichier d'activités publié pour le moment",
   "orgNoActivitiesText": "Cette organisation n'a pas encore commencé à publier de fichier d'activités dans IATI. Ce fichier contiendrait des informations sur les projets auxquels l'organisation participe.",
-  "orgNoActivitiesLink": "En savoir plus sur la publication de données"
+  "orgNoActivitiesLink": "En savoir plus sur la publication de données",
+  "orgChartLoading": "Chargement des données financières…",
+  "orgChartError": "Impossible de charger les données : {error}",
+  "orgChartNoData": "Aucune donnée de budget ou de dépenses n'a été publiée pour cette organisation.",
+  "orgChartNote": "Ce graphique montre les budgets et les dépenses des trois années précédentes, de l'année en cours et des trois années suivantes.",
+  "orgChartSource": "Source :",
+  "orgChartAlt": "Graphique à barres des budgets et dépenses par année, de {from} à {to}. Budgets au total {budget} ; décaissements et dépenses au total {spending}.",
+  "orgChartYear": "Année",
+  "orgChartBudget": "Budget",
+  "orgChartSpending": "Décaissement + dépenses"
 }

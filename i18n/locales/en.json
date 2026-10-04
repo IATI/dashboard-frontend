@@ -466,5 +466,14 @@
   "orgColExpand": "Show checks",
   "orgNoActivitiesTitle": "No activity file published yet",
   "orgNoActivitiesText": "This organisation has not yet begun publishing an activity file to IATI. This file would contain information on the projects the organisation is involved in.",
-  "orgNoActivitiesLink": "Learn more about starting to publish"
+  "orgNoActivitiesLink": "Learn more about starting to publish",
+  "orgChartLoading": "Loading financial data…",
+  "orgChartError": "Could not load data: {error}",
+  "orgChartNoData": "No budget or spending data has been published for this organisation.",
+  "orgChartNote": "This chart shows both budgets and spending for the previous three years, the current year, and the next three years.",
+  "orgChartSource": "Source:",
+  "orgChartAlt": "Bar chart of budget and spending by year, {from} to {to}. Budgets total {budget}; disbursements and expenditure total {spending}.",
+  "orgChartYear": "Year",
+  "orgChartBudget": "Budget",
+  "orgChartSpending": "Disbursement + expenditure"
 }

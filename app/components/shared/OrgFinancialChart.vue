@@ -16,9 +16,14 @@ const CDFD_BASE = 'https://data.countrydata.iatistandard.org/api'
 const now = new Date().getFullYear()
 const years = Array.from({ length: 7 }, (_, i) => String(now - 3 + i))
 
+const { t } = useI18n({ useScope: 'global' })
+
 const loading = ref(true)
 const error = ref(null)
 const chartData = ref(null)
+// CDFD returns no cells at all for an organisation with nothing published, which
+// otherwise renders as a full set of axes with nothing on them.
+const hasData = ref(false)
 
 async function load() {
   loading.value = true
@@ -42,7 +47,12 @@ async function load() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const json = await res.json()
 
-    const byYear = Object.fromEntries(json.cells.map(c => [c['year.year'], c]))
+    const cells = json.cells ?? []
+    const byYear = Object.fromEntries(cells.map(c => [c['year.year'], c]))
+    // Zero everywhere is as empty as no cells: both draw a blank chart.
+    hasData.value = cells.some(c =>
+      (c['value_usd.sum_budget'] || 0) !== 0 || (c['value_usd.sum_3-4'] || 0) !== 0,
+    )
 
     chartData.value = {
       labels: years,
@@ -132,26 +142,96 @@ const chartOptions = {
   },
 }
 
+// Values are held in billions for the chart; present them as currency here.
+const fmtUsd = v => {
+  const n = v * 1e9
+  if (Math.abs(n) >= 1e9) return `$${(n / 1e9).toFixed(1)}bn`
+  if (Math.abs(n) >= 1e6) return `$${(n / 1e6).toFixed(1)}m`
+  if (Math.abs(n) >= 1e3) return `$${(n / 1e3).toFixed(0)}k`
+  return `$${Math.round(n)}`
+}
+
+/**
+ * The chart's contents as rows, for the visually-hidden table below it.
+ *
+ * A canvas is opaque to a screen reader, and tooltips need a pointer, so the
+ * figures are also published as a real table. The table is the accessible
+ * equivalent; the aria-label on the canvas is only the summary.
+ */
+const chartRows = computed(() => {
+  const d = chartData.value
+  if (!d) return []
+  return d.labels.map((year, i) => ({
+    year,
+    budget: d.datasets[0].data[i] ?? 0,
+    spending: d.datasets[1].data[i] ?? 0,
+  }))
+})
+
+const chartSummary = computed(() => {
+  const rows = chartRows.value
+  if (!rows.length) return t('orgChartNoData')
+  const sum = key => rows.reduce((total, r) => total + r[key], 0)
+  return t('orgChartAlt', {
+    from: rows[0].year,
+    to: rows[rows.length - 1].year,
+    budget: fmtUsd(sum('budget')),
+    spending: fmtUsd(sum('spending')),
+  })
+})
+
 onMounted(load)
 watch(() => props.orgId, load)
 </script>
 
 <template>
   <div>
-    <div v-if="loading" style="padding: 40px 0; text-align: center; color: var(--grey-60); font-size: .9rem">
-      Loading financial data…
-    </div>
-    <div v-else-if="error" style="padding: 20px 0; color: var(--red-50); font-size: .9rem">
-      Could not load data: {{ error }}
-    </div>
+    <p v-if="loading" class="org-chart__state">{{ t('orgChartLoading') }}</p>
+    <p v-else-if="error" class="org-chart__state org-chart__state--error">
+      {{ t('orgChartError', { error }) }}
+    </p>
+    <p v-else-if="!hasData" class="org-chart__state">{{ t('orgChartNoData') }}</p>
     <template v-else>
-      <div style="height: 260px; position: relative">
+      <!-- role="img" with a name: the canvas is otherwise an unlabelled
+           graphic, and its contents are unreachable to a screen reader. -->
+      <div class="org-chart__canvas" role="img" :aria-label="chartSummary">
         <BarChart :data="chartData" :options="chartOptions" />
       </div>
-      <p style="font-size: .8rem; color: var(--grey-60); margin: 10px 0 0">
-        This chart shows both budgets and spending for the previous three years, the current year, and the next three years.
-        Source: <a href="https://countrydata.iatistandard.org/" target="_blank" rel="noopener">countrydata.iatistandard.org</a>.
+      <table class="visually-hidden">
+        <caption>{{ chartSummary }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ t('orgChartYear') }}</th>
+            <th scope="col">{{ t('orgChartBudget') }}</th>
+            <th scope="col">{{ t('orgChartSpending') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in chartRows" :key="row.year">
+            <th scope="row">{{ row.year }}</th>
+            <td>{{ fmtUsd(row.budget) }}</td>
+            <td>{{ fmtUsd(row.spending) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="org-chart__note">
+        {{ t('orgChartNote') }}
+        {{ t('orgChartSource') }}
+        <a href="https://countrydata.iatistandard.org/" target="_blank" rel="noopener">countrydata.iatistandard.org</a>.
       </p>
     </template>
   </div>
 </template>
+
+<style scoped>
+.org-chart__state {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--grey-60);
+  font-size: .9rem;
+  margin: 0;
+}
+.org-chart__state--error { color: var(--red-50); text-align: left; padding: 20px 0 }
+.org-chart__canvas { height: 260px; position: relative }
+.org-chart__note { font-size: .8rem; color: var(--grey-60); margin: 10px 0 0 }
+</style>
