@@ -374,7 +374,7 @@ const dimensions = computed(() =>
 
     <main class="main" :aria-busy="loading">
       <OrganisationCallout
-        v-if="noActivities" class="mb-sm"
+        v-if="noActivities" class="mb"
         heading-level="h2" variant="info" icon="i"
         :title="t('orgNoActivitiesTitle')"
       >

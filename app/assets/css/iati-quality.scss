@@ -626,6 +626,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .spread--sm   { margin-bottom: 4px; font-size: .85rem }
 .mt    { margin-top: 18px }
 .mt-sm { margin-top: 10px }
+.mb    { margin-bottom: 18px }   // pairs with .mt, the gap between cards
 .mb-xs { margin-bottom: 8px }
 .mb-sm { margin-bottom: 10px }
 .mb-md { margin-bottom: 14px }
