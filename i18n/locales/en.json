@@ -465,7 +465,7 @@
   "ariaIndicatorBar": "{name}: {pct}% passing",
   "orgColExpand": "Show checks",
   "orgNoActivitiesTitle": "No activity file published yet",
-  "orgNoActivitiesText": "This organisation has not yet begun publishing an activity file to IATI. This file would contain information on the projects the organisation is involved in.",
+  "orgNoActivitiesText": "{name} has not yet begun publishing an activity file to IATI. This file would contain information on the projects the organisation is involved in.",
   "orgNoActivitiesLink": "Learn more about starting to publish",
   "orgChartLoading": "Loading financial data…",
   "orgChartError": "Could not load data: {error}",
@@ -479,6 +479,6 @@
   "orgTlNoUpdates": "No updates in the last 12 months",
   "orgTlNoTransactions": "No transactions reported in the last 12 months",
   "orgStoppedTitle": "This organisation last published more than one year ago | This organisation last published more than {count} years ago",
-  "orgStoppedText": "It last updated its IATI data in {date}. Publishing regularly keeps the information useful to the people who rely on it.",
+  "orgStoppedText": "{name} last updated its IATI data in {date}. Publishing regularly makes the information more useful to those who rely on it.",
   "orgStoppedLink": "Learn more about publishing to IATI"
 }

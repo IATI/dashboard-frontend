@@ -418,7 +418,7 @@ const dimensions = computed(() =>
         heading-level="h2" variant="info" icon="i"
         :title="t('orgNoActivitiesTitle')"
       >
-        <p>{{ t('orgNoActivitiesText') }}</p>
+        <p>{{ t('orgNoActivitiesText', { name: orgName }) }}</p>
         <p class="mt-sm">
           <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
             {{ t('orgNoActivitiesLink') }}
@@ -431,7 +431,7 @@ const dimensions = computed(() =>
         heading-level="h2" variant="info" icon="i"
         :title="t('orgStoppedTitle', yearsSincePublished)"
       >
-        <p>{{ t('orgStoppedText', { date: lastPublishedLabel }) }}</p>
+        <p>{{ t('orgStoppedText', { name: orgName, date: lastPublishedLabel }) }}</p>
         <p class="mt-sm">
           <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
             {{ t('orgStoppedLink') }}
