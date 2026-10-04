@@ -488,5 +488,6 @@
   "orgCovPeriodEnd": "Fin de l’exercice comptable",
   "pubLoadedAt": "Chargé à {time} ·",
   "pubRefresh": "Actualiser",
-  "pubRefreshing": "Actualisation…"
+  "pubRefreshing": "Actualisation…",
+  "orgCovNoReferenceDetail": "L'identifiant de l'organisation est comparé à des données de dépenses de référence externes — OCDE CRS, UN CEB ou un organisme national de réglementation des associations. À défaut de correspondance, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Ni l'un ni l'autre n'est disponible ici."
 }

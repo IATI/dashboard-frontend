@@ -752,6 +752,12 @@ const dimensions = computed(() =>
               <span class="measure__label">{{ t('subCoverage') }}</span>
             </div>
             <p class="measure__note">{{ t('orgCovNoReference') }}</p>
+            <p class="measure__note mt-sm">{{ t('orgCovNoReferenceDetail') }}</p>
+            <p class="measure__note mt-sm">
+              <a href="https://iati.github.io/dashboard-coverage/methodology.html" target="_blank" rel="noopener">
+                {{ t('orgCovMethodology') }}
+              </a>
+            </p>
           </div>
           <div v-else class="measure">
             <div class="measure__head">
