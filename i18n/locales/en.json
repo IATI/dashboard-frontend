@@ -484,5 +484,8 @@
   "orgNoTxnTitle": "No transaction data published",
   "orgNoTxnText": "{name} has published {n} activities but no transactions. Transactions record the money committed, disbursed and spent, which is what makes an organisation’s spending visible in IATI.",
   "orgTlNotMeasurable": "Cannot be measured",
-  "orgCovPeriodEnd": "Accounting period ends"
+  "orgCovPeriodEnd": "Accounting period ends",
+  "pubLoadedAt": "Loaded at {time} ·",
+  "pubRefresh": "Refresh",
+  "pubRefreshing": "Refreshing…"
 }

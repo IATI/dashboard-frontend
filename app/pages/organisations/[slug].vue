@@ -712,7 +712,6 @@ const dimensions = computed(() =>
                 v-for="m in timelinessPanel.txns" :key="m.month"
                 :title="`${m.month} — ${t('orgTlTxnsCount', { n: m.count.toLocaleString() })}`"
                 placement="top" noninteractive
-                class="month-strip__bar-wrap"
               >
                 <template #target>
                   <span class="month-strip__bar" :style="{ height: Math.max(3, m.pct) + '%' }" />

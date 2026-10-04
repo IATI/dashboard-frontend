@@ -2,7 +2,16 @@
 definePageMeta({ active: 'org' })
 const { t, locale } = useI18n({ useScope: 'global' })
 
-const { publishers, status } = usePublisherList()
+const { publishers, status, refresh, fetchedAt } = usePublisherList()
+
+// The list is fetched once per session, so say how old it is rather than
+// leaving the reader to assume it is live.
+const fetchedAtLabel = computed(() => {
+  if (!fetchedAt.value) return null
+  return new Date(fetchedAt.value).toLocaleTimeString(locale.value, {
+    hour: 'numeric', minute: '2-digit',
+  })
+})
 const { lookup: organisationTypeName, map: orgTypeMap } = useCodelist('OrganisationType')
 
 // Signed in with an IATI Account, the list narrows to the organisations that
@@ -119,7 +128,17 @@ watch([search, filterType], () => { currentPage.value = 1 })
               <option v-for="tp in orgTypes" :key="tp.code" :value="tp.code">{{ tp.label }}</option>
             </select>
           </div>
-          <div class="filter-count">{{ t('pubCount', { n: filtered.length.toLocaleString() }) }}</div>
+          <div class="filter-count">
+            <span>{{ t('pubCount', { n: filtered.length.toLocaleString() }) }}</span>
+            <span v-if="fetchedAtLabel" class="filter-count__meta">
+              {{ t('pubLoadedAt', { time: fetchedAtLabel }) }}
+              <button
+                type="button" class="link-button"
+                :disabled="status === 'pending'"
+                @click="refresh()"
+              >{{ status === 'pending' ? t('pubRefreshing') : t('pubRefresh') }}</button>
+            </span>
+          </div>
         </div>
 
         <div class="iati-table">

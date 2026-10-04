@@ -485,5 +485,8 @@
   "orgNoTxnTitle": "Aucune donnée de transaction publiée",
   "orgNoTxnText": "{name} a publié {n} activités mais aucune transaction. Les transactions enregistrent les montants engagés, décaissés et dépensés, ce qui rend visibles les dépenses d'une organisation dans IATI.",
   "orgTlNotMeasurable": "Non mesurable",
-  "orgCovPeriodEnd": "Fin de l’exercice comptable"
+  "orgCovPeriodEnd": "Fin de l’exercice comptable",
+  "pubLoadedAt": "Chargé à {time} ·",
+  "pubRefresh": "Actualiser",
+  "pubRefreshing": "Actualisation…"
 }

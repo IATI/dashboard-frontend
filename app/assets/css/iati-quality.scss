@@ -353,14 +353,18 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
   &__count { font-size: .75rem; color: var(--grey-60); font-variant-numeric: tabular-nums }
   // BTooltip wraps each cell, so it becomes the flex child rather than the cell
-  &__cells { display: flex; gap: 2px; > * { flex: 1; min-width: 0 } }
+  &__cells { display: flex; gap: 2px; > .month-strip__cell { flex: 1; min-width: 0 } }
   &__cell {
     display: block; height: 14px; background: var(--grey-10); border: 1px solid var(--grey-20);
     &.is-active { background: var(--green-50); border-color: var(--green-50) }
   }
   &__bars {
     display: flex; gap: 2px; align-items: flex-end; height: 30px;
-    > * { flex: 1; min-width: 0; height: 100%; display: flex; align-items: flex-end }
+    // Scoped to the bars, not `> *`: BTooltip renders its popover as a sibling
+    // in here, and `height: 100%` of a 30px box collapsed it to nothing — the
+    // tooltip showed its arrow and no content. The bars' own percentage heights
+    // resolve against this container, which is why it keeps an explicit height.
+    > .month-strip__bar { flex: 1; min-width: 0 }
   }
   &__bar {
     display: block; width: 100%; background: var(--teal-50); min-height: 3px;
@@ -705,3 +709,11 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
 // A measure that could not be computed, stated rather than scored
 .measure__value--muted { font-weight: 400; font-style: italic; color: var(--grey-60) }
+
+// Age of the cached organisation list, beside the result count
+.filter-count__meta {
+  display: block; margin-top: 2px;
+  font-size: .78rem; font-weight: 400; color: var(--grey-60);
+  button { font-size: inherit }
+  button[disabled] { opacity: .6; cursor: default; text-decoration: none }
+}
