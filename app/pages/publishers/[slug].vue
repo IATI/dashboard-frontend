@@ -24,6 +24,14 @@ const loading = computed(() => !publisher.value && !publisherError.value)
 // three. Everything else on the page depends only on the stats.
 const availabilityLoading = computed(() => loading.value || validationPending.value)
 
+// A reporting organisation that has not published an activity file yet. Most of
+// this page is derived from activities, so rather than leaving it to be inferred
+// from empty panels, say so and point at the guidance.
+const noActivities = computed(() => stats.value != null && !stats.value.activityCount)
+const publishGuidanceUrl = computed(() =>
+  `https://iatistandard.org/${locale.value}/guidance/publishing-data/how-to-publish-data/`,
+)
+
 // Only the Validator findings now: download failures arrive with the stats.
 const { validation, pending: validationPending } = useAvailabilityData(slug)
 const { lookup: organisationTypeName } = useCodelist('OrganisationType')
@@ -361,6 +369,19 @@ const dimensions = computed(() =>
     </TitleBar>
 
     <main class="main" :aria-busy="loading">
+      <OrganisationCallout
+        v-if="noActivities" class="mb-sm"
+        heading-level="h2" variant="info" icon="i"
+        :title="t('orgNoActivitiesTitle')"
+      >
+        <p>{{ t('orgNoActivitiesText') }}</p>
+        <p class="mt-sm">
+          <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
+            {{ t('orgNoActivitiesLink') }}
+          </a>
+        </p>
+      </OrganisationCallout>
+
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
         <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">

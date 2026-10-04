@@ -532,7 +532,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   padding: 14px 16px; border-left: 4px solid var(--orange-50); background: #fff0f0; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: flex-start;
   &.info { border-color: var(--blue-50); background: var(--teal-10) }
   &.good { border-color: var(--green-50); background: #ebfffa }
-  h4 { font-size: .95rem; margin: 0 0 4px; font-family: "Hanken Grotesk" }
+  h2, h3, h4 { font-size: .95rem; margin: 0 0 4px; font-family: "Hanken Grotesk" }
   p  { margin: 0; font-size: .88rem; line-height: 1.5 }
   .ic {
     font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.4rem; color: var(--orange-90);

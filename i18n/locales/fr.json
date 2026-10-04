@@ -464,5 +464,8 @@
   "navFooterLabel": "Pied de page",
   "ariaCoverageBar": "Couverture : {pct}% du chiffre de référence",
   "ariaIndicatorBar": "{name} : {pct}% de réussite",
-  "orgColExpand": "Afficher les vérifications"
+  "orgColExpand": "Afficher les vérifications",
+  "orgNoActivitiesTitle": "Aucun fichier d'activités publié pour le moment",
+  "orgNoActivitiesText": "Cette organisation n'a pas encore commencé à publier de fichier d'activités dans IATI. Ce fichier contiendrait des informations sur les projets auxquels l'organisation participe.",
+  "orgNoActivitiesLink": "En savoir plus sur la publication de données"
 }

@@ -463,5 +463,8 @@
   "navFooterLabel": "Footer",
   "ariaCoverageBar": "Coverage: {pct}% of the reference figure",
   "ariaIndicatorBar": "{name}: {pct}% passing",
-  "orgColExpand": "Show checks"
+  "orgColExpand": "Show checks",
+  "orgNoActivitiesTitle": "No activity file published yet",
+  "orgNoActivitiesText": "This organisation has not yet begun publishing an activity file to IATI. This file would contain information on the projects the organisation is involved in.",
+  "orgNoActivitiesLink": "Learn more about starting to publish"
 }
