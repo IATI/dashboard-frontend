@@ -296,6 +296,45 @@ const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
 
 // Teal is the base. The three bands above it tint the hero card progressively
 // greener — see iati-quality.scss for why the common band stays neutral.
+// What is holding the overall band where it is, and what the next rung up would
+// be. The overall band is the weakest dimension's, so the dimensions sitting at
+// that band are the ones in the way — usually one, sometimes several.
+const BAND_LADDER_UP = ['needs_improvement', 'good', 'very_good', 'excellent']
+
+const limitingDimensions = computed(() => {
+  const band = overall.value?.category
+  if (!band) return []
+  return dimensions.value.filter(d => d.category === band).map(d => d.label)
+})
+
+const nextBandUp = computed(() => {
+  const i = BAND_LADDER_UP.indexOf(overall.value?.category)
+  return i >= 0 && i < BAND_LADDER_UP.length - 1 ? BAND_LADDER_UP[i + 1] : null
+})
+
+// "Availability", or "Availability and Timeliness" — and the locale's own
+// conjunction, rather than a hard-coded "and".
+const limitingList = computed(() => {
+  const names = limitingDimensions.value
+  if (names.length < 2) return names[0] ?? ''
+  const fmt = new Intl.ListFormat(locale.value, { style: 'long', type: 'conjunction' })
+  return fmt.format(names)
+})
+
+const methodologyFocus = computed(() => {
+  if (!overall.value?.category || loading.value) return null
+  const name = orgName.value
+  if (!nextBandUp.value) return t('methodologyTop', { name })
+  if (!limitingDimensions.value.length) return null
+  const key = limitingDimensions.value.length === 1 ? 'methodologyFocusOne' : 'methodologyFocusMany'
+  return t(key, {
+    name,
+    from: t(labelKey('category', overall.value.category)),
+    to:   t(labelKey('category', nextBandUp.value)),
+    dimensions: limitingList.value,
+  })
+})
+
 const heroBandClass = computed(() =>
   (overall.value?.category ? `hero-band--${overall.value.category}` : null))
 
@@ -531,6 +570,13 @@ const dimensions = computed(() =>
       </section>
 
       <div class="main__inner">
+        <!-- Flat on the page rather than in a card: it explains the band above
+             it, and boxing it would make it look like another finding. -->
+        <div v-if="!loading" class="methodology-note">
+          <p>{{ t('methodologyNote') }}</p>
+          <p v-if="methodologyFocus" class="methodology-note__focus">{{ methodologyFocus }}</p>
+        </div>
+
 
       <BRow gutter-x="3" gutter-y="3" class="mt">
         <BCol cols="12" lg="8">

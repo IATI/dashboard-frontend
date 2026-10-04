@@ -737,6 +737,26 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   100% { transform: scale(1); opacity: 1 }
 }
 
+// ─── Methodology note ─────────────────────────────────────────────────────────
+// Sits flat on the page under the band, with no card around it: it explains the
+// assessment above rather than being another finding, and a box would say
+// otherwise. Held to a readable measure rather than running the full width.
+.methodology-note {
+  max-width: 68ch;
+  margin: 22px 0 6px;
+  color: var(--grey-70);
+  font-size: .92rem;
+  line-height: 1.55;
+
+  p { margin: 0 }
+  p + p { margin-top: 10px }
+
+  &__focus {
+    color: var(--teal-90);
+    font-weight: 600;
+  }
+}
+
 // ─── Hero card ────────────────────────────────────────────────────────────────
 // The overall assessment is the point of the page, but as another white card it
 // read as one panel among several. Colour makes it the first thing seen.
