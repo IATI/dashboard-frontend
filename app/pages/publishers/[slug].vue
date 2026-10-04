@@ -14,7 +14,8 @@ const slug = route.params.slug
 const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
 watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 
-const { downloads, validation } = useAvailabilityData(slug)
+// Only the Validator findings now: download failures arrive with the stats.
+const { validation } = useAvailabilityData(slug)
 const { lookup: organisationTypeName } = useCodelist('OrganisationType')
 
 const identity = computed(() => publisher.value?.identity ?? null)
@@ -83,7 +84,7 @@ const allChecks = computed(() => tests.value)
 const validatorUrl = computed(() => `https://validator.iatistandard.org/organisation/${slug}`)
 
 const availabilityStats = computed(() => {
-  const d = downloads.value
+  const d = stats.value?.downloads
   const v = validation.value
   const rows = []
 
@@ -99,14 +100,14 @@ const availabilityStats = computed(() => {
     note: total ? t('availOfChecked', { n: total.toLocaleString() }) : null,
   })
 
-  if (d && !d.stale) {
-    // The registry's dataset_count disagrees with what the bulk service checks
-    // (UNFPA: 124 registered, 130 failures). The Validator's document count is
-    // the consistent denominator — its `undownloadable` matches these failures.
-    const total = v?.documents ?? identity.value?.datasetCount ?? null
+  // Download failures now come from the stats payload, which breaks them down
+  // per file: its counts sum to the publisher's whole file set, so numerator and
+  // denominator come from the same place. That avoids the mismatch the registry's
+  // dataset_count used to give (UNFPA: 124 registered against 130 failures).
+  if (d?.files) {
     rows.push(measure({
       key: 'failed', label: t('availDownloadErrors'),
-      affected: d.errors.length, total, variant: 'bad',
+      affected: d.failed, total: d.files, variant: 'bad',
     }))
   }
   if (v?.documentsAssessed) {

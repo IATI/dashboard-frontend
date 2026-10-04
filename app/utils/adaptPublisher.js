@@ -128,19 +128,15 @@ function adaptAssessment(stats, methodology) {
       const exact = scale ? (scale[comp.value] ?? null)
         : AS_PERCENT.has(rawId) ? comp.value * 100
         : comp.value
-      // Banded from the methodology, not from comp.category. The API is
-      // currently generous on two components — see the note above adaptStats —
-      // so its own band is deliberately ignored. Delete the deriveCategory call
-      // and read comp.category once that is fixed upstream.
+      // The API's own band is used as-is. Checked against the methodology for
+      // every dimension: coverage, comprehensiveness and availability agree.
+      // Timeliness does not, and is corrected in toAssessmentFragment.
       components[id] = {
         value: AS_PERCENT.has(rawId) ? Math.round(exact) : exact,
-        category: deriveCategory(id, exact, methodology) ?? comp.category ?? null,
+        category: comp.category ?? null,
       }
     }
-    dimensions[dimId] = {
-      category: deriveDimensionCategory(dimId, components, methodology),
-      components,
-    }
+    dimensions[dimId] = { category: dim.category ?? null, components }
   }
 
   return { overall: { category: raw.overall?.category ?? null }, dimensions }
@@ -185,6 +181,27 @@ function recentMonths(series, count = 12) {
     out[key] = series[key] ?? 0
   }
   return out
+}
+
+/**
+ * Files that failed to download, out of all files the publisher has registered.
+ * Returns null when the key is absent, so the panel can leave it unstated
+ * rather than claiming zero failures.
+ */
+function adaptDownloadsByType(byType) {
+  if (!byType || typeof byType !== 'object') return null
+  const entries = Object.entries(byType).filter(([, n]) => typeof n === 'number')
+  if (!entries.length) return null
+
+  const files  = entries.reduce((sum, [, n]) => sum + n, 0)
+  const failed = entries.filter(([type]) => type !== 'null').reduce((sum, [, n]) => sum + n, 0)
+
+  return {
+    files,
+    failed,
+    // Reasons, worst first, for the tooltip — e.g. { http_non_200: 130 }.
+    byType: Object.fromEntries(entries.filter(([type]) => type !== 'null').sort((a, b) => b[1] - a[1])),
+  }
 }
 
 /** Identity fields for the page header. */
@@ -277,6 +294,13 @@ function adaptStats(stats, methodology) {
     mostRecentTransactionDate: stats.most_recent_transaction_date ?? null,
 
     // Display string, plus its methodology enum equivalent
+    // download_errors_by_type is a per-FILE breakdown: the `null` key counts
+    // files that downloaded cleanly, every other key a failure reason. The
+    // values therefore sum to the publisher's whole file set — which is the
+    // right denominator, and a larger one than activity_files, since that counts
+    // only the files the dashboard could actually parse (UNFPA: 124 vs 254).
+    downloads: adaptDownloadsByType(stats.download_errors_by_type),
+
     timelag:      stats.timelag ?? null,
     timelagValue: TIMELAG_TO_VALUE[String(stats.timelag ?? '').toLowerCase()] ?? null,
 
@@ -340,17 +364,6 @@ export function groupTestsByIndicator(tests = []) {
 }
 
 /**
- * Download failures for one publisher, from dashboard-coverage's download_errors.json.
- *
- * Absence from `publishers` means "no known failures", not "no data" — hence the
- * staleness gate: this file's own age is always 0 (it rebuilds daily), but its
- * UPSTREAM once silently froze for 19 months, during which it would have kept
- * reporting healthy. `source_age_days` is the field that catches that, so the
- * verdict is withheld rather than guessed when the upstream is stale.
- */
-const MAX_SOURCE_AGE_DAYS = 7
-
-/**
  * Upstream timestamps arrive in two shapes: ISO 8601, and a space-separated
  * variant ("2026-09-10 03:46:45+00:00"). Normalise so consumers see one format.
  */
@@ -364,30 +377,6 @@ function toIso(value) {
 function daysSince(value) {
   const iso = toIso(value)
   return iso === null ? null : Math.floor((Date.now() - Date.parse(iso)) / 86_400_000)
-}
-
-export function adaptDownloadErrors(raw, slug) {
-  if (!raw?.publishers) return null
-  // Ages are derived from the timestamps rather than read from the file's own
-  // age_days: that value is only correct at the moment it was written, so a
-  // failed rebuild leaves it reporting 0 while the data quietly ages.
-  const sourceGenerated = toIso(raw.source_index_created)
-  const sourceAgeDays = daysSince(sourceGenerated) ?? raw.source_age_days ?? null
-  const stale = sourceAgeDays != null && sourceAgeDays > MAX_SOURCE_AGE_DAYS
-  const errors = raw.publishers[unref(slug)] ?? []
-
-  return {
-    stale,
-    sourceAgeDays,
-    ageDays:         daysSince(raw.generated) ?? raw.age_days ?? null,
-    refreshed:       raw.refreshed ?? null,
-    generated:       toIso(raw.generated),
-    sourceGenerated,
-    datasetsChecked: raw.datasets_checked ?? null,
-    errors,
-    // null = cannot say
-    downloadable: stale ? null : errors.length === 0,
-  }
 }
 
 /**
@@ -407,7 +396,8 @@ const MAX_AGE_DAYS_DEFAULT = 10
 
 export function adaptValidationErrors(raw, slug) {
   if (!raw?.publishers) return null
-  // Derived from the timestamp, not the file's own age_days — see adaptDownloadErrors.
+  // Derived from the timestamp, not the file's own age_days: that value is only
+  // correct when written, so a failed rebuild reports 0 while the data ages.
   const ageDays = daysSince(raw.generated) ?? raw.age_days ?? null
   const refreshed = raw.refreshed ?? null
   const maxAge = MAX_AGE_DAYS_BY_CADENCE[refreshed] ?? MAX_AGE_DAYS_DEFAULT
@@ -484,11 +474,12 @@ export function toAssessmentFragment({ publisher }, methodology) {
     ...(detail ? { detail } : {}),
   })
 
-  // The API scores timeliness from frequency_new, which currently under-reports
-  // updates (see adaptStats). Rescore that one component from frequency_old, and
-  // band it from the methodology rather than taking the API's band: the API is
-  // one to two bands generous here (it never emits `good` for this component at
-  // all — six-monthly and quarterly both come back very_good).
+  // Timeliness is the one dimension the API gets wrong, in two ways: it scores
+  // frequency from frequency_new, which under-reports monthly publishers (see
+  // adaptStats), and it bands the dimension on a four-point scale when the
+  // methodology defines only three — any `very_good` is wrong by construction.
+  // So frequency is rescored from frequency_old and the dimension re-derived
+  // from the methodology's joint rule.
   const frequency = publisher?.stats?.frequency
   if (dimensions.timeliness && frequency?.value) {
     const components = {
@@ -497,7 +488,7 @@ export function toAssessmentFragment({ publisher }, methodology) {
     }
     dimensions.timeliness = {
       components,
-      category: deriveDimensionCategory('timeliness', components, methodology),
+      category: deriveTimeliness(components.timeliness?.value, components.frequency?.value),
     }
   }
 
@@ -519,17 +510,24 @@ function weakestBand(bands) {
 }
 
 /**
- * A dimension's band from its components' values.
+ * Timeliness, from the methodology's joint rule (IATI-Stats#195):
  *
- * The weakest component decides — a publisher is not "excellent" at coverage
- * while failing disaggregation. This is also how the API bands the dimensions it
- * scores itself (verified against every publisher in the sample), so a dimension
- * re-derived here agrees with one taken straight from the API.
+ *   both monthly / one month                              -> excellent
+ *   both at least quarterly / a quarter, OR either one
+ *   monthly / one month                                   -> good
+ *   otherwise                                             -> needs_improvement
+ *
+ * Deliberately a joint function of the two values rather than an aggregate of
+ * their individual bands: the rule awards `good` when EITHER component is top,
+ * which taking the weakest band would never do. Note it defines no `very_good`
+ * for this dimension.
  */
-export function deriveDimensionCategory(dimensionId, components = {}, methodology) {
-  const ladder = ['needs_improvement', 'good', 'very_good', 'excellent']
-  const ranks = Object.values(components)
-    .map(c => ladder.indexOf(c.category))
-    .filter(rank => rank >= 0)
-  return ranks.length ? ladder[Math.min(...ranks)] : null
+export function deriveTimeliness(timelag, frequency) {
+  const top = v => ENUM_RANK[v] === 5          // one month / monthly
+  const mid = v => ENUM_RANK[v] === 4          // a quarter / quarterly
+  if (!timelag || !frequency) return null
+  if (top(timelag) && top(frequency)) return 'excellent'
+  if ((mid(timelag) || top(timelag)) && (mid(frequency) || top(frequency))) return 'good'
+  if (top(timelag) || top(frequency)) return 'good'
+  return 'needs_improvement'
 }

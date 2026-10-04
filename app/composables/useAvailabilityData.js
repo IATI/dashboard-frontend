@@ -3,31 +3,31 @@
 const COVERAGE_DATA = 'https://iati.github.io/dashboard-coverage/data'
 
 /**
- * Download failures and Validator findings for one publisher.
+ * Validator findings for one publisher.
  *
- * Both are single files covering every publisher (~284KB and ~814KB), so each is
- * fetched once under a shared key and reused across pages rather than per slug.
+ * A single ~814KB file covering every publisher, so it is fetched once under a
+ * shared key and reused across pages rather than per slug.
+ *
+ * This is the last thing the page needs from outside the stats payload, and it
+ * is needed only for the per-file counts behind the availability bars — the
+ * pass/fail verdicts themselves come scored from the API. It can go once the
+ * Validator exposes documents_with_critical / documents_with_error
+ * (IATI/validator-services#546).
  *
  * Absence of a slug means "no known issues" — never "the fetch failed" — so the
- * adapters return null verdicts when the data is stale, unreadable, or missing,
+ * adapter returns null verdicts when the data is stale, unreadable, or missing,
  * and the page leaves those components unstated rather than asserting a pass.
  */
 export function useAvailabilityData(slug) {
   const shortName = computed(() => unref(slug))
 
-  const { data: downloadsRaw } = useAsyncData(
-    'download-errors',
-    () => $fetch(`${COVERAGE_DATA}/download_errors.json`),
-    { default: () => null, server: false },
-  )
   const { data: validationRaw } = useAsyncData(
     'validation-errors',
     () => $fetch(`${COVERAGE_DATA}/validation_errors.json`),
     { default: () => null, server: false },
   )
 
-  const downloads  = computed(() => adaptDownloadErrors(downloadsRaw.value, shortName.value))
   const validation = computed(() => adaptValidationErrors(validationRaw.value, shortName.value))
 
-  return { downloads, validation }
+  return { validation }
 }
