@@ -16,3 +16,7 @@ dist/
 
 # Local dev artifacts
 launchctl.txt
+
+# Spreadsheets written by scripts/export-assessments.mjs, which defaults to
+# writing into the working directory. The script is source; its output is not.
+*.xlsx
