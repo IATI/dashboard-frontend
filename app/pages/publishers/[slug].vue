@@ -240,18 +240,12 @@ function starTooltips(id) {
   })
 }
 
-// Placeholder assessment, with the components we can derive from real data laid
-// over the top. When the assessment API lands this merge goes away and its
-// payload is used directly.
+// The assessment comes scored from the API. Only timeliness is still adjusted
+// here — see toAssessmentFragment. The download and validation files are still
+// fetched, but now only for the availability panel's file counts, which the
+// assessment does not carry.
 const assessed = computed(() => {
-  const fragment = toAssessmentFragment(
-    {
-      publisher: publisher.value,
-      downloads: downloads.value,
-      validation: validation.value,
-    },
-    methodology,
-  )
+  const fragment = toAssessmentFragment({ publisher: publisher.value }, methodology)
   return {
     overall: fragment?.overall?.category ? fragment.overall : null,
     ...(fragment?.dimensions ?? {}),

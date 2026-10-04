@@ -89,6 +89,8 @@ const COMPONENT_ID = {
   financials: 'financial_fields',
   organisation: 'organisation_fields',
   timelag: 'timeliness',
+  no_critical: 'no_critical_errors',
+  no_error: 'no_errors',
 }
 
 // Values arrive on three different scales: ratios for coverage and the
@@ -472,7 +474,7 @@ export function adaptValidationErrors(raw, slug) {
  *
  * @param {object} sources { publisher, downloads, validation }
  */
-export function toAssessmentFragment({ publisher, downloads, validation }, methodology) {
+export function toAssessmentFragment({ publisher }, methodology) {
   const scored = publisher?.stats?.assessment ?? null
   const dimensions = { ...(scored?.dimensions ?? {}) }
 
@@ -481,34 +483,6 @@ export function toAssessmentFragment({ publisher, downloads, validation }, metho
     category: deriveCategory(id, value, methodology),
     ...(detail ? { detail } : {}),
   })
-
-  const availability = {}
-  if (downloads?.downloadable !== null && downloads?.downloadable !== undefined) {
-    availability.downloadable = component('downloadable', downloads.downloadable, {
-      failing_datasets: downloads.errors.length,
-      source_generated: downloads.sourceGenerated,
-    })
-  }
-  if (validation?.noCriticalErrors !== null && validation?.noCriticalErrors !== undefined) {
-    availability.no_critical_errors = component('no_critical_errors', validation.noCriticalErrors, {
-      documents_with_critical: validation.documentsWithCritical,
-      total_critical:          validation.totalCritical,
-      documents:               validation.documents,
-    })
-  }
-  if (validation?.noErrors !== null && validation?.noErrors !== undefined) {
-    availability.no_errors = component('no_errors', validation.noErrors, {
-      documents_with_error: validation.documentsWithError,
-      total_error:          validation.totalError,
-      documents:            validation.documents,
-    })
-  }
-  if (Object.keys(availability).length) {
-    dimensions.availability = {
-      components: availability,
-      category: deriveDimensionCategory('availability', availability, methodology),
-    }
-  }
 
   // The API scores timeliness from frequency_new, which currently under-reports
   // updates (see adaptStats). Rescore that one component from frequency_old, and
