@@ -24,7 +24,7 @@ const label = category =>
 <template>
   <span class="dimension-band">
     <span class="dimension-band__label">{{ label(category) }}</span>
-    <Stars :category="category" size="md" :tooltips="tooltips" />
+    <Stars :category="category" size="md" :tooltips="tooltips" decorative />
   </span>
 </template>
 
@@ -45,8 +45,18 @@ const label = category =>
   white-space: nowrap;
 }
 
-/* Narrow screens: the stars carry it, the word is the first thing to go */
+/* Narrow screens: the stars carry it, the word is the first thing to go —
+   visually. It stays in the accessibility tree, because `display: none` would
+   take it out of there too, and the stars beside it are marked decorative on
+   the strength of this label being present. */
 @media (max-width: 575.98px) {
-  .dimension-band__label { display: none }
+  .dimension-band__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 </style>

@@ -495,7 +495,7 @@ const dimensions = computed(() =>
           <div v-else class="hero-metrics">
             <div class="hero-metrics__overall">
               <div v-if="overall" class="hero-metrics__badge">
-                <Stars :category="overall.category" size="xl" />
+                <Stars :category="overall.category" size="xl" decorative />
                 <p class="hero-metrics__category">{{ t(labelKey('category', overall.category)) }}</p>
               </div>
             </div>
@@ -688,7 +688,9 @@ const dimensions = computed(() =>
               <span class="measure__label">{{ t('orgTlFrequency') }}</span>
               <span class="measure__value">{{ timelinessPanel.frequency }}</span>
             </div>
-            <div v-if="timelinessPanel.updates.length" class="month-strip__cells">
+            <!-- Decoration: the note under it states the same thing in words, and
+                 the per-month figures are in tooltips a pointer alone can reach. -->
+            <div v-if="timelinessPanel.updates.length" class="month-strip__cells" aria-hidden="true">
               <BTooltip
                 v-for="m in timelinessPanel.updates" :key="m.month"
                 :title="`${m.month} — ${t('orgTlUpdatesCount', { n: m.count })}`"
@@ -711,7 +713,9 @@ const dimensions = computed(() =>
               <span v-if="timelinessPanel.timeLag" class="measure__value">{{ timelinessPanel.timeLag }}</span>
               <span v-else class="measure__value measure__value--muted">{{ t('orgTlNotMeasurable') }}</span>
             </div>
-            <div v-if="timelinessPanel.txns.length" class="month-strip__bars">
+            <!-- Decoration: the note under it states the same thing in words, and
+                 the per-month figures are in tooltips a pointer alone can reach. -->
+            <div v-if="timelinessPanel.txns.length" class="month-strip__bars" aria-hidden="true">
               <BTooltip
                 v-for="m in timelinessPanel.txns" :key="m.month"
                 :title="`${m.month} — ${t('orgTlTxnsCount', { n: m.count.toLocaleString() })}`"
@@ -806,7 +810,12 @@ const dimensions = computed(() =>
             </div>
             <div class="quarter-grid">
               <div v-for="(n, year) in coverage.quartersByYear" :key="year" class="quarter-grid__year">
-                <span class="quarter-grid__cells">
+                <!-- Named, unlike the month strips above: the year's label is
+                     beside it but the count of quarters is in the cells alone. -->
+                <span
+                  class="quarter-grid__cells"
+                  role="img" :aria-label="t('ariaQuartersYear', { year, n })"
+                >
                   <BTooltip
                     v-for="q in 4" :key="q"
                     :title="q <= n
@@ -919,7 +928,7 @@ const dimensions = computed(() =>
               <span v-if="group.value !== null" class="indicator-group-heading__pct">{{ group.value }}%</span>
               <span class="indicator-group-heading__band">{{ t(labelKey('category', group.category)) }}</span>
               <Stars
-                :category="group.category" size="md"
+                :category="group.category" size="md" decorative
                 :tooltips="starTooltips(group.key)"
               />
             </span>

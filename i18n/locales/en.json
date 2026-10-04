@@ -462,6 +462,8 @@
   "navMobileLabel": "Dashboard sections",
   "navFooterLabel": "Footer",
   "ariaCoverageBar": "Coverage: {pct}% of the reference figure",
+  "ariaQuartersYear": "{year}: {n} of 4 quarters reported",
+  "ariaStars": "{band}, {lit} of 3 stars",
   "ariaIndicatorBar": "{name}: {pct}% passing",
   "orgColExpand": "Show checks",
   "orgNoActivitiesTitle": "No activity file published yet",

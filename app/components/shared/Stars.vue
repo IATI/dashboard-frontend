@@ -4,7 +4,14 @@ const props = defineProps({
   size:     { type: String, default: 'md' },   // 'md' | 'lg' | 'xl'
   // Optional per-star hover text, lowest band first: [1 star, 2 stars, 3 stars]
   tooltips: { type: Array, default: () => [] },
+  // Set where the band is already written out next to the stars, so a screen
+  // reader is not told the same thing twice. Where it is not — the summary
+  // cards name the dimension, not its band — leave this off, or the band is
+  // conveyed by colour alone and never reaches anyone not looking at it.
+  decorative: { type: Boolean, default: false },
 })
+
+const { t } = useI18n({ useScope: 'global' })
 
 // Single source of truth for how a methodology band renders as stars.
 const CATEGORY_STARS = {
@@ -16,11 +23,26 @@ const CATEGORY_STARS = {
 
 const lit = computed(() => CATEGORY_STARS[props.category] ?? 0)
 
+// 'needs_improvement' -> 'categoryNeedsImprovement', as elsewhere on the page
+const bandLabel = computed(() => (props.category
+  ? t('category' + props.category.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase()))
+  : null))
+
+// One name for the row of stars, rather than three identical '★' characters
+// read out in turn with no indication of which are lit.
+const label = computed(() =>
+  bandLabel.value ? t('ariaStars', { band: bandLabel.value, lit: lit.value }) : null)
+
 const starClass = n => ['stars__star', { 'stars__star--lit': n <= lit.value }]
 </script>
 
 <template>
-  <span class="stars" :class="`stars--${size}`">
+  <span
+    class="stars" :class="`stars--${size}`"
+    v-bind="decorative || !label
+      ? { 'aria-hidden': 'true' }
+      : { role: 'img', 'aria-label': label }"
+  >
     <template v-for="n in 3" :key="n">
       <BTooltip v-if="tooltips[n - 1]" :title="tooltips[n - 1]" placement="top" noninteractive>
         <template #target>

@@ -77,12 +77,13 @@ function jump(event) {
 .dimension-card__link:hover,
 .dimension-card__link:focus-visible {
   text-decoration: underline;
-  color: var(--teal-70);
+  color: var(--teal-80);
 }
 .dimension-card__label {
   font-family: "Hanken Grotesk", system-ui, sans-serif;
   font-weight: 700;
-  font-size: .72rem;
+  /* 12px floor: .72rem rendered at 11.5px */
+  font-size: .75rem;
   letter-spacing: .4px;
   text-transform: uppercase;
   color: var(--grey-60);

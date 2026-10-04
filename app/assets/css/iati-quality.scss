@@ -29,6 +29,10 @@
   --green-30: var(--color-green-30); --green-40: var(--color-green-40); --green-50: var(--color-green-50); --green-90: var(--color-green-90);
   --orange-50: var(--color-orange-50); --orange-90: var(--color-orange-90);
   --red-50: var(--color-red-50);
+  // Text uses the darker rungs of each ramp: at the sizes here --teal-70
+  // (4.42:1 on white) and --red-50 (3.77:1) fall just under WCAG AA's 4.5:1,
+  // while --teal-80 (6.05:1) and --red-60 (4.96:1) clear it. The lighter rungs
+  // are still right for fills, borders and large display type.
   --grey-90: var(--color-grey-90); --grey-70: var(--color-grey-70); --grey-60: var(--color-grey-60); --grey-30: var(--color-grey-30); --grey-20: var(--color-grey-20); --grey-10: var(--color-grey-10);
   --shadow: 0 4px 5px var(--color-grey-20);
 }
@@ -102,7 +106,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     border-left: 4px solid var(--blue-50); padding-left: 24px;
     @media (max-width: 575.98px) { padding: 16px 14px 18px; padding-left: 14px }
   }
-  &__eyebrow { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .6px; color: var(--teal-70); margin: 0 0 6px }
+  &__eyebrow { font-family: "Hanken Grotesk"; font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .6px; color: var(--teal-80); margin: 0 0 6px }
   &__title  { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 1.9rem; color: var(--teal-90); margin: 0 0 10px; line-height: 1.1 }
   &__meta   { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: .85rem; color: var(--grey-70); margin-top: 4px;
     strong { color: var(--grey-90) }
@@ -215,7 +219,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .quarter-grid {
   display: flex; flex-wrap: wrap; gap: 10px 14px;
   &__year { display: flex; flex-direction: column; gap: 4px }
-  &__label { font-size: .68rem; color: var(--grey-60); font-variant-numeric: tabular-nums }
+  &__label { font-size: .75rem; color: var(--grey-60); font-variant-numeric: tabular-nums }
   // BTooltip wraps each cell, so it becomes the flex child
   &__cells { display: flex; gap: 2px }
   &__cell {
@@ -247,7 +251,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // Inline text button, for opening details from within a sentence
 .link-button {
   background: none; border: none; padding: 0; cursor: pointer;
-  color: var(--teal-70); font: inherit; text-decoration: underline;
+  color: var(--teal-80); font: inherit; text-decoration: underline;
 }
 .link-button:hover { color: var(--teal-90) }
 
@@ -270,7 +274,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   display: flex; flex-direction: column; gap: 12px;
 
   dt {
-    font-size: .68rem; font-weight: 700; text-transform: uppercase;
+    font-size: .75rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: .4px; color: var(--grey-60); margin-bottom: 2px;
   }
   dd { margin: 0; color: var(--grey-90); min-width: 0; overflow-wrap: anywhere }
@@ -288,7 +292,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .quarter-chip {
   display: inline-block; margin: 0 6px 4px 0; padding: 1px 6px;
   background: var(--teal-10); border: 1px solid var(--teal-30);
-  font-size: .72rem; font-variant-numeric: tabular-nums;
+  font-size: .75rem; font-variant-numeric: tabular-nums;
 }
 
 // ─── Dataset facts ───────────────────────────────────────────────────────────
@@ -325,13 +329,13 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
   &__label {
     font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 700;
-    font-size: .72rem; text-transform: uppercase; letter-spacing: .4px; color: var(--grey-60);
+    font-size: .75rem; text-transform: uppercase; letter-spacing: .4px; color: var(--grey-60);
   }
   &__value {
     font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 800;
     font-size: 1.05rem; color: var(--teal-90);
     &.is-ok   { color: var(--green-90) }
-    &.is-bad  { color: var(--red-50) }
+    &.is-bad  { color: var(--red-60) }
     &.is-warn { color: var(--orange-90) }
     &.is-good { color: var(--green-90) }
   }
@@ -404,7 +408,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // ─── Compact table (two-column comprehensiveness panels) ────────────────────
 .iati-table--compact {
   th, td { padding-top: 5px; padding-bottom: 5px; font-size: .8rem }
-  th { font-size: .72rem }
+  th { font-size: .75rem }
   .check-score__pct { width: 38px; font-size: .78rem }
   .test-list { padding-left: 12px }
   .test-list__item { font-size: .76rem; padding: 4px 0 }
@@ -414,7 +418,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // ─── Indicator row expansion ─────────────────────────────────────────────────
 .expander {
   background: none; border: none; cursor: pointer; padding: 0 4px;
-  color: var(--teal-70); font-size: .9rem; line-height: 1;
+  color: var(--teal-80); font-size: .9rem; line-height: 1;
   &__count { display: block; color: var(--grey-60); font-weight: 400; font-size: .7rem; margin-top: 2px }
 }
 
@@ -457,11 +461,11 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
 // ─── Mobile menu ──────────────────────────────────────────────────────────────
 // A bootstrap-vue-next navbar standing in for the design system's slide-in
-// panel (see Header.vue). Bootstrap's own stylesheet is not loaded — only
-// bootstrap-vue-next's, which carries no navbar, nav or collapse rules — so the
-// collapse semantics and every visual here are supplied below. The components
-// still own the behaviour: open state, the transition and closing on
-// navigation.
+// panel (see Header.vue). Bootstrap's SCSS is imported selectively at the top of
+// this file, and navbar, nav and collapse are not among the modules — nor does
+// bootstrap-vue-next's own stylesheet carry them — so the collapse semantics and
+// every visual here are supplied below. The components still own the behaviour:
+// open state, the transition and closing on navigation.
 .iati-mobile-menu {
   background: transparent;
   padding: 0;

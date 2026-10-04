@@ -463,6 +463,8 @@
   "navMobileLabel": "Sections du tableau de bord",
   "navFooterLabel": "Pied de page",
   "ariaCoverageBar": "Couverture : {pct}% du chiffre de référence",
+  "ariaQuartersYear": "{year} : {n} trimestres sur 4 déclarés",
+  "ariaStars": "{band}, {lit} étoiles sur 3",
   "ariaIndicatorBar": "{name} : {pct}% de réussite",
   "orgColExpand": "Afficher les vérifications",
   "orgNoActivitiesTitle": "Aucun fichier d'activités publié pour le moment",

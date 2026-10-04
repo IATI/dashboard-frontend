@@ -267,7 +267,8 @@ watch([search, filterType], () => {
 </template>
 
 <style scoped>
-.pub-link { color: var(--teal-70); text-decoration: none; font-weight: 700 }
+/* teal-80, not 70: at this size 4.42:1 falls just under WCAG AA */
+.pub-link { color: var(--teal-80); text-decoration: none; font-weight: 700 }
 .pub-link:hover { text-decoration: underline }
 .pub-slug {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
