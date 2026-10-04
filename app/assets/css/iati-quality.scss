@@ -704,31 +704,81 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .flex-1       { flex: 1; min-width: 0 }
 
 // Hero metric row: overall band on left, divider, 2×2 grid of cards on right
+@keyframes hero-settle {
+  0%   { transform: scale(.86); opacity: .4 }
+  60%  { transform: scale(1.05); opacity: 1 }
+  100% { transform: scale(1); opacity: 1 }
+}
+
 // ─── Hero card ────────────────────────────────────────────────────────────────
 // The overall assessment is the point of the page, but as another white card it
-// read as one panel among several. Dark ground makes it the first thing seen,
-// and it is the header's own teal so the page still holds together.
+// read as one panel among several. Colour makes it the first thing seen.
 //
-// Only the card itself inverts. The four dimension cards inside stay light, so
-// the eye goes to the medallion first and then to the detail, and the medallion
-// stays pale rather than inverting with everything else — a dark disc on a dark
-// card would lose the focal point, and grey stars on grey have nothing left to
-// say which are lit.
-// Carries the design system's own ancestor, or its .iati-card rule outranks
-// this one and the card stays white with a white kicker on it.
+// Teal is the base, and deliberately so. Of 2,120 publishers, 2,114 are in
+// Needs improvement, so whatever that band looks like is what nearly everyone
+// opens their page to. Grey or red would meet almost every organisation with a
+// verdict against it, which is the wrong note when we are asking them to
+// publish more and better. Teal is the header's own colour: it says "here is
+// your assessment", not "you failed". The three bands above it earn
+// progressively stronger greens, so green means something when it appears.
+//
+// Each background clears 4.5:1 against the white heading on it, which is what
+// fixes the ramp's bright end: --green-70 is only 3.96:1, so Excellent uses the
+// brightest green that still clears it.
 .iati-design-system--enabled .hero-card {
   background: var(--teal-90);
   border-color: var(--teal-90);
 
-  .iati-card__subtitle { color: #fff }
+  // `title` puts iati-card--header on the card, and that modifier zeroes the
+  // padding so a full-bleed header bar can sit flush. This card's heading is not
+  // a bar, so the design system's own padding goes back and the content stops
+  // running into the edges.
+  padding: 1rem;
 
-  // The design system's cards are transparent, which would show the dark
-  // through; these need to stay light to keep their own contrast.
+  // The band is not known until the assessment has loaded, so the card starts
+  // teal and settles into its colour rather than snapping. The medallion lands
+  // with it, slightly overshooting — on all but six pages the colour does not
+  // change at all, so the movement is what makes the arrival register.
+  transition: background-color 1.1s cubic-bezier(.2, .7, .3, 1);
+
+  .hero-metrics__badge { animation: hero-settle .75s cubic-bezier(.34, 1.56, .64, 1) both }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    .hero-metrics__badge { animation: none }
+  }
+
+  // The card already carries the colour, so the heading bar does not repeat it.
+  // It also styles h3, while Card renders the title as h2.
+  .iati-card__header {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 18px;
+    h2 {
+      margin: 0; color: #fff;
+      font-family: "Hanken Grotesk", system-ui, sans-serif;
+      font-weight: 700; font-size: 1.2rem; letter-spacing: .3px;
+    }
+  }
+
+  // The design system's cards are transparent, which would show the colour
+  // through; these stay light to keep their own contrast.
   .dimension-card { background: #fff }
 
-  // The ring was there to separate a pale disc from a white card. On the dark
+  // The ring was there to separate a pale disc from a white card. On a coloured
   // ground the disc separates itself.
   .hero-metrics__badge { border: none }
+}
+
+.iati-design-system--enabled .hero-card--good      { background: #145d4c; border-color: #145d4c }
+.iati-design-system--enabled .hero-card--very_good { background: #0f775f; border-color: #0f775f }
+.iati-design-system--enabled .hero-card--excellent { background: #0c866a; border-color: #0c866a }
+
+// On the green cards the medallion goes pale green rather than pale blue, so it
+// reads as part of the same family instead of a leftover.
+.hero-card--good, .hero-card--very_good, .hero-card--excellent {
+  .hero-metrics__badge   { background: var(--color-green-10) }
+  .hero-metrics__category { color: var(--color-green-90) }
 }
 
 .hero-metrics {
@@ -889,7 +939,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   // page break below already separates it, so it prints as an ordinary card.
   .hero-card {
     background: #fff !important;
-    .iati-card__subtitle { color: var(--teal-90) !important }
+    .iati-card__header h2 { color: var(--teal-90) !important }
     .hero-metrics__badge { border: 3px solid var(--teal-90) !important }
   }
 

@@ -294,6 +294,12 @@ function testVariant(pct) {
 const overall           = computed(() => assessed.value.overall ?? null)
 const publisherID       = computed(() => identity.value?.iatiIdentifier ?? '')
 
+// Teal is the base. The three bands above it tint the hero card progressively
+// greener — see iati-quality.scss for why the common band stays neutral.
+const heroBandClass = computed(() =>
+  (overall.value?.category ? `hero-card--${overall.value.category}` : null))
+
+
 // Headline spending figure. Declared after publisherID because it keys off it.
 // This is deliberately not coverage.iatiSpendingUsd: that figure is pinned to
 // whichever year the comparison dataset covers (2024 for USAID), because its job
@@ -480,7 +486,7 @@ const dimensions = computed(() =>
 
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
-        <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')" class="hero-card">
+        <BCol cols="12" md="12"><Card :title="t('orgOverallQuality')" :class="['hero-card', heroBandClass]">
           <div v-if="loading" class="hero-metrics">
             <div class="hero-metrics__overall">
               <Skeleton width="150px" height="150px" />
