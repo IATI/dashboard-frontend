@@ -21,7 +21,7 @@ const COVERAGE_DATA = 'https://iati.github.io/dashboard-coverage/data'
 export function useAvailabilityData(slug) {
   const shortName = computed(() => unref(slug))
 
-  const { data: validationRaw } = useAsyncData(
+  const { data: validationRaw, status } = useAsyncData(
     'validation-errors',
     () => $fetch(`${COVERAGE_DATA}/validation_errors.json`),
     { default: () => null, server: false },
@@ -29,5 +29,9 @@ export function useAvailabilityData(slug) {
 
   const validation = computed(() => adaptValidationErrors(validationRaw.value, shortName.value))
 
-  return { validation }
+  // This file is ~814KB and arrives after the stats, so the availability panel
+  // would otherwise render with its download bar alone and then grow to three.
+  const pending = computed(() => status.value === 'idle' || status.value === 'pending')
+
+  return { validation, pending }
 }

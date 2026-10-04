@@ -14,8 +14,18 @@ const slug = route.params.slug
 const { data: publisher, error: publisherError } = usePublisher(slug, { stats: true })
 watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 
+// Everything on this page is fetched client-side, so there is a real window
+// where the publisher is neither loaded nor failed. Without saying so the page
+// renders empty headings and labels with nothing after them.
+const loading = computed(() => !publisher.value && !publisherError.value)
+
+// The Validator file lands after the stats, so the availability panel is held
+// back until both are in rather than appearing with one bar and growing to
+// three. Everything else on the page depends only on the stats.
+const availabilityLoading = computed(() => loading.value || validationPending.value)
+
 // Only the Validator findings now: download failures arrive with the stats.
-const { validation } = useAvailabilityData(slug)
+const { validation, pending: validationPending } = useAvailabilityData(slug)
 const { lookup: organisationTypeName } = useCodelist('OrganisationType')
 
 const identity = computed(() => publisher.value?.identity ?? null)
@@ -336,7 +346,8 @@ const dimensions = computed(() =>
     ]" />
     <TitleBar :eyebrow="t('orgEyebrow')" :title="orgName">
       <template #meta>
-        <span><strong>{{ t('orgReportingID') }}</strong> {{ publisherID }}</span>
+        <Skeleton v-if="loading" width="18rem" height="1.1rem" />
+        <span v-if="publisherID"><strong>{{ t('orgReportingID') }}</strong> {{ publisherID }}</span>
         <span v-if="orgType"><strong>{{ t('orgType') }}</strong> {{ orgType }}</span>
         <span v-if="mostRecentTransaction">
           <strong>{{ t('orgMostRecentTransaction') }}</strong> {{ mostRecentTransaction }}
@@ -348,11 +359,22 @@ const dimensions = computed(() =>
       </template>
     </TitleBar>
 
-    <main class="main">
+    <main class="main" :aria-busy="loading">
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
         <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">
-          <div class="hero-metrics">
+          <div v-if="loading" class="hero-metrics">
+            <div class="hero-metrics__overall">
+              <Skeleton width="150px" height="150px" />
+            </div>
+            <div class="hero-metrics__cards">
+              <Card v-for="n in 4" :key="n" flat class="dimension-card">
+                <Skeleton width="60%" height="1.4rem" />
+                <Skeleton width="100%" height="3.2rem" class="mt-sm" />
+              </Card>
+            </div>
+          </div>
+          <div v-else class="hero-metrics">
             <div class="hero-metrics__overall">
               <div v-if="overall" class="hero-metrics__badge">
                 <Stars :category="overall.category" size="xl" />
@@ -379,7 +401,12 @@ const dimensions = computed(() =>
             <OrgFinancialChart v-if="publisherID" :org-id="publisherID" />
           </Card>
         </BCol>
-        <BCol v-if="datasetFacts.length" cols="12" lg="4">
+        <BCol v-if="loading" cols="12" lg="4">
+          <Card :kicker="t('orgDatasetTitle')">
+            <Skeleton v-for="n in 6" :key="n" height="1.1rem" class="mt-sm" />
+          </Card>
+        </BCol>
+        <BCol v-else-if="datasetFacts.length" cols="12" lg="4">
           <Card :kicker="t('orgDatasetTitle')">
             <dl class="dataset-facts">
               <template v-for="fact in datasetFacts" :key="fact.label">
@@ -448,7 +475,24 @@ const dimensions = computed(() =>
 
       <!-- Coverage vs reference -->
       <!-- Availability — headline counts only; the detail lives in the source files -->
-      <Card v-if="availabilityStats.length" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')" :id="`dimension-availability`" tabindex="-1">
+      <!-- While the stats payload is in flight, stand the four panels up with
+           their real headings so the page does not reflow as each arrives. -->
+      <template v-if="availabilityLoading && !loading">
+        <Card class="mt" :kicker="t('dimAvailability')">
+          <Skeleton height="1rem" class="mt-sm" />
+          <Skeleton width="80%" height="1rem" class="mt-sm" />
+          <Skeleton height="2.4rem" class="mt-sm" />
+        </Card>
+      </template>
+      <template v-if="loading">
+        <Card v-for="dim in DIMENSION_ORDER" :key="dim" class="mt" :kicker="t(labelKey('dim', dim))">
+          <Skeleton height="1rem" class="mt-sm" />
+          <Skeleton width="80%" height="1rem" class="mt-sm" />
+          <Skeleton height="2.4rem" class="mt-sm" />
+        </Card>
+      </template>
+
+      <Card v-if="availabilityStats.length && !availabilityLoading" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')" :id="`dimension-availability`" tabindex="-1">
         <template v-if="bandFor('availability')" #kicker-actions>
           <DimensionBand :category="bandFor('availability')" :tooltips="dimensionStarTooltips()" />
         </template>
