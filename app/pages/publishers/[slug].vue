@@ -50,6 +50,25 @@ const INDICATOR_FIELDS = computed(() => [
 const CHECK_COMPONENT_ORDER = [
   'organisation_fields', 'basic_fields', 'financial_fields', 'advanced_fields',
 ]
+
+// Display order of components within a dimension. The order the API happens to
+// return them in is incidental, and the summary cards at the top of the page
+// were listing timeliness before frequency while the panel below listed them the
+// other way round. Components not named here keep the order they arrive in.
+const COMPONENT_ORDER = {
+  // Frequency first — how often files change — then how current the data is,
+  // matching the timeliness panel.
+  timeliness:        ['frequency', 'timeliness'],
+  availability:      ['downloadable', 'no_critical_errors', 'no_errors'],
+  coverage:          ['coverage', 'disaggregation'],
+  comprehensiveness: CHECK_COMPONENT_ORDER,
+}
+
+function orderedComponents(dimensionId, components = {}) {
+  const order = COMPONENT_ORDER[dimensionId] ?? []
+  const rank = id => (order.indexOf(id) === -1 ? order.length : order.indexOf(id))
+  return Object.entries(components).sort(([a], [b]) => rank(a) - rank(b))
+}
 // Organisation checks are the 1.x section of the same list now
 const allChecks = computed(() => tests.value)
 // NB: indicatorGroups is declared further down, after dimensionBands, since it
@@ -278,7 +297,7 @@ const dimensions = computed(() =>
       key:      id,
       label:    t(labelKey('dim', id)),
       category: dim.category,
-      metrics:  Object.entries(dim.components).map(([cid, c]) => ({
+      metrics:  orderedComponents(id, dim.components).map(([cid, c]) => ({
         label:    t(labelKey('sub', cid)),
         display:  displayValue(cid, c.value),
         category: c.category,
