@@ -338,7 +338,7 @@
   "orgCovEntity": "Reference entity",
   "orgCovYear": "Reference year",
   "orgCovCurrency": "Currency",
-  "orgCovShared": "This reference is shared with {n} other IATI reporting organisations, so this share understates each one.",
+  "orgCovShared": "This reference figure covers {n} reporting organisations, so each one’s coverage appears lower than it is.",
   "orgCovGenerated": "Coverage data generated {date}.",
   "orgCovQuarters": "Quarters reported",
   "orgIatiSpendYear": "IATI spending {year}",
@@ -488,5 +488,5 @@
   "pubLoadedAt": "Loaded at {time} ·",
   "pubRefresh": "Refresh",
   "pubRefreshing": "Refreshing…",
-  "orgCovNoReferenceDetail": "Coverage compares this organisation's IATI spending against an independent reference figure — an official donor record, a UN agency's own finance statistics, or a national charity regulator's filing. Where none is found, the total budget it declares in its own IATI organisation file is used instead. No usable figure was found from any of these."
+  "orgCovNoReferenceDetail": "Coverage compares this organisation's IATI spending against an independent reference figure — an official donor record, a UN agency's own finance statistics, or a national charity regulator's filing. Where none is found, the total budget it declares in its own IATI organisation file is used instead. No usable figure was found from any of these. Publishing a total budget in the organisation file would allow coverage to be calculated."
 }

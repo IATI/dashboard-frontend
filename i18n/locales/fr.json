@@ -339,7 +339,7 @@
   "orgCovEntity": "Entité de référence",
   "orgCovYear": "Année de référence",
   "orgCovCurrency": "Devise",
-  "orgCovShared": "Cette référence est partagée avec {n} autres organisations déclarantes IATI ; cette part est donc sous-estimée.",
+  "orgCovShared": "Ce chiffre de référence couvre {n} organisations déclarantes ; la couverture de chacune apparaît donc plus faible qu'elle ne l'est.",
   "orgCovGenerated": "Données de couverture générées le {date}.",
   "orgCovQuarters": "Trimestres déclarés",
   "orgIatiSpendYear": "Dépenses IATI {year}",
@@ -489,5 +489,5 @@
   "pubLoadedAt": "Chargé à {time} ·",
   "pubRefresh": "Actualiser",
   "pubRefreshing": "Actualisation…",
-  "orgCovNoReferenceDetail": "La couverture compare les dépenses IATI de cette organisation à un chiffre de référence indépendant — un relevé officiel de bailleur, les statistiques financières d'une agence des Nations unies ou le dépôt auprès d'un organisme national de réglementation des associations. À défaut, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Aucun chiffre exploitable n'a été trouvé parmi ces sources."
+  "orgCovNoReferenceDetail": "La couverture compare les dépenses IATI de cette organisation à un chiffre de référence indépendant — un relevé officiel de bailleur, les statistiques financières d'une agence des Nations unies ou le dépôt auprès d'un organisme national de réglementation des associations. À défaut, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Aucun chiffre exploitable n'a été trouvé parmi ces sources. Publier un budget total dans le fichier d'organisation permettrait de calculer la couverture."
 }

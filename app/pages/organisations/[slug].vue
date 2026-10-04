@@ -783,6 +783,13 @@ const dimensions = computed(() =>
                 {{ t('orgCovMoreDetails') }}
               </button>
             </p>
+            <!-- Where several organisations sit under one reference figure, each
+                 is divided by the whole of it. UN (Secretariat) reads 0.013%
+                 across four publishers, which reads as a fault unless this is
+                 said next to the number rather than inside the modal. -->
+            <p v-if="coverage.publishersSharingReference > 1" class="measure__note">
+              {{ t('orgCovShared', { n: coverage.publishersSharingReference }) }}
+            </p>
           </div>
 
           <!-- Disaggregation: quarters actually reported in, by year -->
