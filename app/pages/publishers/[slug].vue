@@ -439,7 +439,7 @@ const dimensions = computed(() =>
       <!-- Availability — headline counts only; the detail lives in the source files -->
       <Card v-if="availabilityStats.length" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')">
         <template v-if="bandFor('availability')" #kicker-actions>
-          <Stars :category="bandFor('availability')" size="md" :tooltips="dimensionStarTooltips()" />
+          <DimensionBand :category="bandFor('availability')" :tooltips="dimensionStarTooltips()" />
         </template>
         <div class="measure-grid measure-grid--3 mt-sm">
           <div v-for="stat in availabilityStats" :key="stat.key" class="measure">
@@ -493,7 +493,7 @@ const dimensions = computed(() =>
       <!-- Timeliness — update cadence and how current the data is -->
       <Card v-if="timelinessPanel" :class="['mt', cardTone('timeliness')]" :kicker="t('dimTimeliness')">
         <template v-if="bandFor('timeliness')" #kicker-actions>
-          <Stars :category="bandFor('timeliness')" size="md" :tooltips="dimensionStarTooltips()" />
+          <DimensionBand :category="bandFor('timeliness')" :tooltips="dimensionStarTooltips()" />
         </template>
 
         <div class="measure-grid mt-sm">
@@ -552,7 +552,7 @@ const dimensions = computed(() =>
       <!-- Coverage vs reference — real figures from the dashboard-coverage dataset -->
       <Card v-if="coverage" :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')">
         <template v-if="bandFor('coverage')" #kicker-actions>
-          <Stars :category="bandFor('coverage')" size="md" :tooltips="dimensionStarTooltips()" />
+          <DimensionBand :category="bandFor('coverage')" :tooltips="dimensionStarTooltips()" />
         </template>
         <div class="measure-grid mt-sm">
           <!-- Coverage: IATI spending against the reference total -->
@@ -669,7 +669,7 @@ const dimensions = computed(() =>
       <!-- Activity checks, straight from stats.gherkin_tests_current -->
       <Card v-if="tests.length" :class="['mt', cardTone('comprehensiveness')]" :kicker="t('dimComprehensiveness')">
         <template v-if="bandFor('comprehensiveness')" #kicker-actions>
-          <Stars :category="bandFor('comprehensiveness')" size="md" :tooltips="dimensionStarTooltips()" />
+          <DimensionBand :category="bandFor('comprehensiveness')" :tooltips="dimensionStarTooltips()" />
         </template>
         <div class="comprehensiveness-grid mt-sm">
         <div v-for="group in indicatorGroups" :key="group.key" class="comprehensiveness-grid__panel">
