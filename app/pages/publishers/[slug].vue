@@ -561,13 +561,28 @@ const dimensions = computed(() =>
       </Card>
 
       <!-- Coverage vs reference — real figures from the dashboard-coverage dataset -->
-      <Card v-if="coverage" :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')" :id="`dimension-coverage`" tabindex="-1">
+      <Card
+        v-if="coverage && (coverage.coveragePercent !== null || coverage.quartersByYear)"
+        :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')"
+        :id="`dimension-coverage`" tabindex="-1"
+      >
         <template v-if="bandFor('coverage')" #kicker-actions>
           <DimensionBand :category="bandFor('coverage')" :tooltips="dimensionStarTooltips()" />
         </template>
         <div class="measure-grid mt-sm">
-          <!-- Coverage: IATI spending against the reference total -->
-          <div class="measure">
+          <!-- Coverage: IATI spending against the reference total.
+               94 of the 381 publishers with a reference source have no
+               reference figure at all — 80 of them Dutch publishers that carry
+               nl_charities as a source but are not in the CBF register. There
+               is nothing to compare against, which is not the same as scoring
+               zero, so the measure says so rather than showing a bar. -->
+          <div v-if="coverage.coveragePercent === null" class="measure">
+            <div class="measure__head">
+              <span class="measure__label">{{ t('subCoverage') }}</span>
+            </div>
+            <p class="measure__note">{{ t('orgCovNoReference') }}</p>
+          </div>
+          <div v-else class="measure">
             <div class="measure__head">
               <span class="measure__label">{{ t('subCoverage') }}</span>
               <span class="measure__value">{{ coverage.coveragePercent }}%</span>
