@@ -35,10 +35,64 @@ const notPublishedNames = computed(() =>
 )
 
 const PER_PAGE = 50
-const search = ref('')
-const filterType = ref('')
-const currentPage = ref(1)
+
+/**
+ * The filters live in the URL so that leaving for an organisation and coming
+ * back restores the view, and so a filtered list can be linked to.
+ *
+ * replace, not push: the state has to survive a round trip through history, but
+ * typing in the search box should not fill the back button with one entry per
+ * keystroke. The current entry is rewritten instead, and leaving the page
+ * pushes as normal, so Back returns here with the query intact.
+ */
+const route = useRoute()
+const router = useRouter()
+
+const search = ref(String(route.query.q ?? ''))
+const filterType = ref(String(route.query.type ?? ''))
+const currentPage = ref(Number(route.query.page) || 1)
 const sortBy = ref([{ key: 'name', order: 'asc' }])
+
+// Set while writing the refs from the URL, so the watchers below do not treat a
+// restore as a user edit and immediately write back or reset the page.
+let restoring = false
+
+function queryFromState() {
+  const q = {}
+  const term = search.value.trim()
+  if (term) q.q = term
+  if (filterType.value) q.type = filterType.value
+  if (currentPage.value > 1) q.page = String(currentPage.value)
+  return q
+}
+
+function sameQuery(a, b) {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)])
+  return [...keys].every(k => String(a[k] ?? '') === String(b[k] ?? ''))
+}
+
+let writeTimer = null
+watch([search, filterType, currentPage], () => {
+  if (restoring) return
+  clearTimeout(writeTimer)
+  // Debounced because this also fires per keystroke in the search box.
+  writeTimer = setTimeout(() => {
+    const q = queryFromState()
+    if (!sameQuery(q, route.query)) router.replace({ query: q })
+  }, 300)
+})
+
+// Back and forward change the query without remounting the page.
+watch(() => route.query, q => {
+  if (sameQuery(queryFromState(), q)) return
+  restoring = true
+  search.value = String(q.q ?? '')
+  filterType.value = String(q.type ?? '')
+  currentPage.value = Number(q.page) || 1
+  nextTick(() => { restoring = false })
+})
+
+onBeforeUnmount(() => clearTimeout(writeTimer))
 
 const FIELDS = computed(() => [
   { key: 'name',         label: t('pubColName'), sortable: true },
@@ -86,7 +140,10 @@ const filtered = computed(() => {
 })
 
 // Any filter change should return to the first page, or you land on an empty one
-watch([search, filterType], () => { currentPage.value = 1 })
+watch([search, filterType], () => {
+  // Not while restoring: the page number arrives from the URL with them.
+  if (!restoring) currentPage.value = 1
+})
 </script>
 
 <template>
