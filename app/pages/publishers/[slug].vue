@@ -275,6 +275,9 @@ const dimensionStarTooltips = () =>
 const componentBandFor = (dimensionId, componentId) =>
   dimensionBands.value?.[dimensionId]?.components?.[componentId]?.category ?? null
 
+const componentValueFor = (dimensionId, componentId) =>
+  dimensionBands.value?.[dimensionId]?.components?.[componentId]?.value ?? null
+
 const dimensionBands = computed(() =>
   Object.fromEntries(Object.entries(assessed.value).filter(([k]) => k !== 'overall')),
 )
@@ -288,6 +291,10 @@ const indicatorGroups = computed(() => {
     key: id,
     label: t(labelKey('sub', id)),
     category: componentBandFor('comprehensiveness', id),
+    // The score behind the stars. Taken from the assessment, not averaged from
+    // the table below: the API scores the component from
+    // comprehensiveness_new_by_component, which is not the mean of these rows.
+    value: componentValueFor('comprehensiveness', id),
     items: rows.filter(row => row.component === id),
   }))
 })
@@ -668,11 +675,14 @@ const dimensions = computed(() =>
         <div v-for="group in indicatorGroups" :key="group.key" class="comprehensiveness-grid__panel">
           <div class="indicator-group-heading">
             <span>{{ group.label }}</span>
-            <Stars
-              v-if="group.category"
-              :category="group.category" size="md"
-              :tooltips="starTooltips(group.key)"
-            />
+            <span v-if="group.category" class="indicator-group-heading__score">
+              <span v-if="group.value !== null" class="indicator-group-heading__pct">{{ group.value }}%</span>
+              <span class="indicator-group-heading__band">{{ t(labelKey('category', group.category)) }}</span>
+              <Stars
+                :category="group.category" size="md"
+                :tooltips="starTooltips(group.key)"
+              />
+            </span>
           </div>
           <p v-if="!group.items.length" class="coverage-note">{{ t('orgNoTests') }}</p>
           <div v-else class="iati-table iati-table--compact">

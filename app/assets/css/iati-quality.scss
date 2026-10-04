@@ -547,8 +547,21 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   font-family: "Hanken Grotesk"; font-weight: 700; font-size: .82rem;
   text-transform: uppercase; letter-spacing: .4px; color: var(--teal-90);
   border-bottom: 2px solid var(--teal-30); padding-bottom: 4px; margin-bottom: 4px;
-  // stars sit on the heading's right, mirroring the dimension cards
+  // score, band and stars sit on the heading's right, mirroring the dimension cards
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
+
+  &__score { display: flex; align-items: center; gap: 8px; flex-shrink: 0 }
+  &__pct   { font-variant-numeric: tabular-nums }
+  // The band reads as a label rather than part of the heading, so it drops the
+  // uppercase and the heading's weight.
+  &__band {
+    text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--grey-60);
+    white-space: nowrap;
+  }
+  // Narrow panels: the band is the first thing to go, the score and stars stay.
+  @media (max-width: 575.98px) {
+    &__band { display: none }
+  }
 }
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
