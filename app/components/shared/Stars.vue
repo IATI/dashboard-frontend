@@ -50,17 +50,34 @@ const starStyle = n => ({ '--star-index': n - 1 })
     <template v-for="n in 3" :key="n">
       <BTooltip v-if="tooltips[n - 1]" :title="tooltips[n - 1]" placement="top" noninteractive>
         <template #target>
-          <span :class="[starClass(n), 'stars__star--help']" :style="starStyle(n)">★</span>
+          <span :class="[starClass(n), 'stars__star--help']" :style="starStyle(n)"><svg class="stars__glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg></span>
         </template>
       </BTooltip>
-      <span v-else :class="starClass(n)" :style="starStyle(n)">★</span>
+      <span v-else :class="starClass(n)" :style="starStyle(n)"><svg class="stars__glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg></span>
     </template>
   </span>
 </template>
 
 <style scoped>
 .stars { white-space: nowrap; line-height: 1; display: inline-flex; gap: 1px }
-.stars__star { color: var(--grey-20); cursor: default; transition: color .15s ease }
+
+/* A drawn star, not the ★ character. Nothing here sets a font for it, so each
+   browser fell back to a different one and sized the glyph differently —
+   Firefox's came out noticeably smaller than Chrome's. An SVG is the same
+   everywhere, takes its colour from the span through currentColor, and still
+   scales with the font-size the size modifiers set. */
+.stars__star {
+  color: var(--grey-20);
+  cursor: default;
+  transition: color .15s ease;
+  display: inline-flex;
+}
+.stars__glyph {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  display: block;
+}
 .stars__star--lit { color: var(--green-50) }
 .stars--md { font-size: 1rem }
 .stars--lg { font-size: 1.6rem; gap: 3px }
