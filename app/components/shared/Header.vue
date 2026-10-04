@@ -13,7 +13,7 @@ const navItems = computed(() => [
   { key: 'overall',   to: '/',              label: t('navOverview') },
   { key: 'groups',    to: '/groups/10',     label: t('navGroups') },
   { key: 'country',   to: '/countries/KE',  label: t('navCountry') },
-  { key: 'org',       to: '/publishers',    label: t('navOrganisations') },
+  { key: 'org',       to: '/organisations', label: t('navOrganisations') },
   { key: 'exploring', to: '/exploring-data', label: t('navExploring') },
 ])
 

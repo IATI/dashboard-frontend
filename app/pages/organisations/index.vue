@@ -40,11 +40,22 @@ const FIELDS = computed(() => [
 ])
 
 // Org types present in the data, labelled from the codelist and sorted by label
+// Ordered by code, not by label. The OrganisationType codes are grouped by
+// kind — 10s government, 20s NGO, 40 multilateral, 60 foundation, 70s private
+// sector, 80 academic — so the numeric order carries meaning that sorting the
+// names alphabetically throws away. It also keeps the order stable across
+// languages, where the names sort differently.
 const orgTypes = computed(() => {
   const codes = [...new Set(publishers.value.map(p => p.organisationType).filter(Boolean))]
   return codes
     .map(code => ({ code, label: organisationTypeName(code) }))
-    .sort((a, b) => a.label.localeCompare(b.label, locale.value))
+    .sort((a, b) => {
+      const an = Number(a.code)
+      const bn = Number(b.code)
+      // Any non-numeric code sorts after the numeric ones, by its own text.
+      if (Number.isNaN(an) || Number.isNaN(bn)) return String(a.code).localeCompare(String(b.code))
+      return an - bn
+    })
 })
 
 const rows = computed(() => {
@@ -124,7 +135,7 @@ watch([search, filterType], () => { currentPage.value = 1 })
               <div class="loading">{{ t('loading') }}</div>
             </template>
             <template #cell(name)="{ item }">
-              <NuxtLink class="pub-link" :to="`/publishers/${item.slug}`">{{ item.name }}</NuxtLink>
+              <NuxtLink class="pub-link" :to="`/organisations/${item.slug}`">{{ item.name }}</NuxtLink>
             </template>
             <template #cell(slug)="{ value }">
               <span class="pub-slug">{{ value }}</span>

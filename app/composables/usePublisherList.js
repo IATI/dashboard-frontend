@@ -1,5 +1,5 @@
 /**
- * Every reporting organisation, for the /publishers index.
+ * Every reporting organisation, for the /organisations index.
  *
  * One request for all ~2,100 (the API pages at 25 by default, so page_size is
  * raised past the total). The response is ~1.9MB and takes several seconds, so

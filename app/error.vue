@@ -37,7 +37,7 @@ function leave(to) {
         <p v-if="detail" class="error-page__detail">{{ detail }}</p>
 
         <div class="error-page__actions">
-          <button type="button" class="error-page__button" @click="leave('/publishers')">
+          <button type="button" class="error-page__button" @click="leave('/organisations')">
             {{ t('errBrowsePublishers') }}
           </button>
           <button type="button" class="error-page__link" @click="leave('/')">

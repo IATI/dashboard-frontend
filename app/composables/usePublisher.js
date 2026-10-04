@@ -3,7 +3,7 @@ import methodology from '~~/sample-data/methodology.json'
 
 /**
  * Fetches one reporting organisation from the dashboard API by its short_name
- * (the `[slug]` in /publishers/[slug]), e.g. 'usaid', 'afdb', 'ec-intpa'.
+ * (the `[slug]` in /organisations/[slug]), e.g. 'usaid', 'afdb', 'ec-intpa'.
  *
  * The dashboard sends no CORS headers, so browser-side requests go through the
  * Cloudflare proxy configured in NUXT_PUBLIC_DASHBOARD_BASE. Server-side renders
