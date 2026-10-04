@@ -9,6 +9,17 @@ const props = defineProps({
   href:     { type: String, default: null },
 })
 
+const { t } = useI18n({ useScope: 'global' })
+
+// The band in words, beside the stars. Without it the card states the
+// dimension's name but not how it scored, leaving that to star colour alone —
+// which is no use to anyone not looking at it, and is why the stars here can
+// now be decorative. The panels below say it the same way.
+// 'needs_improvement' -> 'categoryNeedsImprovement'
+const bandLabel = computed(() => (props.category
+  ? t('category' + props.category.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase()))
+  : null))
+
 /**
  * Scroll to the panel rather than jumping, and move focus with it so the link
  * behaves for a keyboard or screen reader the way a plain anchor would.
@@ -34,11 +45,14 @@ function jump(event) {
   <Card flat class="dimension-card">
     <div class="dimension-card__body">
       <div class="dimension-card__band">
-        <Stars :category="category" size="lg" />
-        <p class="dimension-card__label">
-          <a v-if="href" :href="href" class="dimension-card__link" @click="jump">{{ label }}</a>
-          <template v-else>{{ label }}</template>
-        </p>
+        <Stars :category="category" size="lg" decorative />
+        <div class="dimension-card__naming">
+          <p class="dimension-card__label">
+            <a v-if="href" :href="href" class="dimension-card__link" @click="jump">{{ label }}</a>
+            <template v-else>{{ label }}</template>
+          </p>
+          <p v-if="bandLabel" class="dimension-card__category">{{ bandLabel }}</p>
+        </div>
       </div>
 
       <ul v-if="metrics.length" class="dimension-card__metrics">
@@ -79,6 +93,18 @@ function jump(event) {
   text-decoration: underline;
   color: var(--teal-80);
 }
+/* Name and band read as one block, so the gap between them is tighter than the
+   gap from the stars above. */
+.dimension-card__naming { display: flex; flex-direction: column; gap: 1px }
+
+.dimension-card__category {
+  font-family: "Hanken Grotesk", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: .82rem;
+  color: var(--grey-70);
+  margin: 0;
+}
+
 .dimension-card__label {
   font-family: "Hanken Grotesk", system-ui, sans-serif;
   font-weight: 700;
