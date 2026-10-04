@@ -463,7 +463,7 @@
   "navMobileLabel": "Sections du tableau de bord",
   "navFooterLabel": "Pied de page",
   "ariaCoverageBar": "Couverture : {pct}% du chiffre de référence",
-  "methodologyNote": "Les organisations sont encouragées à progresser vers les niveaux supérieurs de qualité de publication en s’améliorant sur l’ensemble des dimensions, plutôt qu’en ciblant des indicateurs particuliers. Pour être considérées comme « Bien », « Très bien » ou « Excellent », les données doivent remplir tous les critères de cette catégorie.",
+  "methodologyNote": "Les organisations sont encouragées à progresser vers les niveaux supérieurs de qualité de publication en s’améliorant sur chaque dimension. Pour être considérées comme « Bien », « Très bien » ou « Excellent », les données doivent remplir tous les critères de cette catégorie.",
   "methodologyFocusOne": "Pour passer de « {from} » à « {to} », {name} est encouragée à se concentrer sur la dimension {dimensions}.",
   "methodologyFocusMany": "Pour passer de « {from} » à « {to} », {name} est encouragée à se concentrer sur les dimensions {dimensions}.",
   "methodologyTop": "{name} remplit les critères « Excellent » sur toutes les dimensions.",

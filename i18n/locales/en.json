@@ -462,7 +462,7 @@
   "navMobileLabel": "Dashboard sections",
   "navFooterLabel": "Footer",
   "ariaCoverageBar": "Coverage: {pct}% of the reference figure",
-  "methodologyNote": "Organisations are encouraged to work towards the higher levels of publishing quality by improving across the dimensions, rather than chasing particular indicators. To be considered “Good”, “Very good” or “Excellent”, data needs to meet all the criteria in that category.",
+  "methodologyNote": "Organisations are encouraged to work towards the higher levels of publishing quality by improving across every dimension. To be considered “Good”, “Very good” or “Excellent”, data needs to meet all the criteria in that category.",
   "methodologyFocusOne": "To progress from “{from}” to “{to}”, {name} is encouraged to focus on the {dimensions} dimension.",
   "methodologyFocusMany": "To progress from “{from}” to “{to}”, {name} is encouraged to focus on the {dimensions} dimensions.",
   "methodologyTop": "{name} meets the criteria for “Excellent” across every dimension.",

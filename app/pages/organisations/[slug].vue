@@ -483,7 +483,7 @@ const dimensions = computed(() =>
       </template>
     </TitleBar>
 
-    <main class="main" :aria-busy="loading">
+    <main class="main main--full" :aria-busy="loading">
       <!-- Anything above the hero. Takes no height of its own when empty,
            so the band stays flush against the title bar. -->
       <div class="main__inner main__inner--top">

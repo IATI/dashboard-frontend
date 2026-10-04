@@ -113,15 +113,22 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
 }
 
-// `main` no longer holds the container: the hero band spans the window, so the
-// width is applied by the inner wrappers on either side of it instead.
 .main {
-  padding-bottom: 60px;
-  @media (max-width: 575.98px) { padding-bottom: 40px }
+  max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px;
+  @media (max-width: 575.98px) { padding: 18px 14px 40px }
+
+  // Only the organisation page gives up the container, because its assessment
+  // band spans the window; its inner wrappers carry the width instead. Every
+  // other page still wants `main` to be the container.
+  &--full {
+    max-width: none;
+    padding: 0 0 60px;
+    @media (max-width: 575.98px) { padding: 0 0 40px }
+  }
 
   &__inner {
-    max-width: 1280px; margin: 0 auto; padding: 28px 28px 0;
-    @media (max-width: 575.98px) { padding: 18px 14px 0 }
+    max-width: 1280px; margin: 0 auto; padding: 18px 28px 0;
+    @media (max-width: 575.98px) { padding: 14px 14px 0 }
   }
 
   // The wrapper above the hero holds callouts that usually are not there. Its
@@ -742,18 +749,26 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // assessment above rather than being another finding, and a box would say
 // otherwise. Held to a readable measure rather than running the full width.
 .methodology-note {
-  max-width: 68ch;
-  margin: 22px 0 6px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px 48px;
+  align-items: start;
+  margin: 0 0 4px;
   color: var(--grey-70);
   font-size: .92rem;
   line-height: 1.55;
 
   p { margin: 0 }
-  p + p { margin-top: 10px }
 
   &__focus {
     color: var(--teal-90);
     font-weight: 600;
+  }
+
+  // One column below the width where two would each be too narrow to read.
+  @media (max-width: 767.98px) {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 
