@@ -51,7 +51,8 @@ const testsSortBy = ref([{ key: 'value', order: 'desc' }])
 const expandedIndicators = ref([])
 
 const INDICATOR_FIELDS = computed(() => [
-  { key: 'expand',    label: '',                   thStyle: { width: '34px' } },
+  // Not empty: an unnamed column header reads as blank when navigating a table
+  { key: 'expand',    label: t('orgColExpand'),    thStyle: { width: '34px' } },
   { key: 'indicator', label: t('orgColIndicator'), sortable: true },
   { key: 'value',     label: t('orgColScore'),     sortable: true, thStyle: { width: '140px' } },
 ])
@@ -516,6 +517,10 @@ const dimensions = computed(() =>
                   <BProgress
                     :max="100" height="1rem" class="avail-bar__seg"
                     :style="{ flex: `${stat.okPct} 0 0%` }"
+                    :aria-label="t('availTipOk', {
+                      n: (stat.total - stat.affected).toLocaleString(),
+                      total: stat.total.toLocaleString(),
+                    })"
                   >
                     <BProgressBar :value="100" variant="success" />
                   </BProgress>
@@ -530,6 +535,10 @@ const dimensions = computed(() =>
                   <BProgress
                     :max="100" height="1rem" class="avail-bar__seg"
                     :style="{ flex: `${stat.affectedPct} 0 0%` }"
+                    :aria-label="t('availTipAffected', {
+                      n: stat.affected.toLocaleString(),
+                      total: stat.total.toLocaleString(),
+                    })"
                   >
                     <BProgressBar :value="100" :variant="stat.variant === 'warn' ? 'warning' : 'danger'" />
                   </BProgress>
@@ -631,7 +640,10 @@ const dimensions = computed(() =>
               <span class="measure__label">{{ t('subCoverage') }}</span>
               <span class="measure__value">{{ coverage.coveragePercent }}%</span>
             </div>
-            <Bar :pct="coverage.coveragePercent" variant="good" label="" height="1rem" />
+            <Bar
+              :pct="coverage.coveragePercent" variant="good" label="" height="1rem"
+              :aria-label="t('ariaCoverageBar', { pct: coverage.coveragePercent })"
+            />
             <p class="measure__note measure__note--split">
               <span>
                 {{ t('orgCovOfReference', {
@@ -780,6 +792,11 @@ const dimensions = computed(() =>
               v-model:expanded-items="expandedIndicators"
               primary-key="id"
             >
+              <!-- Named for a screen reader, but the word itself would wrap
+                   badly in a 34px column, so it is visually hidden. -->
+              <template #head(expand)="{ label }">
+                <span class="visually-hidden">{{ label }}</span>
+              </template>
               <template #cell(expand)="{ toggleExpansion, expansionShowing }">
                 <button
                   type="button" class="expander"
@@ -796,7 +813,10 @@ const dimensions = computed(() =>
                   <span class="check-score__na">{{ notApplicableLabel(item.component) }}</span>
                 </div>
                 <div v-else class="check-score">
-                  <BProgress class="check-score__bar" :max="100" height=".9rem">
+                  <BProgress
+                    class="check-score__bar" :max="100" height=".9rem"
+                    :aria-label="t('ariaIndicatorBar', { name: item.indicator, pct: item.value })"
+                  >
                     <BProgressBar :value="item.value" :variant="testVariant(item.value)" />
                   </BProgress>
                   <span class="check-score__pct">{{ item.value }}%</span>
@@ -828,7 +848,10 @@ const dimensions = computed(() =>
                         <span class="check-score__na">{{ notApplicableLabel(test.component) }}</span>
                       </div>
                       <div v-else class="check-score">
-                        <BProgress class="check-score__bar" :max="100" height=".7rem">
+                        <BProgress
+                          class="check-score__bar" :max="100" height=".7rem"
+                          :aria-label="t('ariaIndicatorBar', { name: test.name, pct: test.value })"
+                        >
                           <BProgressBar :value="test.value" :variant="testVariant(test.value)" />
                         </BProgress>
                         <span class="check-score__pct">{{ test.value }}%</span>

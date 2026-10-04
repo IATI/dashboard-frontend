@@ -460,5 +460,8 @@
   "navPrimaryLabel": "IATI site",
   "navToolLabel": "Dashboard sections",
   "navMobileLabel": "Dashboard sections",
-  "navFooterLabel": "Footer"
+  "navFooterLabel": "Footer",
+  "ariaCoverageBar": "Coverage: {pct}% of the reference figure",
+  "ariaIndicatorBar": "{name}: {pct}% passing",
+  "orgColExpand": "Show checks"
 }

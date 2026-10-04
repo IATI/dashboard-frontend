@@ -461,5 +461,8 @@
   "navPrimaryLabel": "Site IATI",
   "navToolLabel": "Sections du tableau de bord",
   "navMobileLabel": "Sections du tableau de bord",
-  "navFooterLabel": "Pied de page"
+  "navFooterLabel": "Pied de page",
+  "ariaCoverageBar": "Couverture : {pct}% du chiffre de référence",
+  "ariaIndicatorBar": "{name} : {pct}% de réussite",
+  "orgColExpand": "Afficher les vérifications"
 }

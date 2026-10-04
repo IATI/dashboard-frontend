@@ -4,6 +4,9 @@ const props = defineProps({
   variant: { type: String, default: undefined },  // 'good' | 'warn' | 'bad'
   label:   { type: String, default: undefined },  // '' hides it; omit for "42%"
   height:  { type: String, default: '1.15rem' },
+  // What the bar measures. Required for the progressbar to have an accessible
+  // name — without one it is announced as a bare percentage with no subject.
+  ariaLabel: { type: String, default: undefined },
 })
 
 // Our band names mapped onto Bootstrap's contextual variants. A variant that is
@@ -22,7 +25,7 @@ const displayLabel = computed(() =>
 
 <template>
   <div class="check-score">
-    <BProgress class="check-score__bar" :max="100" :height="height">
+    <BProgress class="check-score__bar" :max="100" :height="height" :aria-label="ariaLabel">
       <BProgressBar :value="value" :variant="barVariant" />
     </BProgress>
     <span v-if="showLabel" class="check-score__pct">{{ displayLabel }}</span>
