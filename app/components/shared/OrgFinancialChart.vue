@@ -197,23 +197,33 @@ watch(() => props.orgId, load)
       <div class="org-chart__canvas" role="img" :aria-label="chartSummary">
         <BarChart :data="chartData" :options="chartOptions" />
       </div>
-      <table class="visually-hidden">
-        <caption>{{ chartSummary }}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{{ t('orgChartYear') }}</th>
-            <th scope="col">{{ t('orgChartBudget') }}</th>
-            <th scope="col">{{ t('orgChartSpending') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in chartRows" :key="row.year">
-            <th scope="row">{{ row.year }}</th>
-            <td>{{ fmtUsd(row.budget) }}</td>
-            <td>{{ fmtUsd(row.spending) }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- The wrapper carries visually-hidden, not the table: a table cannot be
+           shrunk to 1px, because its used width is at least its min-content
+           width, so the class left it 913px wide and absolutely positioned,
+           which pushed the document's scroll width past the viewport and left
+           a wide empty margin down the right of every narrow screen. A block
+           wrapper does shrink, and its overflow:hidden clips the table inside
+           it. The table keeps its own markup so it is still a table to a
+           screen reader. -->
+      <div class="visually-hidden">
+        <table>
+          <caption>{{ chartSummary }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('orgChartYear') }}</th>
+              <th scope="col">{{ t('orgChartBudget') }}</th>
+              <th scope="col">{{ t('orgChartSpending') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in chartRows" :key="row.year">
+              <th scope="row">{{ row.year }}</th>
+              <td>{{ fmtUsd(row.budget) }}</td>
+              <td>{{ fmtUsd(row.spending) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <p class="org-chart__note">
         {{ t('orgChartNote') }}
         {{ t('orgChartSource') }}

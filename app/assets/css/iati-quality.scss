@@ -455,12 +455,124 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // Needs .iati-design-system--enabled scope to beat DS h2 font-size specificity
 .iati-design-system--enabled .section-title { background: var(--teal-90); color: #fff; text-transform: uppercase; font-weight: 700; padding: .55rem 1rem; font-size: .95rem; letter-spacing: .4px; margin: 0; font-family: "Nunito Sans" }
 
+// ─── Mobile menu ──────────────────────────────────────────────────────────────
+// A bootstrap-vue-next navbar standing in for the design system's slide-in
+// panel (see Header.vue). Bootstrap's own stylesheet is not loaded — only
+// bootstrap-vue-next's, which carries no navbar, nav or collapse rules — so the
+// collapse semantics and every visual here are supplied below. The components
+// still own the behaviour: open state, the transition and closing on
+// navigation.
+.iati-mobile-menu {
+  background: transparent;
+  padding: 0;
+  flex-wrap: wrap;
+
+  // This element carries the header title as well, so it stays on screen at
+  // every width; the design system shows .iati-header__nav from 768px up, so
+  // only the burger and the menu it opens drop away there.
+  @media (min-width: 768px) {
+    .navbar-toggler, .collapse, .collapsing { display: none }
+  }
+
+  // Bootstrap's collapse states, which bootstrap-vue-next expects to exist.
+  // Without `display: none` a closed menu keeps its links in the tab order.
+  .collapse:not(.show) { display: none }
+  .collapsing {
+    height: 0;
+    overflow: hidden;
+    transition: height .35s ease;
+    @media (prefers-reduced-motion: reduce) { transition: none }
+  }
+  .collapse.show, .collapsing { flex-basis: 100%; width: 100% }
+
+  // flex-basis 0, not auto: wrapping is decided from each item's basis before
+  // any shrinking happens, so a title wide enough to need two lines would push
+  // the burger onto a line of its own. At zero basis the title never forces the
+  // wrap and the burger stays beside it; the menu still wraps below, because it
+  // asks for the full width outright. Needs .header-title-row in the selector to
+  // outrank that class's own `flex: 1 1 auto` further down this file.
+  &.header-title-row .iati-header-title { flex: 1 1 0; min-width: 0 }
+
+  .navbar-toggler {
+    align-self: center;
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, .6);
+    border-radius: 3px;
+    padding: .5rem .7rem;
+    cursor: pointer;
+  }
+
+  // The design system's own hamburger, so the button matches the rest of the
+  // header rather than Bootstrap's (absent) default glyph.
+  .navbar-toggler-icon {
+    display: block;
+    width: 26px;
+    height: 17px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 38 17'%3E%3Cpath d='M0 0h38v3H0ZM0 7h38v3H0ZM0 14h38v3H0Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .navbar-nav {
+    list-style: none;
+    margin: 0 0 .75rem;
+    padding: 0;
+    width: 100%;
+  }
+
+  .nav-item { list-style: none }
+
+  .nav-link {
+    display: block;
+    color: #fff;
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 600;
+    padding: .7rem .25rem;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, .25);
+
+    &:hover, &:focus-visible { text-decoration: underline }
+    &.active { text-decoration: underline }
+  }
+}
+
 // ─── Table ────────────────────────────────────────────────────────────────────
-// BTable: hide the auto-generated "Click to sort" screen-reader text
+// On a phone, let a table fit the screen instead of widening the page. The
+// design system gives every cell min-width: 20ch, which across five columns is
+// about 690px — and although .iati-table scrolls, a box that wide still grows
+// the mobile layout viewport, so the page ended up ~670px wide with an empty
+// band down the right of every screen. Wrapping the headings is a better trade
+// here than a table nobody can see the right-hand end of.
+// This is what stops a wide table widening the whole page on a phone. BTable
+// gives every sortable column header an absolutely positioned visually-hidden
+// span ("Click to sort ascending"), and an absolutely positioned box is laid out
+// against its containing block — the nearest non-static ancestor. With the th,
+// the table and .iati-table all static, that resolved to an element OUTSIDE the
+// scroll container, so the wrapper's overflow-x had nothing to clip and each
+// span stretched the document from its own column's offset: 573px inside a 393px
+// screen, with an empty band down the right. Making the th the containing block
+// puts the span back inside the scroll area. Nothing is needed on the wrapper.
+//
+// Appeared with the sort labels in bootstrap-vue-next 0.45.3. Same fix as
+// frontend-project-dashboard a1f8a716.
+.iati-design-system--enabled .iati-table th { position: relative }
+
+// ─── Table ────────────────────────────────────────────────────────────────────
+// BTable: hide the auto-generated "Click to sort" screen-reader text.
+// Only ever put this on a block element. A table's used width is at least its
+// min-content width, so `width: 1px` does not shrink one — see OrgFinancialChart,
+// where it has to wrap the table instead of sitting on it.
+// `clip-path` rather than the deprecated `clip`; otherwise the standard recipe.
+// Note that none of this controls whether these spans widen the page on a
+// phone — clipping affects painting, not layout, so a clipped box still
+// contributes to its containing block's scrollable overflow. What decides that
+// is which element is the containing block: see the `.iati-table th` rule.
 .visually-hidden {
   position: absolute !important; width: 1px !important; height: 1px !important;
   padding: 0 !important; margin: -1px !important; overflow: hidden !important;
-  clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important;
+  clip-path: inset(50%) !important; white-space: nowrap !important;
+  border: 0 !important;
 }
 
 .iati-table {
@@ -686,16 +798,6 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .header-title-row {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   .iati-header-title { flex: 1 1 auto; min-width: 0 }
-}
-
-// The button is `align-self: stretch` with its label pushed to the bottom, sized
-// for the short actions row it normally sits in. Beside the taller title block
-// that stretches it to full height and strands "Menu" far below the icon. Pin it
-// to its own height instead. The selector carries the design system's own
-// ancestor so it outranks the rule it is correcting regardless of load order.
-.iati-design-system--enabled .header-title-row .iati-menu-toggle {
-  align-self: center;
-  height: 3rem;
 }
 
 // Dimension panels are jump targets from the summary cards at the top. The
