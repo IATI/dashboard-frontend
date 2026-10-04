@@ -4,6 +4,10 @@ const { t, locale } = useI18n({ useScope: 'global' })
 
 const { publishers, status, refresh, fetchedAt } = usePublisherList()
 
+// With the rest of the site out of reach, "Publishing Quality" has nowhere to
+// go — a crumb that redirects straight back is worse than plain text.
+const { full: fullSite } = usePreviewScope()
+
 // The list is fetched once per session, so say how old it is rather than
 // leaving the reader to assume it is live.
 const fetchedAtLabel = computed(() => {
@@ -170,7 +174,7 @@ watch([search, filterType], () => {
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: '/' },
+      { label: t('breadPublishingQuality'), href: fullSite ? '/' : null },
       { label: t('navOrganisations') },
     ]" />
     <TitleBar :title="t('navOrganisations')" />

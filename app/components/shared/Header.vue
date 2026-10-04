@@ -9,13 +9,24 @@ const { user, ready, isSignedIn, signIn, signOut } = useAuth()
 
 // One list, rendered twice: the horizontal tool nav on desktop and the slide-in
 // panel on mobile. Keeping them separate is how they drift apart.
-const navItems = computed(() => [
-  { key: 'overall',   to: '/',              label: t('navOverview') },
-  { key: 'groups',    to: '/groups/10',     label: t('navGroups') },
-  { key: 'country',   to: '/countries/KE',  label: t('navCountry') },
-  { key: 'org',       to: '/organisations', label: t('navOrganisations') },
-  { key: 'exploring', to: '/exploring-data', label: t('navExploring') },
-])
+// Only the organisations pages are finished, so the preview does not offer the
+// rest — a link that redirects straight back is worse than no link. ?full
+// restores them; see usePreviewScope.
+const { full: fullSite } = usePreviewScope()
+
+const ALL_NAV = [
+  { key: 'overall',   to: '/',              labelKey: 'navOverview' },
+  { key: 'groups',    to: '/groups/10',     labelKey: 'navGroups' },
+  { key: 'country',   to: '/countries/KE',  labelKey: 'navCountry' },
+  { key: 'org',       to: '/organisations', labelKey: 'navOrganisations' },
+  { key: 'exploring', to: '/exploring-data', labelKey: 'navExploring' },
+]
+
+const navItems = computed(() =>
+  ALL_NAV
+    .filter(item => fullSite.value || isPreviewPath(item.to))
+    .map(item => ({ ...item, label: t(item.labelKey) })),
+)
 
 // The design system hides .iati-header__nav below 768px and expects this panel
 // to take its place; without it there is no navigation at all on a phone. Its
@@ -105,7 +116,7 @@ onBeforeUnmount(() => {
                   {{ item.label }}
                 </NuxtLink>
               </li>
-              <li><a class="iati-tool-nav-link" href="#">{{ t('navAbout') }}</a></li>
+              <li v-if="fullSite"><a class="iati-tool-nav-link" href="#">{{ t('navAbout') }}</a></li>
             </ul>
           </nav>
         </div>
@@ -133,7 +144,7 @@ onBeforeUnmount(() => {
                 {{ item.label }}
               </NuxtLink>
             </li>
-            <li class="iati-mobile-nav__item">
+            <li v-if="fullSite" class="iati-mobile-nav__item">
               <a class="iati-mobile-nav__link" href="#" @click="menuOpen = false">{{ t('navAbout') }}</a>
             </li>
           </ul>

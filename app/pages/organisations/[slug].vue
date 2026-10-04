@@ -82,6 +82,10 @@ const publishGuidanceUrl = computed(() =>
 
 // Only the Validator findings now: download failures arrive with the stats.
 const { validation, pending: validationPending } = useAvailabilityData(slug)
+
+// With the rest of the site out of reach, "Publishing Quality" has nowhere to
+// go — a crumb that redirects straight back is worse than plain text.
+const { full: fullSite } = usePreviewScope()
 const { lookup: organisationTypeName } = useCodelist('OrganisationType')
 
 const identity = computed(() => publisher.value?.identity ?? null)
@@ -415,7 +419,7 @@ const dimensions = computed(() =>
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: '/' },
+      { label: t('breadPublishingQuality'), href: fullSite ? '/' : null },
       { label: t('navOrganisations'), href: '/organisations' },
       { label: orgName },
     ]" />
