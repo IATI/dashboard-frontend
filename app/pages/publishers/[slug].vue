@@ -50,6 +50,14 @@ const monthsSincePublished = computed(() => {
 
 // Only for publishers that did start: one with no activity file gets the other
 // callout, and telling them to resume would be wrong.
+// Activities published, but no transactions at all. Worth saying, because the
+// time lag below is computed from transaction dates and so cannot mean anything
+// for these publishers — all seven in a 120-publisher sample come back as
+// "More than one year", which is the bottom of the scale rather than a finding.
+const noTransactions = computed(() =>
+  stats.value != null && stats.value.activityCount > 0 && !stats.value.transactionTotal,
+)
+
 const publishingStopped = computed(() =>
   !noActivities.value
   && monthsSincePublished.value !== null
@@ -191,9 +199,15 @@ const timelinessPanel = computed(() => {
 
   return {
     frequency: freq?.value ? t(labelKey('value', freq.value)) : freq?.label ?? null,
-    timeLag:   stats.value.timelagValue
-      ? t(labelKey('value', stats.value.timelagValue))
-      : stats.value.timelag,
+    // IATI-Stats derives timelag purely from transaction_months_with_year, so
+    // with no transactions it falls through to the worst band. Withhold it
+    // rather than report the bottom of a scale nothing was measured against.
+    timeLag: stats.value.transactionTotal
+      ? (stats.value.timelagValue
+          ? t(labelKey('value', stats.value.timelagValue))
+          : stats.value.timelag)
+      : null,
+    timeLagMeasurable: Boolean(stats.value.transactionTotal),
     updates:      updates.map(([month, n]) => ({ month, active: n > 0, count: n })),
     monthsActive: updates.filter(([, n]) => n > 0).length,
     txns:         txns.map(([month, n]) => ({ month, count: n, pct: Math.round((n / peak) * 100) })),
@@ -422,6 +436,19 @@ const dimensions = computed(() =>
         <p class="mt-sm">
           <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
             {{ t('orgNoActivitiesLink') }}
+          </a>
+        </p>
+      </OrganisationCallout>
+
+      <OrganisationCallout
+        v-if="noTransactions" class="mb"
+        heading-level="h2" variant="info" icon="i"
+        :title="t('orgNoTxnTitle')"
+      >
+        <p>{{ t('orgNoTxnText', { name: orgName, n: stats.activityCount.toLocaleString() }) }}</p>
+        <p class="mt-sm">
+          <a :href="publishGuidanceUrl" target="_blank" rel="noopener">
+            {{ t('orgStoppedLink') }}
           </a>
         </p>
       </OrganisationCallout>
@@ -666,10 +693,11 @@ const dimensions = computed(() =>
             <p v-else class="measure__note">{{ t('orgTlNoUpdates') }}</p>
           </div>
 
-          <div v-if="timelinessPanel.timeLag" class="measure">
+          <div v-if="timelinessPanel.timeLag || !timelinessPanel.timeLagMeasurable" class="measure">
             <div class="measure__head">
               <span class="measure__label">{{ t('orgTlTimeLag') }}</span>
-              <span class="measure__value">{{ timelinessPanel.timeLag }}</span>
+              <span v-if="timelinessPanel.timeLag" class="measure__value">{{ timelinessPanel.timeLag }}</span>
+              <span v-else class="measure__value measure__value--muted">{{ t('orgTlNotMeasurable') }}</span>
             </div>
             <div v-if="timelinessPanel.txns.length" class="month-strip__bars">
               <BTooltip

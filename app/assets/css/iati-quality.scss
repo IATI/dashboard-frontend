@@ -702,3 +702,6 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   scroll-margin-top: 16px;
   &:focus { outline: none }
 }
+
+// A measure that could not be computed, stated rather than scored
+.measure__value--muted { font-weight: 400; font-style: italic; color: var(--grey-60) }

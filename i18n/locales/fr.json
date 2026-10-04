@@ -481,5 +481,8 @@
   "orgTlNoTransactions": "Aucune transaction déclarée au cours des 12 derniers mois",
   "orgStoppedTitle": "Cette organisation n'a rien publié depuis plus d'un an | Cette organisation n'a rien publié depuis plus de {count} ans",
   "orgStoppedText": "{name} a mis à jour ses données IATI pour la dernière fois en {date}. Une publication régulière rend ces informations plus utiles à celles et ceux qui s'appuient dessus.",
-  "orgStoppedLink": "En savoir plus sur la publication dans IATI"
+  "orgStoppedLink": "En savoir plus sur la publication dans IATI",
+  "orgNoTxnTitle": "Aucune donnée de transaction publiée",
+  "orgNoTxnText": "{name} a publié {n} activités mais aucune transaction. Les transactions enregistrent les montants engagés, décaissés et dépensés, ce qui rend visibles les dépenses d'une organisation dans IATI.",
+  "orgTlNotMeasurable": "Non mesurable"
 }
