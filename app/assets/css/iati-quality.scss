@@ -704,6 +704,33 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 .flex-1       { flex: 1; min-width: 0 }
 
 // Hero metric row: overall band on left, divider, 2×2 grid of cards on right
+// ─── Hero card ────────────────────────────────────────────────────────────────
+// The overall assessment is the point of the page, but as another white card it
+// read as one panel among several. Dark ground makes it the first thing seen,
+// and it is the header's own teal so the page still holds together.
+//
+// Only the card itself inverts. The four dimension cards inside stay light, so
+// the eye goes to the medallion first and then to the detail, and the medallion
+// stays pale rather than inverting with everything else — a dark disc on a dark
+// card would lose the focal point, and grey stars on grey have nothing left to
+// say which are lit.
+// Carries the design system's own ancestor, or its .iati-card rule outranks
+// this one and the card stays white with a white kicker on it.
+.iati-design-system--enabled .hero-card {
+  background: var(--teal-90);
+  border-color: var(--teal-90);
+
+  .iati-card__subtitle { color: #fff }
+
+  // The design system's cards are transparent, which would show the dark
+  // through; these need to stay light to keep their own contrast.
+  .dimension-card { background: #fff }
+
+  // The ring was there to separate a pale disc from a white card. On the dark
+  // ground the disc separates itself.
+  .hero-metrics__badge { border: none }
+}
+
 .hero-metrics {
   display: flex;
   gap: 28px;
@@ -855,6 +882,15 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     border: 1px solid var(--grey-30) !important;
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  // The hero's dark ground earns its place on screen, where it marks the
+  // assessment out from the panels below. On paper it is a slab of ink, and the
+  // page break below already separates it, so it prints as an ordinary card.
+  .hero-card {
+    background: #fff !important;
+    .iati-card__subtitle { color: var(--teal-90) !important }
+    .hero-metrics__badge { border: 3px solid var(--teal-90) !important }
   }
 
   // Keep a panel with its heading rather than orphaning one at a page foot.

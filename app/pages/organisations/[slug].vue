@@ -480,7 +480,7 @@ const dimensions = computed(() =>
 
       <!-- Hero — score + alerts -->
       <BRow gutter-x="4" class="mb-sm">
-        <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')">
+        <BCol cols="12" md="12"><Card :kicker="t('orgOverallQuality')" class="hero-card">
           <div v-if="loading" class="hero-metrics">
             <div class="hero-metrics__overall">
               <Skeleton width="150px" height="150px" />
