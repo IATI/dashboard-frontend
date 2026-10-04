@@ -357,10 +357,21 @@ export function groupTestsByIndicator(tests = []) {
     }
     rows.get(key).tests.push(test)
   }
-  return [...rows.values()].map(row => ({
-    ...row,
-    value: Math.round(row.tests.reduce((sum, t) => sum + t.value, 0) / row.tests.length),
-  }))
+  // Average only the tests that had something to assess. A check with a zero
+  // denominator applies to none of this publisher's activities — adaptTests
+  // gives it a null value — and counting it dragged the indicator down as if it
+  // had scored zero: WFP's "Country or region" read 67% off 100%, 100% and a
+  // check for regions, which it reports none of.
+  return [...rows.values()].map(row => {
+    const scored = row.tests.filter(t => t.denominator > 0)
+    return {
+      ...row,
+      // null, not 0, when nothing applied: "not assessed" is not "failed".
+      value: scored.length
+        ? Math.round(scored.reduce((sum, t) => sum + t.value, 0) / scored.length)
+        : null,
+    }
+  })
 }
 
 /**

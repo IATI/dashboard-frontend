@@ -449,5 +449,6 @@
   "pubScopedNotPublished": "No dashboard data for {orgs}. That usually means no IATI data has been published yet. Sign out to browse all reporting organisations.",
   "pubScopedSomeMissing": "Not shown: {orgs} — no dashboard data.",
   "navMenu": "Menu",
-  "navCloseMenu": "Close menu"
+  "navCloseMenu": "Close menu",
+  "orgTestNotApplicable": "Not applicable"
 }

@@ -689,7 +689,10 @@ const dimensions = computed(() =>
                 <span class="org">{{ item.indicator }}</span>
               </template>
               <template #cell(value)="{ item }">
-                <div class="check-score">
+                <div v-if="item.value === null" class="check-score">
+                  <span class="check-score__na">{{ t('orgTestNotApplicable') }}</span>
+                </div>
+                <div v-else class="check-score">
                   <BProgress class="check-score__bar" :max="100" height=".9rem">
                     <BProgressBar :value="item.value" :variant="testVariant(item.value)" />
                   </BProgress>
@@ -704,6 +707,7 @@ const dimensions = computed(() =>
                          activities it does not apply to, so this is not the
                          publisher's activity count and varies check to check. -->
                     <span
+                      v-if="test.denominator"
                       class="test-list__count"
                       :title="test.notApplicable
                         ? t('orgTestExcluded', { n: test.notApplicable.toLocaleString() })
@@ -715,7 +719,12 @@ const dimensions = computed(() =>
                       }) }}
                     </span>
                     <div class="test-list__score">
-                      <div class="check-score">
+                      <!-- Nothing this check applies to: "0 of 0" and a bare "%"
+                           read as a failure rather than as not assessed. -->
+                      <div v-if="!test.denominator" class="check-score">
+                        <span class="check-score__na">{{ t('orgTestNotApplicable') }}</span>
+                      </div>
+                      <div v-else class="check-score">
                         <BProgress class="check-score__bar" :max="100" height=".7rem">
                           <BProgressBar :value="test.value" :variant="testVariant(test.value)" />
                         </BProgress>

@@ -192,6 +192,12 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
     width: 44px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums;
     color: var(--grey-90);
   }
+  // A check with nothing to assess. Stated quietly rather than scored, so it
+  // does not read as a result of zero.
+  &__na {
+    margin-left: auto; font-size: .78rem; font-style: italic; color: var(--grey-60);
+    white-space: nowrap;
+  }
 }
 
 // ─── Availability bar: two hoverable segments reading as one bar ─────────────
