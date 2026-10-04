@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
         <a href="https://iatistandard.org/" aria-label="Go to IATI homepage">
           <img class="iati-header__logo" alt="" src="~/assets/svg/logo-colour.svg" />
         </a>
-        <nav class="iati-header__general-nav">
+        <nav class="iati-header__general-nav" :aria-label="t('navPrimaryLabel')">
           <ul class="iati-piped-list">
             <li><a href="https://iatistandard.org/en/about/">{{ t('navAboutIATI') }}</a></li>
             <li><a href="https://iatistandard.org/en/using-data/">{{ t('navUseData') }}</a></li>
@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
           </button>
         </div>
         <div class="iati-header__nav">
-          <nav>
+          <nav :aria-label="t('navToolLabel')">
             <ul class="iati-tool-nav">
               <li v-for="item in navItems" :key="item.key">
                 <NuxtLink class="iati-tool-nav-link" :class="{ active: active === item.key }" :to="item.to">
@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
             :aria-label="t('navCloseMenu')" @click="menuOpen = false"
           ></button>
         </div>
-        <nav>
+        <nav :aria-label="t('navMobileLabel')">
           <ul>
             <li v-for="item in navItems" :key="item.key" class="iati-mobile-nav__item">
               <NuxtLink class="iati-mobile-nav__link" :to="item.to" @click="menuOpen = false">

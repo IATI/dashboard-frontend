@@ -19,17 +19,19 @@ defineProps({
     loading && 'iati-card--loading',
   ]">
     <div v-if="title && !kicker" class="iati-card__header">
-      <h3>{{ title }}</h3>
+      <h2>{{ title }}</h2>
       <slot name="actions" />
     </div>
     <template v-if="kicker">
-      <!-- kicker-actions sits on the kicker's baseline, e.g. a dimension's stars -->
+      <!-- The kicker is this card's heading when there is no title under it,
+           which is how every dimension panel uses it. With a title it is an
+           eyebrow above that title, and the title is the heading instead. -->
       <div v-if="$slots['kicker-actions']" class="iati-card__kicker-row">
-        <p class="iati-card__subtitle">{{ kicker }}</p>
+        <component :is="title ? 'p' : 'h2'" class="iati-card__subtitle">{{ kicker }}</component>
         <slot name="kicker-actions" />
       </div>
-      <p v-else class="iati-card__subtitle">{{ kicker }}</p>
-      <h3 v-if="title">{{ title }}</h3>
+      <component v-else :is="title ? 'p' : 'h2'" class="iati-card__subtitle">{{ kicker }}</component>
+      <h2 v-if="title">{{ title }}</h2>
     </template>
     <slot />
   </div>

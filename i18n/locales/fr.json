@@ -457,5 +457,9 @@
   "coverageSourceTotalBudget": "Budget déclaré par l'organisation",
   "groupReferenceSources": "OCDE/CAD CRS · UN CEB · Charity Commission · CBF · IRS 990 · budgets déclarés",
   "groupReferencePeriod": "2022–2026, chaque source étant comparée à la période qu’elle couvre",
-  "orgCovMethodology": "Comment la couverture est calculée"
+  "orgCovMethodology": "Comment la couverture est calculée",
+  "navPrimaryLabel": "Site IATI",
+  "navToolLabel": "Sections du tableau de bord",
+  "navMobileLabel": "Sections du tableau de bord",
+  "navFooterLabel": "Pied de page"
 }

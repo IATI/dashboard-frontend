@@ -7,7 +7,7 @@ const { locale, setLocale } = useI18n({ useScope: 'global' })
     <div class="iati-brand-background__content">
       <div class="iati-footer__section iati-footer__section--last">
         <div class="iati-footer__container">
-          <nav>
+          <nav :aria-label="t('navFooterLabel')">
             <ul class="iati-piped-list iati-footer__legal-nav">
               <li><a href="https://web-terms.iatistandard.org/en/latest/privacy-policy/">Privacy</a></li>
               <li><a href="https://web-terms.iatistandard.org/en/latest/cookie-policy/">Cookies</a></li>
