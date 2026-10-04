@@ -696,6 +696,15 @@ const dimensions = computed(() =>
           <p v-if="coverageGenerated" class="coverage-note">
             {{ t('orgCovGenerated', { date: coverageGenerated }) }}
           </p>
+          <!-- What this modal cannot cover: which period each source compares,
+               gross vs net, the EU handling, and why a zero with no reference is
+               not a measured zero. Complements methodology.json, which describes
+               the scoring thresholds rather than how the number is derived. -->
+          <p class="coverage-note">
+            <a href="https://iati.github.io/dashboard-coverage/methodology.html" target="_blank" rel="noopener">
+              {{ t('orgCovMethodology') }}
+            </a>
+          </p>
         </BModal>
 
       </Card>

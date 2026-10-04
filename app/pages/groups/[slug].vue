@@ -144,8 +144,8 @@ function changeClass(change) {
     <TitleBar :eyebrow="t('groupEyebrow')" :title="t('groupTitle')">
       <template #meta>
         <span><strong>{{ g.n }}</strong> {{ t('groupPublishers') }}</span>
-        <span><strong>{{ t('groupReference') }}</strong> OECD/DAC CRS · CBF · Charity Commission · IRS 990</span>
-        <span><strong>{{ t('groupPeriod') }}</strong> 2024 (full) + 2025/2026 (partial)</span>
+        <span><strong>{{ t('groupReference') }}</strong> {{ t('groupReferenceSources') }}</span>
+        <span><strong>{{ t('groupPeriod') }}</strong> {{ t('groupReferencePeriod') }}</span>
       </template>
     </TitleBar>
 

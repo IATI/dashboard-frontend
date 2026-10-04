@@ -453,5 +453,8 @@
   "orgTestNoOrganisations": "No relevant organisations",
   "unitQuarters": "{count} quarter | {count} quarters",
   "orgCovNoReference": "No reference figure is available for this organisation, so coverage cannot be calculated.",
-  "coverageSourceTotalBudget": "Own total budget (self-declared)"
+  "coverageSourceTotalBudget": "Organisation's own declared budget",
+  "groupReferenceSources": "OECD/DAC CRS · UN CEB · Charity Commission · CBF · IRS 990 · declared budgets",
+  "groupReferencePeriod": "2022–2026, each source compared against the period it covers",
+  "orgCovMethodology": "How coverage is calculated"
 }
