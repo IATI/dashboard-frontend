@@ -579,7 +579,10 @@ const dimensions = computed(() =>
                   spend: fmtUsd(coverage.iatiSpendingUsd),
                   reference: fmtUsd(coverage.referenceValueUsd),
                 }) }}
-                · {{ t(labelKey('coverageBasis', coverage.coverageBasis)) }}
+                <!-- The year the reference figure is for. 131 of 381 publishers
+                     have none — every nl_charities one, plus a few UK/US
+                     charities — so it is omitted rather than shown empty. -->
+                <template v-if="coverage.referenceYear">· {{ coverage.referenceYear }}</template>
               </span>
               <button type="button" class="link-button" @click="coverageDetails = true">
                 {{ t('orgCovMoreDetails') }}
@@ -647,13 +650,17 @@ const dimensions = computed(() =>
                 <dt>{{ t('orgCovSource') }}</dt>
                 <dd>{{ t(labelKey('coverageSource', coverage.referenceSource)) }}</dd>
               </div>
-              <div>
+              <div v-if="coverage.referenceYear">
                 <dt>{{ t('orgCovYear') }}</dt>
                 <dd>{{ coverage.referenceYear }}</dd>
               </div>
               <div>
                 <dt>{{ t('orgCovCurrency') }}</dt>
                 <dd>{{ coverage.referenceCurrency }}</dd>
+              </div>
+              <div v-if="coverage.coverageBasis">
+                <dt>{{ t('orgCovBasis') }}</dt>
+                <dd>{{ t(labelKey('coverageBasis', coverage.coverageBasis)) }}</dd>
               </div>
             </div>
             <div class="coverage-meta__row">
