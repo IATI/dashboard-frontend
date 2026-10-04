@@ -827,7 +827,7 @@ const dimensions = computed(() =>
             <p class="measure__note">{{ t('orgCovNoReference') }}</p>
             <p class="measure__note mt-sm">{{ t('orgCovNoReferenceDetail') }}</p>
             <p class="measure__note mt-sm">
-              <a href="https://iati.github.io/dashboard-coverage/methodology.html" target="_blank" rel="noopener">
+              <a href="https://iati.github.io/dashboard-coverage/methodology" target="_blank" rel="noopener">
                 {{ t('orgCovMethodology') }}
               </a>
             </p>
@@ -973,7 +973,7 @@ const dimensions = computed(() =>
                not a measured zero. Complements methodology.json, which describes
                the scoring thresholds rather than how the number is derived. -->
           <p class="coverage-note">
-            <a href="https://iati.github.io/dashboard-coverage/methodology.html" target="_blank" rel="noopener">
+            <a href="https://iati.github.io/dashboard-coverage/methodology" target="_blank" rel="noopener">
               {{ t('orgCovMethodology') }}
             </a>
           </p>
