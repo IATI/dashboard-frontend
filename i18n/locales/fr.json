@@ -484,5 +484,6 @@
   "orgStoppedLink": "En savoir plus sur la publication dans IATI",
   "orgNoTxnTitle": "Aucune donnée de transaction publiée",
   "orgNoTxnText": "{name} a publié {n} activités mais aucune transaction. Les transactions enregistrent les montants engagés, décaissés et dépensés, ce qui rend visibles les dépenses d'une organisation dans IATI.",
-  "orgTlNotMeasurable": "Non mesurable"
+  "orgTlNotMeasurable": "Non mesurable",
+  "orgCovPeriodEnd": "Fin de l’exercice comptable"
 }

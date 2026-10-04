@@ -258,6 +258,14 @@ function fmtUsd(value) {
 
 const coverageDetails = ref(false)
 
+const referencePeriodEndLabel = computed(() => {
+  const d = coverage.value?.referencePeriodEnd
+  if (!d) return null
+  const [y, m, day] = d.split('-').map(Number)
+  return new Date(Date.UTC(y, m - 1, day))
+    .toLocaleDateString(locale.value, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+})
+
 const coverageGenerated = computed(() => {
   const iso = coverage.value?.generatedAt
   if (!iso) return null
@@ -832,7 +840,14 @@ const dimensions = computed(() =>
                 <dt>{{ t('orgCovSource') }}</dt>
                 <dd>{{ t(labelKey('coverageSource', coverage.referenceSource)) }}</dd>
               </div>
-              <div v-if="coverage.referenceYear">
+              <!-- The charity registers report each organisation's own
+                   accounting period rather than a calendar year, so name the
+                   period end when there is one. -->
+              <div v-if="coverage.referencePeriodEnd">
+                <dt>{{ t('orgCovPeriodEnd') }}</dt>
+                <dd>{{ referencePeriodEndLabel }}</dd>
+              </div>
+              <div v-else-if="coverage.referenceYear">
                 <dt>{{ t('orgCovYear') }}</dt>
                 <dd>{{ coverage.referenceYear }}</dd>
               </div>

@@ -483,5 +483,6 @@
   "orgStoppedLink": "Learn more about publishing to IATI",
   "orgNoTxnTitle": "No transaction data published",
   "orgNoTxnText": "{name} has published {n} activities but no transactions. Transactions record the money committed, disbursed and spent, which is what makes an organisation’s spending visible in IATI.",
-  "orgTlNotMeasurable": "Cannot be measured"
+  "orgTlNotMeasurable": "Cannot be measured",
+  "orgCovPeriodEnd": "Accounting period ends"
 }

@@ -169,17 +169,28 @@ function adaptCoverageFromStats(stats) {
     && c.reference_source != null
     && c.coverage != null
 
+  // Show the spending figure the ratio was actually computed from. The basis
+  // says which, and preferring net regardless was wrong: Oxfam GB is compared
+  // on a gross basis, so its 34% comes from +$159.0m, while the panel showed
+  // the net figure of -$2.9m beside it.
+  const grossUsd = c.iati_spending_usd ?? null
+  const netUsd = c.iati_net_spending_usd ?? null
+  const spendingUsd = c.coverage_basis === 'net' ? (netUsd ?? grossUsd) : (grossUsd ?? netUsd)
+
+  const reference = adaptReferenceYear(c.reference_year)
+
   return {
     hasReference,
     coveragePercent:   hasReference && c.coverage != null ? Math.round(c.coverage * 100) : null,
     coverageBasis:     c.coverage_basis ?? null,
-    iatiSpendingUsd:   c.iati_net_spending_usd ?? c.iati_spending_usd ?? null,
+    iatiSpendingUsd:   spendingUsd,
     referenceValueUsd: c.reference_value_usd ?? null,
     referenceCurrency: c.reference_currency ?? null,
     referenceSource:   c.reference_source ?? null,
     referenceEntity:   c.reference_entity ?? null,
     referenceEntityId: c.reference_entity_id ?? null,
-    referenceYear:     c.reference_year ?? null,
+    referenceYear:     reference.year,
+    referencePeriodEnd: reference.periodEnd,
     publishersSharingReference: c.publishers_sharing_reference ?? null,
     quartersPerYear: d.quarters_per_year ?? null,
     quartersByYear:  d.quarters_by_year ?? null,
@@ -223,6 +234,31 @@ function adaptDownloadsByType(byType) {
     // Reasons, worst first, for the tooltip — e.g. { http_non_200: 130 }.
     byType: Object.fromEntries(entries.filter(([type]) => type !== 'null').sort((a, b) => b[1] - a[1])),
   }
+}
+
+/**
+ * reference_year is not always a year. The charity registers report the end of
+ * each organisation's own accounting period — "2025-03-31T00:00:00" for Oxfam
+ * GB — because those periods do not line up with calendar years. Keep both: the
+ * year for the inline label, the exact date for the detail panel.
+ */
+function adaptReferenceYear(value) {
+  if (value === null || value === undefined) return { year: null, periodEnd: null }
+  if (typeof value === 'number') return { year: value, periodEnd: null }
+
+  const text = String(value)
+  if (/^\d{4}$/.test(text)) return { year: Number(text), periodEnd: null }
+
+  // Read off the string rather than through Date. "2025-03-31T00:00:00" carries
+  // no timezone, so parsing it lands in local time and converting back to UTC
+  // moves it a day in any zone ahead of UTC — 31 March became 30 March here.
+  // It is a calendar date, not an instant, so keep it as one.
+  const date = text.match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (date) {
+    const [, year, month, day] = date
+    return { year: Number(year), periodEnd: `${year}-${month}-${day}` }
+  }
+  return { year: null, periodEnd: null }
 }
 
 /** The most recent "YYYY-MM" key in an update series, or null if it is empty. */
