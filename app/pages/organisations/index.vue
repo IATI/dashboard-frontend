@@ -48,10 +48,22 @@ const PER_PAGE = 50
 const route = useRoute()
 const router = useRouter()
 
+// Sortable columns, and the default. A sort key from the URL is checked against
+// this: a stale or hand-edited link should fall back rather than leave the table
+// sorted by a column that does not exist.
+const SORTABLE = ['name', 'slug', 'orgType', 'hqCountry', 'datasetCount']
+const DEFAULT_SORT = { key: 'name', order: 'asc' }
+
+function sortFromQuery(q) {
+  const key = String(q.sort ?? '')
+  if (!SORTABLE.includes(key)) return { ...DEFAULT_SORT }
+  return { key, order: q.dir === 'desc' ? 'desc' : 'asc' }
+}
+
 const search = ref(String(route.query.q ?? ''))
 const filterType = ref(String(route.query.type ?? ''))
 const currentPage = ref(Number(route.query.page) || 1)
-const sortBy = ref([{ key: 'name', order: 'asc' }])
+const sortBy = ref([sortFromQuery(route.query)])
 
 // Set while writing the refs from the URL, so the watchers below do not treat a
 // restore as a user edit and immediately write back or reset the page.
@@ -63,6 +75,14 @@ function queryFromState() {
   if (term) q.q = term
   if (filterType.value) q.type = filterType.value
   if (currentPage.value > 1) q.page = String(currentPage.value)
+
+  // Only when it differs from the default, so an untouched table stays at a
+  // clean /organisations.
+  const sort = sortBy.value?.[0]
+  if (sort?.key && !(sort.key === DEFAULT_SORT.key && sort.order === DEFAULT_SORT.order)) {
+    q.sort = sort.key
+    if (sort.order === 'desc') q.dir = 'desc'
+  }
   return q
 }
 
@@ -72,7 +92,7 @@ function sameQuery(a, b) {
 }
 
 let writeTimer = null
-watch([search, filterType, currentPage], () => {
+watch([search, filterType, currentPage, sortBy], () => {
   if (restoring) return
   clearTimeout(writeTimer)
   // Debounced because this also fires per keystroke in the search box.
@@ -89,6 +109,7 @@ watch(() => route.query, q => {
   search.value = String(q.q ?? '')
   filterType.value = String(q.type ?? '')
   currentPage.value = Number(q.page) || 1
+  sortBy.value = [sortFromQuery(q)]
   nextTick(() => { restoring = false })
 })
 
