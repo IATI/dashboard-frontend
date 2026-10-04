@@ -562,7 +562,7 @@ const dimensions = computed(() =>
 
       <!-- Coverage vs reference — real figures from the dashboard-coverage dataset -->
       <Card
-        v-if="coverage && (coverage.coveragePercent !== null || coverage.quartersByYear)"
+        v-if="coverage && (coverage.hasReference || coverage.quartersByYear)"
         :class="['mt', cardTone('coverage')]" :kicker="t('dimCoverage')"
         :id="`dimension-coverage`" tabindex="-1"
       >
@@ -576,7 +576,7 @@ const dimensions = computed(() =>
                nl_charities as a source but are not in the CBF register. There
                is nothing to compare against, which is not the same as scoring
                zero, so the measure says so rather than showing a bar. -->
-          <div v-if="coverage.coveragePercent === null" class="measure">
+          <div v-if="!coverage.hasReference" class="measure">
             <div class="measure__head">
               <span class="measure__label">{{ t('subCoverage') }}</span>
             </div>

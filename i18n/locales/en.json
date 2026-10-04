@@ -452,5 +452,6 @@
   "orgTestNoActivities": "No relevant activities",
   "orgTestNoOrganisations": "No relevant organisations",
   "unitQuarters": "{count} quarter | {count} quarters",
-  "orgCovNoReference": "No reference figure is available for this organisation, so coverage cannot be calculated."
+  "orgCovNoReference": "No reference figure is available for this organisation, so coverage cannot be calculated.",
+  "coverageSourceTotalBudget": "Own total budget (self-declared)"
 }

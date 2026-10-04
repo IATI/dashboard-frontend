@@ -453,5 +453,6 @@
   "orgTestNoActivities": "Aucune activité concernée",
   "orgTestNoOrganisations": "Aucune organisation concernée",
   "unitQuarters": "{count} trimestre | {count} trimestres",
-  "orgCovNoReference": "Aucun chiffre de référence n'est disponible pour cette organisation ; la couverture ne peut donc pas être calculée."
+  "orgCovNoReference": "Aucun chiffre de référence n'est disponible pour cette organisation ; la couverture ne peut donc pas être calculée.",
+  "coverageSourceTotalBudget": "Budget total déclaré (auto-déclaré)"
 }

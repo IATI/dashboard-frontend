@@ -149,8 +149,19 @@ function adaptCoverageFromStats(stats) {
   const c = raw.coverage
   const d = raw.disaggregation ?? {}
 
+  // Whether this publisher has anything to be compared against. Detected three
+  // ways because the upstream convention changed: it used to report
+  // `coverage: null`, and now reports `coverage: 0` with `no_reference: true`.
+  // A 0 under that flag is an absence of a measurement, not a measured zero, so
+  // treating it as a score would mark ~660 publishers down for not appearing in
+  // any register. Checking all three keeps old and new files working.
+  const hasReference = c.no_reference !== true
+    && c.reference_source != null
+    && c.coverage != null
+
   return {
-    coveragePercent:   c.coverage != null ? Math.round(c.coverage * 100) : null,
+    hasReference,
+    coveragePercent:   hasReference && c.coverage != null ? Math.round(c.coverage * 100) : null,
     coverageBasis:     c.coverage_basis ?? null,
     iatiSpendingUsd:   c.iati_net_spending_usd ?? c.iati_spending_usd ?? null,
     referenceValueUsd: c.reference_value_usd ?? null,
