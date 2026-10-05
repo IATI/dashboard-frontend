@@ -330,9 +330,22 @@ const coveragePair = computed(() => {
   if (!c) return null
   const native = c.iatiSpending != null && c.referenceValue != null
     && c.iatiCurrency && c.iatiCurrency === c.referenceCurrency
-  return native
-    ? { iati: fmtMoney(c.iatiSpending, c.iatiCurrency), reference: fmtMoney(c.referenceValue, c.referenceCurrency) }
-    : { iati: fmtUsd(c.iatiSpendingUsd), reference: fmtUsd(c.referenceValueUsd) }
+  if (native) {
+    return {
+      iati: fmtMoney(c.iatiSpending, c.iatiCurrency),
+      reference: fmtMoney(c.referenceValue, c.referenceCurrency),
+    }
+  }
+  // Falling back to USD. Where the reference was filed in something else —
+  // sterling, for every UK charity — name that figure too, so the number the
+  // reader would recognise from the register is on the page.
+  const filed = c.referenceValue != null && c.referenceCurrency && c.referenceCurrency !== 'USD'
+    ? ` (${fmtMoney(c.referenceValue, c.referenceCurrency)})`
+    : ''
+  return {
+    iati: fmtUsd(c.iatiSpendingUsd),
+    reference: `${fmtUsd(c.referenceValueUsd)}${filed}`,
+  }
 })
 
 const coverageDetails = ref(false)
@@ -1064,6 +1077,11 @@ const dimensions = computed(() =>
             </div>
           </dl>
 
+          <!-- Only where the reference is an accounting period: that is what
+               makes this figure cover different months than the chart above. -->
+          <p v-if="coverage.referencePeriodEnd" class="coverage-note mt-sm">
+            {{ t('orgCovPeriodNote', { entity: coverage.referenceEntity }) }}
+          </p>
           <p v-if="coverage.publishersSharingReference > 1" class="coverage-note mt-sm">
             {{ t('orgCovShared', { n: coverage.publishersSharingReference }) }}
           </p>

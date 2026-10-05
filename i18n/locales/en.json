@@ -513,5 +513,6 @@
   "orgDsHelpDuplicates": "Some activity identifiers are used more than once across this organisation’s files.",
   "orgChartSpendingShort": "Spending",
   "orgChartSpendingLong": "Spending (Disbursements + Expenditure)",
-  "orgChartBudgetShort": "Budgets"
+  "orgChartBudgetShort": "Budgets",
+  "orgCovPeriodNote": "The IATI spending figure here covers {entity}’s accounting period, which is not the calendar year, so it will differ from the figures elsewhere on this page."
 }

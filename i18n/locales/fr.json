@@ -514,5 +514,6 @@
   "orgDsHelpDuplicates": "Certains identifiants d’activité sont utilisés plusieurs fois dans les fichiers de cette organisation.",
   "orgChartSpendingShort": "Dépenses",
   "orgChartSpendingLong": "Dépenses (décaissements + dépenses)",
-  "orgChartBudgetShort": "Budgets"
+  "orgChartBudgetShort": "Budgets",
+  "orgCovPeriodNote": "Le montant des dépenses IATI indiqué ici couvre l’exercice comptable de {entity}, qui ne correspond pas à l’année civile ; il diffère donc des montants présentés ailleurs sur cette page."
 }

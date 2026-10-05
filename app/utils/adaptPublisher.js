@@ -191,11 +191,19 @@ function adaptCoverageFromStats(stats) {
     iatiSpendingUsd:   spendingUsd,
     referenceValueUsd: c.reference_value_usd ?? null,
     referenceCurrency: c.reference_currency ?? null,
-    // The same two figures before conversion. The ratio is computed on these,
-    // and the USD pair is them converted at one rate for the reference period —
-    // which is why the USD spending here disagrees with the chart's, where CDFD
-    // converts each transaction at its own date. Oxfam Novib: 124,905,528 EUR,
-    // $146.8m at coverage's 1.175, $139.3m at CDFD's dated rates.
+    // The same two figures before conversion.
+    //
+    // iati_currency is NOT the publisher's reporting currency. CDFD, which
+    // dashboard-coverage counts IATI spending from, exposes only value_usd and
+    // value_eur — value_gbp returns "Invalid aggregate" — so it is whichever of
+    // those two was used. A Dutch charity's EUR reference matches one of them
+    // and is compared natively; a UK charity's GBP reference cannot be, so its
+    // £362.6m is converted to $469.2m and compared against a USD total.
+    //
+    // Where the pair is EUR, the USD conversion differs from the chart's: the
+    // coverage dataset applies one rate for the reference period while CDFD
+    // converts each transaction at its own date. Oxfam Novib is 124,905,528 EUR
+    // either way, $146.8m at 1.175 against $139.3m at CDFD's dated rates.
     iatiSpending:      c.iati_spending ?? null,
     iatiCurrency:      c.iati_currency ?? null,
     referenceValue:    c.reference_value ?? null,
