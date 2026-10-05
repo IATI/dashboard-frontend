@@ -294,6 +294,47 @@ function fmtUsd(value) {
   return `$${Math.round(value)}`
 }
 
+// The same shape as fmtUsd, with whatever currency the figure is actually in.
+// narrowSymbol so EUR reads "€124.9m" rather than "EUR 124.9m"; the code
+// itself is the fallback for a currency the runtime has no symbol for.
+function currencySymbol(code) {
+  try {
+    return new Intl.NumberFormat(locale.value, {
+      style: 'currency', currency: code, currencyDisplay: 'narrowSymbol',
+    }).formatToParts(0).find(part => part.type === 'currency')?.value ?? `${code} `
+  } catch { return `${code} ` }
+}
+
+function fmtMoney(value, currency) {
+  if (value == null) return '—'
+  if (!currency || currency === 'USD') return fmtUsd(value)
+  const symbol = currencySymbol(currency)
+  const units = [[1e12, 'tn'], [1e9, 'bn'], [1e6, 'm'], [1e3, 'k']]
+  for (const [size, suffix] of units) {
+    if (Math.abs(value) >= size) return `${symbol}${(value / size).toFixed(1)}${suffix}`
+  }
+  return `${symbol}${Math.round(value)}`
+}
+
+/**
+ * The coverage pair, in the currency the ratio was actually computed in.
+ *
+ * Shown natively only when both figures are there and in the same currency.
+ * Where they differ — IATI in USD against a GBP reference, say — two currencies
+ * side by side would not read as a comparison, so both fall back to the USD the
+ * dataset converted them to. reference_value is missing for some publishers,
+ * which is the other reason to fall back.
+ */
+const coveragePair = computed(() => {
+  const c = coverage.value
+  if (!c) return null
+  const native = c.iatiSpending != null && c.referenceValue != null
+    && c.iatiCurrency && c.iatiCurrency === c.referenceCurrency
+  return native
+    ? { iati: fmtMoney(c.iatiSpending, c.iatiCurrency), reference: fmtMoney(c.referenceValue, c.referenceCurrency) }
+    : { iati: fmtUsd(c.iatiSpendingUsd), reference: fmtUsd(c.referenceValueUsd) }
+})
+
 const coverageDetails = ref(false)
 
 const referencePeriodEndLabel = computed(() => {
@@ -1012,11 +1053,11 @@ const dimensions = computed(() =>
             <div class="coverage-meta__row">
               <div>
                 <dt>{{ t('orgCovIatiLabel') }}</dt>
-                <dd>{{ fmtUsd(coverage.iatiSpendingUsd) }}</dd>
+                <dd>{{ coveragePair.iati }}</dd>
               </div>
               <div>
                 <dt>{{ t('orgCovRefLabel') }}</dt>
-                <dd>{{ fmtUsd(coverage.referenceValueUsd) }}</dd>
+                <dd>{{ coveragePair.reference }}</dd>
               </div>
             </div>
           </dl>
