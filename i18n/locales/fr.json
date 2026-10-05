@@ -467,7 +467,7 @@
   "methodologyFocusOne": "Pour passer de « {from} » à « {to} », {name} est encouragée à se concentrer sur la dimension {dimensions}.",
   "methodologyFocusMany": "Pour passer de « {from} » à « {to} », {name} est encouragée à se concentrer sur les dimensions {dimensions}.",
   "methodologyTop": "{name} remplit les critères « Excellent » sur toutes les dimensions.",
-  "orgCompSource": "Les « champs de l’organisation » sont évalués à partir du fichier d’organisation. Les trois autres composantes sont évaluées à partir de ses fichiers d’activités.",
+  "orgCompSource": "Les « champs de l’organisation » sont évalués à partir de {org} ; les trois autres composantes à partir de {act}.",
   "orgCompSourceOrgFiles": "aucun fichier d’organisation | {n} fichier d’organisation | {n} fichiers d’organisation",
   "orgCompSourceActFiles": "aucun fichier d’activités | {n} fichier d’activités | {n} fichiers d’activités",
   "orgIndicatorHelp": "Ce que vérifie cet indicateur",
@@ -501,5 +501,5 @@
   "pubRefresh": "Actualiser",
   "pubRefreshing": "Actualisation…",
   "orgCovNoReferenceDetail": "La couverture compare les dépenses IATI de cette organisation à un chiffre de référence indépendant — un relevé officiel de bailleur, les statistiques financières d'une agence des Nations unies ou le dépôt auprès d'un organisme national de réglementation des associations. À défaut, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Aucun chiffre exploitable n'a été trouvé parmi ces sources. Publier un budget total dans le fichier d'organisation permettrait de calculer la couverture.",
-  "orgCompSourceCounts": "{name} a publié {org} et {act}."
+  "orgCompSourceNoOrgFile": "Aucun fichier d’organisation n’a été publié, les « champs de l’organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}."
 }

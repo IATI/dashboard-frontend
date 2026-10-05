@@ -119,14 +119,16 @@ const comprehensivenessSource = computed(() => {
   if (!st) return null
   const org = st.organisationFiles ?? 0
   const act = st.datasetCount ?? 0
-  return {
-    note: t('orgCompSource'),
-    counts: t('orgCompSourceCounts', {
-      name: orgName.value,
-      org: t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org),
-      act: t('orgCompSourceActFiles', { n: act.toLocaleString() }, act),
-    }),
+  const files = {
+    org: t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org),
+    act: t('orgCompSourceActFiles', { n: act.toLocaleString() }, act),
   }
+  // A quarter of publishers have no organisation file at all. "Assessed against
+  // no organisation file" is true but unhelpful: what they need to know is that
+  // the column reads zero because the file does not exist.
+  return org
+    ? t('orgCompSource', files)
+    : t('orgCompSourceNoOrgFile', files)
 })
 
 // Placeholder until the real wording is written. Keyed by indicator so each can
@@ -1124,8 +1126,7 @@ const dimensions = computed(() =>
         <!-- Under the grid rather than above it: it explains what has just been
              read, and at the top it pushed the four panels down the page. -->
         <p v-if="comprehensivenessSource" class="comp-source">
-          {{ comprehensivenessSource.note }}
-          {{ comprehensivenessSource.counts }}
+          {{ comprehensivenessSource }}
         </p>
       </Card>
 
