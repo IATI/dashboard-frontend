@@ -67,7 +67,7 @@ async function load() {
       labels: years,
       datasets: [
         {
-          label: 'Budget',
+          label: t('orgChartBudgetShort'),
           data: years.map(y => (byYear[y]?.['value_usd.sum_budget'] ?? 0) / 1e9),
           backgroundColor: C.budget,
           borderRadius: { topLeft: 3, topRight: 3 },
@@ -77,7 +77,10 @@ async function load() {
           barPercentage: 0.88,
         },
         {
-          label: 'Disbursement + Expenditure',
+          // Short in the legend, which has little room; the tooltip has space
+          // to say what "spending" is made of.
+          label: t('orgChartSpendingShort'),
+          tooltipLabel: t('orgChartSpendingLong'),
           data: years.map(y => (byYear[y]?.['value_usd.sum_3-4'] ?? 0) / 1e9),
           backgroundColor: C.spending,
           borderRadius: { topLeft: 3, topRight: 3 },
@@ -130,7 +133,14 @@ const chartOptions = {
       usePointStyle: true,
       titleFont: { family: FONT, weight: '700' },
       bodyFont: { family: FONT },
-      callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtBn(ctx.parsed.y)}` },
+      // fmtUsd, not fmtBn: the tooltip is read against the "IATI spending"
+      // figure in the page title, and the two disagreed — $16bn here against
+      // $16.2bn there. Note fmtUsd below already takes BILLIONS, which is the
+      // unit the datasets are in, so nothing is converted here. The axis keeps
+      // fmtBn, where a decimal on every tick is noise rather than precision.
+      callbacks: {
+        label: ctx => ` ${ctx.dataset.tooltipLabel ?? ctx.dataset.label}: ${fmtUsd(ctx.parsed.y)}`,
+      },
     },
   },
   scales: {
@@ -152,6 +162,8 @@ const chartOptions = {
 }
 
 // Values are held in billions for the chart; present them as currency here.
+// Takes BILLIONS, not dollars — the datasets are divided by 1e9 before they
+// reach the chart. Named the same as the page's own fmtUsd, which takes dollars.
 const fmtUsd = v => {
   const n = v * 1e9
   if (Math.abs(n) >= 1e9) return `$${(n / 1e9).toFixed(1)}bn`

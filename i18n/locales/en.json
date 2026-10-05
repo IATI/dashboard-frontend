@@ -510,5 +510,8 @@
   "orgDsHelpSize": "The total file size of this organisation’s data.",
   "orgDsHelpLabel": "What this means",
   "orgDsDuplicates": "{n} duplicate | {n} duplicate | {n} duplicates",
-  "orgDsHelpDuplicates": "Some activity identifiers are used more than once across this organisation’s files."
+  "orgDsHelpDuplicates": "Some activity identifiers are used more than once across this organisation’s files.",
+  "orgChartSpendingShort": "Spending",
+  "orgChartSpendingLong": "Spending (Disbursements + Expenditure)",
+  "orgChartBudgetShort": "Budgets"
 }

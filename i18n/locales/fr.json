@@ -511,5 +511,8 @@
   "orgDsHelpSize": "La taille totale des fichiers de cette organisation.",
   "orgDsHelpLabel": "Ce que cela signifie",
   "orgDsDuplicates": "{n} doublon | {n} doublon | {n} doublons",
-  "orgDsHelpDuplicates": "Certains identifiants d’activité sont utilisés plusieurs fois dans les fichiers de cette organisation."
+  "orgDsHelpDuplicates": "Certains identifiants d’activité sont utilisés plusieurs fois dans les fichiers de cette organisation.",
+  "orgChartSpendingShort": "Dépenses",
+  "orgChartSpendingLong": "Dépenses (décaissements + dépenses)",
+  "orgChartBudgetShort": "Budgets"
 }
