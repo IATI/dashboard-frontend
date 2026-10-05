@@ -439,20 +439,16 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 }
 
 // ─── Indicator row expansion ─────────────────────────────────────────────────
-// Note above the comprehensiveness grid saying which file each component is
-// read from. Plain text, because it explains the panel rather than scoring it.
+// Note under the comprehensiveness grid saying which file each component is
+// read from. Plain text and the full width of the panel, because it explains
+// what has just been read rather than scoring anything.
 .comp-source {
   margin: 0;
+  margin-top: 16px;
   font-size: .86rem;
   line-height: 1.5;
   color: var(--grey-70);
-  max-width: 78ch;
-
-  &__counts {
-    display: inline-block;
-    color: var(--grey-60);
-    font-variant-numeric: tabular-nums;
-  }
+  font-variant-numeric: tabular-nums;
 }
 
 // The indicator's name, with its explanation pushed to the right of the cell so

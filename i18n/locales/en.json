@@ -466,11 +466,9 @@
   "methodologyFocusOne": "To progress from “{from}” to “{to}”, {name} is encouraged to focus on the {dimensions} dimension.",
   "methodologyFocusMany": "To progress from “{from}” to “{to}”, {name} is encouraged to focus on the {dimensions} dimensions.",
   "methodologyTop": "{name} meets the criteria for “Excellent” across every dimension.",
-  "orgCompSource": "“Organisation fields” are assessed against this organisation’s organisation file. The other three are assessed against its activity files.",
-  "orgCompSourceOrgFiles": "{n} organisation file published | {n} organisation file published | {n} organisation files published",
-  "orgCompSourceNoOrgFile": "no organisation file published",
-  "orgCompSourceActFiles": "{n} activity file published | {n} activity file published | {n} activity files published",
-  "orgCompSourceNoActFile": "no activity file published",
+  "orgCompSource": "“Organisation fields” are assessed against the organisation file. The other three components are assessed against its activity files.",
+  "orgCompSourceOrgFiles": "no organisation file | {n} organisation file | {n} organisation files",
+  "orgCompSourceActFiles": "no activity file | {n} activity file | {n} activity files",
   "orgIndicatorHelp": "What this indicator checks",
   "orgIndicatorHelpTodo": "A plain-language explanation of this indicator will go here.",
   "ariaQuartersYear": "{year}: {n} of 4 quarters reported",
@@ -501,5 +499,6 @@
   "pubLoadedAt": "Loaded at {time} ·",
   "pubRefresh": "Refresh",
   "pubRefreshing": "Refreshing…",
-  "orgCovNoReferenceDetail": "Coverage compares this organisation's IATI spending against an independent reference figure — an official donor record, a UN agency's own finance statistics, or a national charity regulator's filing. Where none is found, the total budget it declares in its own IATI organisation file is used instead. No usable figure was found from any of these. Publishing a total budget in the organisation file would allow coverage to be calculated."
+  "orgCovNoReferenceDetail": "Coverage compares this organisation's IATI spending against an independent reference figure — an official donor record, a UN agency's own finance statistics, or a national charity regulator's filing. Where none is found, the total budget it declares in its own IATI organisation file is used instead. No usable figure was found from any of these. Publishing a total budget in the organisation file would allow coverage to be calculated.",
+  "orgCompSourceCounts": "{name} has published {org} and {act}."
 }

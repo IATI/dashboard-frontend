@@ -121,8 +121,11 @@ const comprehensivenessSource = computed(() => {
   const act = st.datasetCount ?? 0
   return {
     note: t('orgCompSource'),
-    orgFiles: org ? t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org) : t('orgCompSourceNoOrgFile'),
-    actFiles: act ? t('orgCompSourceActFiles', { n: act.toLocaleString() }, act) : t('orgCompSourceNoActFile'),
+    counts: t('orgCompSourceCounts', {
+      name: orgName.value,
+      org: t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org),
+      act: t('orgCompSourceActFiles', { n: act.toLocaleString() }, act),
+    }),
   }
 })
 
@@ -1007,12 +1010,6 @@ const dimensions = computed(() =>
         <template v-if="bandFor('comprehensiveness')" #kicker-actions>
           <DimensionBand :category="bandFor('comprehensiveness')" :tooltips="dimensionStarTooltips()" />
         </template>
-        <p v-if="comprehensivenessSource" class="comp-source">
-          {{ comprehensivenessSource.note }}
-          <span class="comp-source__counts">
-            {{ comprehensivenessSource.orgFiles }} · {{ comprehensivenessSource.actFiles }}
-          </span>
-        </p>
         <div class="comprehensiveness-grid mt-sm">
         <div v-for="group in indicatorGroups" :key="group.key" class="comprehensiveness-grid__panel">
           <div class="indicator-group-heading">
@@ -1124,6 +1121,12 @@ const dimensions = computed(() =>
           </div>
         </div>
         </div>
+        <!-- Under the grid rather than above it: it explains what has just been
+             read, and at the top it pushed the four panels down the page. -->
+        <p v-if="comprehensivenessSource" class="comp-source">
+          {{ comprehensivenessSource.note }}
+          {{ comprehensivenessSource.counts }}
+        </p>
       </Card>
 
       </div>
