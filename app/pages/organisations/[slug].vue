@@ -937,9 +937,11 @@ const dimensions = computed(() =>
             />
             <p class="measure__note measure__note--split">
               <span>
+                <!-- Same pair as the details box, in the currency the ratio
+                     was computed in; see coveragePair for when that is USD. -->
                 {{ t('orgCovOfReference', {
-                  spend: fmtUsd(coverage.iatiSpendingUsd),
-                  reference: fmtUsd(coverage.referenceValueUsd),
+                  spend: coveragePair.iati,
+                  reference: coveragePair.reference,
                 }) }}
                 <!-- The year the reference figure is for. 131 of 381 publishers
                      have none — every nl_charities one, plus a few UK/US
