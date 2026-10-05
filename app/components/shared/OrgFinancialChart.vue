@@ -20,6 +20,9 @@ const C = {
 const CDFD_BASE = 'https://data.countrydata.iatistandard.org/api'
 
 const now = new Date().getFullYear()
+// A seven-year window, three back and three forward. The empty-state message
+// says "no RECENT budget or spending data" because of this: an organisation
+// with older figures has published data, just none that falls in here.
 const years = Array.from({ length: 7 }, (_, i) => String(now - 3 + i))
 
 const { t } = useI18n({ useScope: 'global' })

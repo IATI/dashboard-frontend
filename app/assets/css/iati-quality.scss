@@ -320,15 +320,25 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
 // ─── Dataset facts ───────────────────────────────────────────────────────────
 .dataset-facts {
+  // auto 1fr: the term column is only as wide as the longest label, and the
+  // value column takes the rest. Grid stretches each dt to that column's width,
+  // which is what lets the marks line up at its right edge without the labels
+  // sprawling across the panel.
   display: grid; grid-template-columns: auto 1fr; gap: 0; margin: 6px 0 0; font-size: .85rem;
   dt {
     font-weight: 700; color: var(--grey-70); white-space: nowrap;
-    padding: 7px 16px 7px 0; border-top: 1px solid var(--grey-20);
+    // No padding on this side: the term column now runs most of the width, so a
+    // gap here breaks the rule between the two columns near the right edge.
+    padding: 7px 0; border-top: 1px solid var(--grey-20);
   }
   dd {
     margin: 0; text-align: right; color: var(--teal-90); font-weight: 700;
-    font-variant-numeric: tabular-nums; padding: 7px 0; border-top: 1px solid var(--grey-20);
+    font-variant-numeric: tabular-nums; padding: 7px 0 7px 18px;
+    border-top: 1px solid var(--grey-20);
+    white-space: nowrap;
   }
+  // Said beside the number it inflates, not as a figure in its own right
+  &__note { font-weight: 400; color: var(--red-60); font-size: .92em }
   dt:first-of-type, dt:first-of-type + dd { border-top: none }
 }
 
@@ -449,6 +459,18 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   line-height: 1.5;
   color: var(--grey-70);
   font-variant-numeric: tabular-nums;
+}
+
+// The term plus its explanation mark, kept on one line so the mark sits beside
+// the word rather than wrapping under it.
+// The mark sits at the right of the term column, lined up down the panel,
+// rather than trailing each label at a different x.
+.dataset-facts__term {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
 }
 
 // The indicator's name, with its explanation pushed to the right of the cell so

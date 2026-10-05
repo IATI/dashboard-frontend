@@ -350,6 +350,11 @@ function adaptTests(stats) {
 function adaptStats(stats, methodology) {
   return {
     activityCount:             stats.activities ?? null,
+    // Identifiers used by more than one activity, counted across ALL of this
+    // publisher's files. The Validator's own uniqueness rule (1.1.2) only looks
+    // within a single document, so a duplicate split across two files passes
+    // there and shows up only here.
+    duplicateIdentifiers:      Object.keys(stats.publisher_duplicate_identifiers ?? {}).length,
     datasetCount:              stats.activity_files ?? null,
     organisationFiles:         stats.organisation_files ?? null,
     transactionTotal:          stats.transaction_total ?? null,

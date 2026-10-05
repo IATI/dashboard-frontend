@@ -262,18 +262,25 @@ const datasetFacts = computed(() => {
   const levels = st.hierarchyLevels ?? []
   const rows = []
 
-  const add = (label, value) => { if (value) rows.push({ label, value }) }
-  add(t('orgDsActivities'),   st.activityCount?.toLocaleString())
-  add(t('orgDsTransactions'), st.transactionTotal?.toLocaleString())
-  add(t('orgDsFiles'),        st.datasetCount?.toLocaleString())
+  const add = (label, value, help, note) => { if (value) rows.push({ label, value, help, note }) }
+  // A duplicate identifier is worth saying beside the count it inflates.
+  const dupes = st.duplicateIdentifiers ?? 0
+  add(t('orgDsActivities'), st.activityCount?.toLocaleString(),
+    dupes ? `${t('orgDsHelpActivities')} ${t('orgDsHelpDuplicates')}` : t('orgDsHelpActivities'),
+    dupes ? t('orgDsDuplicates', { n: dupes.toLocaleString() }, dupes) : null)
+  add(t('orgDsTransactions'), st.transactionTotal?.toLocaleString(), t('orgDsHelpTransactions'))
+  add(t('orgDsFiles'),        st.datasetCount?.toLocaleString(),     t('orgDsHelpFiles'))
   add(t('orgDsHierarchy'),    levels.length
     ? (levels.length === 1 ? t('orgDsOneLevel') : t('orgDsLevels', { n: levels.length }))
-    : null)
+    : null, t('orgDsHelpHierarchy'))
+  // date_extremes spans activity date types 1-4 — planned and actual start and
+  // end — not transactions. AfDB runs 1967 to 2040, where 2040 is a planned end
+  // date and its most recent transaction is 2026.
   add(t('orgDsDateRange'), st.earliestDate && st.latestDate
     ? `${st.earliestDate.slice(0, 4)} – ${st.latestDate.slice(0, 4)}`
-    : null)
-  add(t('orgDsVersion'), st.versions?.join(', '))
-  add(t('orgDsSize'),    fmtBytes(st.fileSizeBytes))
+    : null, t('orgDsHelpDateRange'))
+  add(t('orgDsVersion'), st.versions?.join(', '), t('orgDsHelpVersion'))
+  add(t('orgDsSize'),    fmtBytes(st.fileSizeBytes), t('orgDsHelpSize'))
   return rows
 })
 
@@ -623,8 +630,24 @@ const dimensions = computed(() =>
           <Card :kicker="t('orgDatasetTitle')">
             <dl class="dataset-facts">
               <template v-for="fact in datasetFacts" :key="fact.label">
-                <dt>{{ fact.label }}</dt>
-                <dd>{{ fact.value }}</dd>
+                <dt>
+                  <span class="dataset-facts__term">
+                    {{ fact.label }}
+                    <BTooltip v-if="fact.help" :title="fact.help" placement="top" noninteractive>
+                      <template #target>
+                        <span
+                          class="indicator-cell__help"
+                          role="img"
+                          :aria-label="`${fact.label}: ${fact.help}`"
+                        >?</span>
+                      </template>
+                    </BTooltip>
+                  </span>
+                </dt>
+                <dd>
+                  {{ fact.value }}
+                  <span v-if="fact.note" class="dataset-facts__note">({{ fact.note }})</span>
+                </dd>
               </template>
             </dl>
           </Card>

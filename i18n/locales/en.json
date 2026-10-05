@@ -480,7 +480,7 @@
   "orgNoActivitiesLink": "Learn more about starting to publish",
   "orgChartLoading": "Loading financial data…",
   "orgChartError": "Could not load data: {error}",
-  "orgChartNoData": "No budget or spending data has been published for this organisation.",
+  "orgChartNoData": "No recent budget or spending data has been published for this organisation.",
   "orgChartNote": "This chart shows both budgets and spending for the previous three years, the current year, and the next three years.",
   "orgChartSource": "Source:",
   "orgChartAlt": "Bar chart of budget and spending by year, {from} to {to}. Budgets total {budget}; disbursements and expenditure total {spending}.",
@@ -500,5 +500,15 @@
   "pubRefresh": "Refresh",
   "pubRefreshing": "Refreshing…",
   "orgCovNoReferenceDetail": "Coverage compares this organisation's IATI spending against an independent reference figure — an official donor record, a UN agency's own finance statistics, or a national charity regulator's filing. Where none is found, the total budget it declares in its own IATI organisation file is used instead. No usable figure was found from any of these. Publishing a total budget in the organisation file would allow coverage to be calculated.",
-  "orgCompSourceNoOrgFile": "No organisation file has been published, so “Organisation fields” cannot be assessed. The other three components are assessed against {act}."
+  "orgCompSourceNoOrgFile": "No organisation file has been published, so “Organisation fields” cannot be assessed. The other three components are assessed against {act}.",
+  "orgDsHelpActivities": "Total number of activities published by this organisation.",
+  "orgDsHelpTransactions": "Total number of transactions published by this organisation.",
+  "orgDsHelpFiles": "Total number of files published by this organisation.",
+  "orgDsHelpHierarchy": "Whether this organisation uses a hierarchy of activities (for example projects and sub-components) in its publication. Most organisations do not.",
+  "orgDsHelpDateRange": "The earliest and latest activity dates in this organisation’s data — planned and actual start and end dates. These are not transaction dates, so the range can extend into the future.",
+  "orgDsHelpVersion": "The version or versions of the IATI Standard used by this organisation.",
+  "orgDsHelpSize": "The total file size of this organisation’s data.",
+  "orgDsHelpLabel": "What this means",
+  "orgDsDuplicates": "{n} duplicate | {n} duplicate | {n} duplicates",
+  "orgDsHelpDuplicates": "Some activity identifiers are used more than once across this organisation’s files."
 }

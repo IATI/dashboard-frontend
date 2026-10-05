@@ -481,7 +481,7 @@
   "orgNoActivitiesLink": "En savoir plus sur la publication de données",
   "orgChartLoading": "Chargement des données financières…",
   "orgChartError": "Impossible de charger les données : {error}",
-  "orgChartNoData": "Aucune donnée de budget ou de dépenses n'a été publiée pour cette organisation.",
+  "orgChartNoData": "Aucune donnée récente de budget ou de dépenses n’a été publiée pour cette organisation.",
   "orgChartNote": "Ce graphique montre les budgets et les dépenses des trois années précédentes, de l'année en cours et des trois années suivantes.",
   "orgChartSource": "Source :",
   "orgChartAlt": "Graphique à barres des budgets et dépenses par année, de {from} à {to}. Budgets au total {budget} ; décaissements et dépenses au total {spending}.",
@@ -501,5 +501,15 @@
   "pubRefresh": "Actualiser",
   "pubRefreshing": "Actualisation…",
   "orgCovNoReferenceDetail": "La couverture compare les dépenses IATI de cette organisation à un chiffre de référence indépendant — un relevé officiel de bailleur, les statistiques financières d'une agence des Nations unies ou le dépôt auprès d'un organisme national de réglementation des associations. À défaut, le budget total qu'elle déclare dans son propre fichier d'organisation IATI est utilisé. Aucun chiffre exploitable n'a été trouvé parmi ces sources. Publier un budget total dans le fichier d'organisation permettrait de calculer la couverture.",
-  "orgCompSourceNoOrgFile": "Aucun fichier d’organisation n’a été publié, les « champs de l’organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}."
+  "orgCompSourceNoOrgFile": "Aucun fichier d’organisation n’a été publié, les « champs de l’organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}.",
+  "orgDsHelpActivities": "Nombre total d’activités publiées par cette organisation.",
+  "orgDsHelpTransactions": "Nombre total de transactions publiées par cette organisation.",
+  "orgDsHelpFiles": "Nombre total de fichiers publiés par cette organisation.",
+  "orgDsHelpHierarchy": "Indique si cette organisation utilise une hiérarchie d’activités (par exemple projets et sous-composantes). La plupart des organisations ne le font pas.",
+  "orgDsHelpDateRange": "Les dates d’activité les plus anciennes et les plus récentes — dates de début et de fin, prévues et réelles. Ce ne sont pas des dates de transaction, la période peut donc s’étendre dans le futur.",
+  "orgDsHelpVersion": "La ou les versions du Standard IATI utilisées par cette organisation.",
+  "orgDsHelpSize": "La taille totale des fichiers de cette organisation.",
+  "orgDsHelpLabel": "Ce que cela signifie",
+  "orgDsDuplicates": "{n} doublon | {n} doublon | {n} doublons",
+  "orgDsHelpDuplicates": "Certains identifiants d’activité sont utilisés plusieurs fois dans les fichiers de cette organisation."
 }
