@@ -506,7 +506,7 @@
   "orgDsHelpTransactions": "Nombre total de transactions publiées par cette organisation.",
   "orgDsHelpFiles": "Nombre total de fichiers publiés par cette organisation.",
   "orgDsHelpHierarchy": "Indique si cette organisation utilise une hiérarchie d’activités (par exemple projets et sous-composantes). La plupart des organisations ne le font pas.",
-  "orgDsHelpDateRange": "Les dates d’activité les plus anciennes et les plus récentes — dates de début et de fin, prévues et réelles. Ce ne sont pas des dates de transaction, la période peut donc s’étendre dans le futur.",
+  "orgDsHelpDateRange": "Les dates d’activité les plus anciennes et les plus récentes dans les données de cette organisation — dates de début et de fin, prévues et réelles.",
   "orgDsHelpVersion": "La ou les versions du Standard IATI utilisées par cette organisation.",
   "orgDsHelpSize": "La taille totale des fichiers de cette organisation.",
   "orgDsHelpLabel": "Ce que cela signifie",
