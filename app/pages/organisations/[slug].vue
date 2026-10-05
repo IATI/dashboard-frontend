@@ -382,8 +382,11 @@ const PANEL_DIMENSIONS = new Set(DIMENSION_ORDER)
 
 // API ids are snake_case; i18n keys are the same id camel-cased behind a prefix,
 // e.g. ('sub', 'passes_validation') -> 'subPassesValidation'
+// Returns null rather than throwing on a missing id: these ids come from the
+// API, and a null one used to take the whole page down with it. `t(null)`
+// renders nothing, so a missing label degrades to a blank cell.
 const labelKey = (prefix, id) =>
-  prefix + id.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase())
+  (id ? prefix + id.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase()) : null)
 
 // Counts whose number means nothing on its own. Disaggregation is quarters per
 // year, so "1.6" alone reads as a score out of something unstated.
@@ -947,7 +950,13 @@ const dimensions = computed(() =>
               {{ t('orgCovClose') }}
             </button>
           </template>
-          <dl class="coverage-meta">
+          <!-- Every field here comes from the reference figure, so without one
+               they are all null — and labelKey on a null source threw, taking
+               the whole page down for the ~505 publishers in that state. -->
+          <p v-if="!coverage.hasReference" class="coverage-note">
+            {{ t('orgCovNoReference') }}
+          </p>
+          <dl v-else class="coverage-meta">
             <div class="coverage-meta__entity">
               <dt>{{ t('orgCovEntity') }}</dt>
               <dd>{{ coverage.referenceEntity }}</dd>
