@@ -339,7 +339,11 @@ function adaptTests(stats) {
     }
   }
 
-  return rows.sort((a, b) => a.groupId.localeCompare(b.groupId) || a.name.localeCompare(b.name))
+  // Grouped, but the API's own order is kept inside each group: sorting by name
+  // put the organisation budget's checks in the order one / three / two, because
+  // that is alphabetical. Array.prototype.sort is stable, so comparing only the
+  // group id leaves the checks as the API listed them.
+  return rows.sort((a, b) => a.groupId.localeCompare(b.groupId))
 }
 
 /** The parts of `stats` we actually use, renamed and typed consistently. */

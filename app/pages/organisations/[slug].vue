@@ -110,6 +110,28 @@ const tests = computed(() => stats.value?.tests ?? [])
 const testsSortBy = ref([{ key: 'value', order: 'desc' }])
 const expandedIndicators = ref([])
 
+// Which files each comprehensiveness component is read from, with this
+// organisation's counts. Asked for because the components do not say: the
+// organisation fields come from a different file than the other three, and
+// "Reporting organisation" exists in both, so the heading alone is ambiguous.
+const comprehensivenessSource = computed(() => {
+  const st = stats.value
+  if (!st) return null
+  const org = st.organisationFiles ?? 0
+  const act = st.datasetCount ?? 0
+  return {
+    note: t('orgCompSource'),
+    orgFiles: org ? t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org) : t('orgCompSourceNoOrgFile'),
+    actFiles: act ? t('orgCompSourceActFiles', { n: act.toLocaleString() }, act) : t('orgCompSourceNoActFile'),
+  }
+})
+
+// Placeholder until the real wording is written. Keyed by indicator so each can
+// be replaced one at a time: add an entry and it is used instead.
+// TODO: replace with plain-language text per indicator.
+const INDICATOR_HELP = {}
+const indicatorHelp = id => INDICATOR_HELP[id] ?? t('orgIndicatorHelpTodo')
+
 const INDICATOR_FIELDS = computed(() => [
   // Not empty: an unnamed column header reads as blank when navigating a table
   { key: 'expand',    label: t('orgColExpand'),    thStyle: { width: '34px' } },
@@ -985,6 +1007,12 @@ const dimensions = computed(() =>
         <template v-if="bandFor('comprehensiveness')" #kicker-actions>
           <DimensionBand :category="bandFor('comprehensiveness')" :tooltips="dimensionStarTooltips()" />
         </template>
+        <p v-if="comprehensivenessSource" class="comp-source">
+          {{ comprehensivenessSource.note }}
+          <span class="comp-source__counts">
+            {{ comprehensivenessSource.orgFiles }} · {{ comprehensivenessSource.actFiles }}
+          </span>
+        </p>
         <div class="comprehensiveness-grid mt-sm">
         <div v-for="group in indicatorGroups" :key="group.key" class="comprehensiveness-grid__panel">
           <div class="indicator-group-heading">
@@ -1014,15 +1042,31 @@ const dimensions = computed(() =>
                 <span class="visually-hidden">{{ label }}</span>
               </template>
               <template #cell(expand)="{ toggleExpansion, expansionShowing }">
+                <!-- A drawn chevron that turns, rather than the ▸ character:
+                     the glyph read as decoration and nothing suggested the row
+                     opened. Same reasoning as the stars. -->
                 <button
                   type="button" class="expander"
+                  :class="{ 'expander--open': expansionShowing }"
                   :aria-expanded="expansionShowing"
                   :aria-label="t('orgShowTests')"
                   @click="toggleExpansion()"
-                >{{ expansionShowing ? '▾' : '▸' }}</button>
+                >
+                  <svg class="expander__chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path d="M5.3 3.3a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 1 1-1.4-1.4L8.6 8 5.3 4.7a1 1 0 0 1 0-1.4z"/>
+                  </svg>
+                </button>
               </template>
               <template #cell(indicator)="{ item }">
-                <span class="org">{{ item.indicator }}</span>
+                <span class="indicator-cell">
+                  <span class="org">{{ item.indicator }}</span>
+                  <!-- Right-aligned so the names stay scannable down the column -->
+                  <BTooltip :title="indicatorHelp(item.id)" placement="top" noninteractive>
+                    <template #target>
+                      <span class="indicator-cell__help" :aria-label="t('orgIndicatorHelp')" role="img">?</span>
+                    </template>
+                  </BTooltip>
+                </span>
               </template>
               <template #cell(value)="{ item }">
                 <div v-if="item.value === null" class="check-score">

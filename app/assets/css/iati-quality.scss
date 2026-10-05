@@ -439,9 +439,61 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 }
 
 // ─── Indicator row expansion ─────────────────────────────────────────────────
+// Note above the comprehensiveness grid saying which file each component is
+// read from. Plain text, because it explains the panel rather than scoring it.
+.comp-source {
+  margin: 0;
+  font-size: .86rem;
+  line-height: 1.5;
+  color: var(--grey-70);
+  max-width: 78ch;
+
+  &__counts {
+    display: inline-block;
+    color: var(--grey-60);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// The indicator's name, with its explanation pushed to the right of the cell so
+// the names stay scannable down the column.
+.indicator-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  &__help {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--grey-30);
+    color: var(--grey-60);
+    font-size: .7rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: help;
+  }
+}
+
 .expander {
   background: none; border: none; cursor: pointer; padding: 0 4px;
   color: var(--teal-80); font-size: .9rem; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+
+  // Turns to point down when the row is open, so the control says what it does
+  &__chevron {
+    width: 13px; height: 13px; fill: currentColor; display: block;
+    transition: transform .18s ease;
+    @media (prefers-reduced-motion: reduce) { transition: none }
+  }
+  &--open &__chevron { transform: rotate(90deg) }
+
+  &:hover, &:focus-visible { color: var(--teal-90) }
   &__count { display: block; color: var(--grey-60); font-weight: 400; font-size: .7rem; margin-top: 2px }
 }
 
