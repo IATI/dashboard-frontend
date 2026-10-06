@@ -66,19 +66,33 @@ const starStyle = n => ({ '--star-index': n - 1 })
    Firefox's came out noticeably smaller than Chrome's. An SVG is the same
    everywhere, takes its colour from the span through currentColor, and still
    scales with the font-size the size modifiers set. */
+/* green-70, not green-50: where a star group is the only thing carrying the
+   band — the metric rows inside the summary cards — it is a meaningful graphic,
+   and WCAG 1.4.11 wants 3:1 against the white behind it. green-50 is 2.25:1,
+   green-70 is 3.96:1 and the nearest rung that clears it. */
 .stars__star {
   color: var(--grey-20);
   cursor: default;
   transition: color .15s ease;
   display: inline-flex;
 }
+.stars__star--lit { color: var(--color-green-70) }
+
 .stars__glyph {
   width: 1em;
   height: 1em;
   fill: currentColor;
   display: block;
 }
-.stars__star--lit { color: var(--green-50) }
+
+/* An unearned star keeps its pale fill but gains an outline: at 1.4:1 the fill
+   alone is close to invisible, and on a nought-star band there would be nothing
+   perceivable at all. The outline is grey-50, 3.74:1, so the shape reads while
+   still looking empty rather than filled. */
+.stars__star:not(.stars__star--lit) .stars__glyph {
+  stroke: var(--color-grey-50);
+  stroke-width: 1;
+}
 .stars--md { font-size: 1rem }
 .stars--lg { font-size: 1.6rem; gap: 3px }
 .stars--xl { font-size: 2.6rem; gap: 5px }
@@ -86,7 +100,7 @@ const starStyle = n => ({ '--star-index': n - 1 })
 /* Hovering a star previews it in green — including unearned ones, which shows
    what the band would look like once its threshold is met. */
 .stars__star--help:hover {
-  color: var(--green-50);
+  color: var(--color-green-70);
   animation: star-pulse 1.1s ease-in-out infinite;
 }
 
