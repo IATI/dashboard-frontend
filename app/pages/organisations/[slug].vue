@@ -1100,7 +1100,7 @@ const dimensions = computed(() =>
         </BModal>
 
       </Card>
-      <!-- Activity checks, straight from stats.gherkin_tests_current -->
+      <!-- Activity checks, straight from stats.gherkin_tests -->
       <Card v-if="tests.length" :class="['mt', cardTone('comprehensiveness')]" :kicker="t('dimComprehensiveness')" :id="`dimension-comprehensiveness`" tabindex="-1">
         <template v-if="bandFor('comprehensiveness')" #kicker-actions>
           <DimensionBand :category="bandFor('comprehensiveness')" :tooltips="dimensionStarTooltips()" />

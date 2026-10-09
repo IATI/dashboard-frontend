@@ -301,7 +301,11 @@ function adaptIdentity(raw) {
 }
 
 /**
- * The Gherkin checks, from stats.gherkin_tests_current.
+ * The Gherkin checks, from stats.gherkin_tests.
+ *
+ * Was gherkin_tests_current, which the API no longer returns. Two other
+ * variants sit beside this one — gherkin_tests_hierarchy_exclusions and
+ * gherkin_tests_rm_current_step — which we do not use.
  *
  * Shape is { "<group id>": { "<Test name>": { None, True, False } } }, where the
  * group id's leading section number is the methodology component it belongs to:
@@ -311,6 +315,10 @@ function adaptIdentity(raw) {
  * `None` counts activities the check does not apply to, so the denominator is
  * True + False — scoring against the full activity count would penalise a
  * publisher for checks that were never relevant to its data.
+ *
+ * Note the denominators are still every activity rather than the current ones:
+ * AfDB has 5,366 activities and 1,220 current, and the widest check counts
+ * 5,366. Whatever "current" means upstream, it is not yet applied here.
  */
 const COMPONENT_BY_SECTION = {
   1: 'organisation_fields',
@@ -326,7 +334,7 @@ function humaniseGroupId(groupId) {
 }
 
 function adaptTests(stats) {
-  const groups = stats.gherkin_tests_current ?? {}
+  const groups = stats.gherkin_tests ?? {}
   const rows = []
 
   for (const [groupId, tests] of Object.entries(groups)) {
