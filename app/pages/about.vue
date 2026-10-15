@@ -113,6 +113,8 @@ const indicatorGroups = computed(() => FRAMEWORK_INDICATORS.map(group => ({
 })))
 
 const FRAMEWORK_URL = 'https://iatistandard.org/en/news/reimagining-data-quality-consultation/'
+// Where the consultation happens: one issue per indicator and per component.
+const FEEDBACK_URL = 'https://github.com/IATI/dashboard-feedback/issues'
 const TESTS_URL = 'https://github.com/IATI/dashboard-tests'
 const VALIDATOR_URL = 'https://validator.iatistandard.org/'
 </script>
@@ -132,9 +134,13 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
       <BAlert :model-value="true" variant="warning" class="about-draft">
         <h2 class="about-draft__title">{{ t('aboutDraftTitle') }}</h2>
         <p>{{ t('aboutDraftBody') }}</p>
-        <p class="mb-0">
+        <p>
           {{ t('aboutDraftFeedback') }}
           <a :href="`mailto:${SUPPORT_EMAIL}`">{{ t('aboutDraftContact', { email: SUPPORT_EMAIL }) }}</a>
+        </p>
+        <p class="mb-0">
+          {{ t('aboutDraftGithub') }}
+          <a :href="FEEDBACK_URL">{{ t('aboutDraftGithubLink') }}</a>
         </p>
       </BAlert>
 
