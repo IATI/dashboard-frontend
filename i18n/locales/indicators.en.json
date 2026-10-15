@@ -62,7 +62,7 @@
   "componentHelp": {
     "downloadable": "Every registered file could be downloaded from the organisation's server.",
     "no_critical_errors": "The files are valid against the IATI schema. Files that are not valid are not available in the IATI Datastore.",
-    "no_errors": "The IATI Validator reports no errors.",
+    "no_errors": "The IATI Validator reports no errors. IATI Validator errors are (in most cases) fairly basic structural issues.",
     "frequency": "How often the organisation updates its files.",
     "timeliness": "How far behind the present the published data is.",
     "coverage": "Published spending as a share of an independent reference figure for the same period.",

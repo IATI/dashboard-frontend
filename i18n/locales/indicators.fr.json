@@ -44,7 +44,7 @@
   "componentHelp": {
     "downloadable": "Chaque fichier déclaré a pu être téléchargé depuis le serveur de l'organisation.",
     "no_critical_errors": "Les fichiers sont valides au regard du schéma IATI. Les fichiers non valides ne sont pas disponibles dans le Datastore IATI.",
-    "no_errors": "Le validateur IATI ne signale aucune erreur.",
+    "no_errors": "Le validateur IATI ne signale aucune erreur. Les erreurs du validateur IATI correspondent, dans la plupart des cas, à des problèmes structurels assez élémentaires.",
     "frequency": "À quelle fréquence l'organisation met à jour ses fichiers.",
     "timeliness": "Le retard des données publiées par rapport à la période en cours.",
     "coverage": "Les dépenses publiées en part d'un chiffre de référence indépendant portant sur la même période.",
