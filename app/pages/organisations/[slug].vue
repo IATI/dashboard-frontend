@@ -131,11 +131,10 @@ const comprehensivenessSource = computed(() => {
     : t('orgCompSourceNoOrgFile', files)
 })
 
-// Placeholder until the real wording is written. Keyed by indicator so each can
-// be replaced one at a time: add an entry and it is used instead.
-// TODO: replace with plain-language text per indicator.
-const INDICATOR_HELP = {}
-const indicatorHelp = id => INDICATOR_HELP[id] ?? t('orgIndicatorHelpTodo')
+// What each indicator measures, from i18n/locales/indicators.<lang>.json —
+// the same text the table on /about shows. Keyed on the stable group id rather
+// than the displayed name.
+const { indicatorHelp, indicatorName } = useIndicatorHelp()
 
 const INDICATOR_FIELDS = computed(() => [
   // Not empty: an unnamed column header reads as blank when navigating a table
@@ -446,9 +445,6 @@ const PANEL_DIMENSIONS = new Set(DIMENSION_ORDER)
 // Returns null rather than throwing on a missing id: these ids come from the
 // API, and a null one used to take the whole page down with it. `t(null)`
 // renders nothing, so a missing label degrades to a blank cell.
-const labelKey = (prefix, id) =>
-  (id ? prefix + id.replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase()) : null)
-
 // Counts whose number means nothing on its own. Disaggregation is quarters per
 // year, so "1.6" alone reads as a score out of something unstated.
 const COMPONENT_UNIT = { disaggregation: 'unitQuarters' }
@@ -664,7 +660,10 @@ const dimensions = computed(() =>
         <!-- Flat on the page rather than in a card: it explains the band above
              it, and boxing it would make it look like another finding. -->
         <div v-if="!loading" class="methodology-note">
-          <p>{{ t('methodologyNote') }}</p>
+          <p>
+            {{ t('methodologyNote') }}
+            <NuxtLink to="/about">{{ t('methodologyLink') }}</NuxtLink>
+          </p>
           <p v-if="methodologyFocus" class="methodology-note__focus">{{ methodologyFocus }}</p>
         </div>
 
@@ -1151,11 +1150,20 @@ const dimensions = computed(() =>
               </template>
               <template #cell(indicator)="{ item }">
                 <span class="indicator-cell">
-                  <span class="org">{{ item.indicator }}</span>
+                  <!-- The curated name where there is one; the API's humanised
+                       group id is the fallback for an indicator added upstream
+                       before it has been named here. -->
+                  <span class="org">{{ indicatorName(item.groupId) ?? item.indicator }}</span>
                   <!-- Right-aligned so the names stay scannable down the column -->
-                  <BTooltip :title="indicatorHelp(item.id)" placement="top" noninteractive>
+                  <BTooltip
+                    v-if="indicatorHelp(item.groupId)"
+                    :title="indicatorHelp(item.groupId)" placement="top" noninteractive
+                  >
                     <template #target>
-                      <span class="indicator-cell__help" :aria-label="t('orgIndicatorHelp')" role="img">?</span>
+                      <span
+                        class="indicator-cell__help" role="img"
+                        :aria-label="t('orgIndicatorHelpFor', { name: item.indicator })"
+                      >?</span>
                     </template>
                   </BTooltip>
                 </span>

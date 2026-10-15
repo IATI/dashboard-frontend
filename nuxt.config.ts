@@ -1,6 +1,11 @@
 export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n'],
   i18n: {
+    // The indicator descriptions live beside these, in
+    // i18n/locales/indicators.<lang>.json, but are NOT registered here —
+    // useIndicatorHelp imports them directly. They describe the IATI Standard
+    // and so contain element names like reporting-org/@ref, which vue-i18n's
+    // message compiler rejects as malformed linked messages.
     locales: [
       { code: 'en', language: 'en-GB', file: 'en.json', name: 'English' },
       { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Français' },

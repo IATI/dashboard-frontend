@@ -461,7 +461,16 @@ export function groupTestsByIndicator(tests = []) {
   for (const test of tests) {
     const key = test.group ?? test.name
     if (!rows.has(key)) {
-      rows.set(key, { id: key, indicator: key, component: test.component, tests: [] })
+      // groupId as well as the display name: the name is humanised from the id
+      // and gets reworded, so anything keyed on an indicator — its description,
+      // for one — needs the id that does not move.
+      rows.set(key, {
+        id: key,
+        groupId: test.groupId ?? null,
+        indicator: key,
+        component: test.component,
+        tests: [],
+      })
     }
     rows.get(key).tests.push(test)
   }
