@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
   category: { type: String, default: null },
-  size:     { type: String, default: 'md' },   // 'md' | 'lg' | 'xl'
+  size:     { type: String, default: 'md' },   // 'sm' | 'md' | 'lg' | 'xl'
   // Optional per-star hover text, lowest band first: [1 star, 2 stars, 3 stars]
   tooltips: { type: Array, default: () => [] },
   // Set where the band is already written out next to the stars, so a screen
@@ -93,6 +93,9 @@ const starStyle = n => ({ '--star-index': n - 1 })
   stroke: var(--color-grey-50);
   stroke-width: 1;
 }
+/* sm: inside a table cell or a header, where the stars label a column rather
+   than report a score */
+.stars--sm { font-size: .8rem; gap: 1px }
 .stars--md { font-size: 1rem }
 .stars--lg { font-size: 1.6rem; gap: 3px }
 .stars--xl { font-size: 2.6rem; gap: 5px }

@@ -175,7 +175,10 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   &__header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 20px; background: var(--teal-90); border-radius: 4px 4px 0 0;
-    h3 { margin: 0; color: #fff }
+    // h2 as well as h3: Card renders the title as an h2, so for a long time the
+    // white here applied to a tag the component never emits, leaving a
+    // near-black heading on the teal bar.
+    h2, h3 { margin: 0; color: #fff }
     a  { color: rgba(255,255,255,.75); font-size: .82rem; text-decoration: none }
   }
 
@@ -1148,3 +1151,174 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   thead { display: table-header-group }
   tr { break-inside: avoid; page-break-inside: avoid }
 }
+
+// ─── About ────────────────────────────────────────────────────────────────────
+// The methodology page. Mostly tables, because what a reader has come for is
+// the thresholds and the indicator descriptions rather than the prose.
+
+.about-lead {
+  max-width: 68ch;
+  margin: 0 0 20px;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--grey-70);
+}
+
+.about-draft {
+  margin-bottom: 0;   // the alert qualifies the lead above it
+
+  &__title {
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 0 0 6px;
+  }
+
+  p + p { margin-top: 8px }
+}
+
+// Running text here is read, not scanned, so it is held to a comfortable
+// measure even where the card around it is wider.
+.about-prose {
+  max-width: 72ch;
+  color: var(--grey-70);
+  line-height: 1.6;
+
+  p { margin: 0 0 10px }
+  p:last-child { margin-bottom: 0 }
+}
+
+.about-dimensions {
+  display: grid;
+  gap: 32px;
+  margin-top: 20px;
+}
+
+.about-dimension {
+  // A grid item defaults to min-width: auto, so it refuses to shrink below the
+  // min-content width of the table inside it. The table scrolls on its own, but
+  // without this the section pushes the whole page sideways on a phone.
+  min-width: 0;
+
+  &__title {
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--teal-90);
+    margin: 0 0 4px;
+  }
+
+  &__why {
+    max-width: 72ch;
+    margin: 0 0 12px;
+    font-size: .92rem;
+    line-height: 1.55;
+    color: var(--grey-70);
+  }
+}
+
+// These sit INSIDE .iati-table, so the design system supplies the borders,
+// padding, font size and the mint header row — the same treatment as every
+// other table on the site. What follows only adjusts what that leaves wrong
+// for tables of sentences rather than figures, and has to be scoped the same
+// way the design system scopes its own rules to match their specificity.
+.iati-design-system--enabled .about-table {
+  // Prose, not a data grid: 20ch per column forces a scroll at any width, and
+  // the cells have to be allowed to wrap.
+  th, td {
+    min-width: 0;
+    white-space: normal;
+    vertical-align: top;
+  }
+
+  // Row headers are the indicator and component names. The design system's th
+  // is a mint, uppercase header cell, which is right at the top of a table and
+  // wrong down the side of one.
+  tbody th {
+    background-color: #fff;
+    text-transform: none;
+    font-weight: 600;
+    color: var(--teal-90);
+  }
+
+  td { line-height: 1.5 }
+
+  // Threshold columns: as narrow as their contents, centred under the stars.
+  &__band {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead &__band { text-align: center }
+
+  // The band name reads above its stars.
+  &__band-name {
+    display: block;
+    font-size: .72rem;
+    margin-bottom: 3px;
+  }
+
+  // A band that asks nothing of a component. Marked rather than left blank so
+  // the cell does not read as an omission; the word is in the accessibility
+  // tree beside it.
+  &__blank::before {
+    content: "–";
+    color: var(--grey-60);
+  }
+
+  &__number {
+    width: 1%;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--grey-60);
+    text-transform: none;
+  }
+
+  &__note { font-size: .92em }
+
+  &--ratings tbody th {
+    white-space: nowrap;
+
+    .about-table__rating {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+
+  &__group-name {
+    display: block;
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--teal-90);
+  }
+
+  &__group-help {
+    display: block;
+    max-width: 90ch;
+    margin-top: 3px;
+    font-weight: 400;
+    text-transform: none;
+    line-height: 1.45;
+    color: var(--grey-90);
+  }
+}
+
+// The component heading inside the indicator table: a paler wash of the header
+// row's mint, so it reads as a level below the column headings rather than a
+// repeat of them. Spelled out rather than nested, because `tbody th` above is
+// one element more specific than a nested `&__group th` would be and was
+// painting this white like any other row header.
+.iati-design-system--enabled .about-table tbody tr.about-table__group th {
+  background-color: rgba(117, 223, 199, .3);
+  text-transform: none;
+  border-top: 2px solid #5c97a9;
+}
+
+// Tables follow their introduction directly, and .iati-table carries no margin
+// of its own.
+.about-table { margin-top: 16px }
+.about-dimension .about-table { margin-top: 0 }

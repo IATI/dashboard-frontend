@@ -13,9 +13,14 @@
  */
 const STORAGE_KEY = 'iati-dq-full'
 
-/** Pages a publisher is sent to. Everything else needs the flag. */
+/**
+ * Pages a publisher is sent to. Everything else needs the flag.
+ *
+ * /about is in the preview because the consultation email points publishers at
+ * the methodology, and an organisation's page links to it.
+ */
 export function isPreviewPath(path) {
-  return path === '/organisations' || path.startsWith('/organisations/')
+  return path === '/about' || path === '/organisations' || path.startsWith('/organisations/')
 }
 
 export function usePreviewScope() {

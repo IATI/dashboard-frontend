@@ -20,6 +20,7 @@ const ALL_NAV = [
   { key: 'country',   to: '/countries/KE',  labelKey: 'navCountry' },
   { key: 'org',       to: '/organisations', labelKey: 'navOrganisations' },
   { key: 'exploring', to: '/exploring-data', labelKey: 'navExploring' },
+  { key: 'about',     to: '/about',          labelKey: 'navAbout' },
 ]
 
 const navItems = computed(() =>
@@ -116,7 +117,6 @@ const menuOpen = ref(false)
                 v-for="item in navItems" :key="item.key"
                 :to="item.to" :active="active === item.key"
               >{{ item.label }}</BNavItem>
-              <BNavItem v-if="fullSite" href="#">{{ t('navAbout') }}</BNavItem>
             </BNavbarNav>
           </BCollapse>
         </BNavbar>
@@ -128,7 +128,6 @@ const menuOpen = ref(false)
                   {{ item.label }}
                 </NuxtLink>
               </li>
-              <li v-if="fullSite"><a class="iati-tool-nav-link" href="#">{{ t('navAbout') }}</a></li>
             </ul>
           </nav>
         </div>
