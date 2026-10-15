@@ -73,10 +73,6 @@ const menuOpen = ref(false)
               <option value="fr">Français</option>
             </select>
           </div>
-          <a href="#" class="iati-button iati-button--light hide--mobile-nav">
-            <span>{{ t('navHelp') }}</span>
-            <i class="iati-icon iati-icon--info"></i>
-          </a>
           <ClientOnly>
             <button
               v-if="isSignedIn" type="button" class="iati-button iati-button--light"
