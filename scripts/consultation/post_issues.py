@@ -71,24 +71,32 @@ def main():
     if not files:
         sys.exit('no matching issue files')
 
-    if not args.post:
-        print(f'DRY RUN — {len(files)} issues would be posted to {REPO}\n')
-
-    existing = set()
+    # Read first, in both modes: a dry run that cannot say what already exists
+    # cannot answer the only question worth asking before a re-run.
+    rows = json.loads(gh('issue', 'list', '--repo', REPO, '--state', 'all',
+                         '--limit', '1000', '--json', 'title'))
+    existing = {r['title'] for r in rows}
+    known, unavailable = set(), set()
     if args.post:
-        rows = json.loads(gh('issue', 'list', '--repo', REPO, '--state', 'all',
-                             '--limit', '1000', '--json', 'title'))
-        existing = {r['title'] for r in rows}
         known = {l['name'] for l in json.loads(
             gh('label', 'list', '--repo', REPO, '--limit', '200', '--json', 'name'))}
-        unavailable = set()
+
+    if not args.post:
+        todo = sum(1 for f in files if parse(f)[0] not in existing)
+        print(f'DRY RUN — {REPO} already has {len(existing)} issue(s); '
+              f'{todo} of these {len(files)} would be created\n')
 
     posted = skipped = 0
     for path in files:
         title, labels, body = parse(path)
         if not args.post:
-            print(f'  {title}')
-            print(f'      labels: {", ".join(labels) or "none"}   ({len(body)} chars, {path.name})')
+            if title in existing:
+                print(f'  SKIP (exists)  {title}')
+                skipped += 1
+            else:
+                print(f'  would create   {title}')
+                print(f'                 labels: {", ".join(labels) or "none"}'
+                      f'   ({len(body)} chars, {path.name})')
             continue
         if title in existing:
             print(f'  skipped, already exists: {title}')
@@ -116,7 +124,8 @@ def main():
     if args.post:
         print(f'\n{posted} created, {skipped} already existed')
     else:
-        print(f'\nNothing posted. Re-run with --post to create these {len(files)} issues.')
+        print(f'\nNothing posted. {skipped} already exist and would be skipped; '
+              f'{len(files) - skipped} would be created. Re-run with --post to do it.')
 
 
 if __name__ == '__main__':

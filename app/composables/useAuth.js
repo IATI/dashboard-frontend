@@ -92,7 +92,14 @@ export function useAuth() {
       error.value = e?.message ?? 'Sign-in failed'
     }
 
-    if (returning) restoreReturnPath()
+    // Awaited, not fire-and-forget. The app lands back on the root, which is a
+    // cross-publisher page that most accounts may not open. Setting `ready`
+    // while that navigation was still in flight let the gate evaluate the root
+    // for a signed-in publisher and refuse it — "this page is not available to
+    // your account" — before the redirect to their own page landed. Transient,
+    // timing-dependent, and gone on a refresh, which is exactly how it was
+    // reported.
+    if (returning) await restoreReturnPath()
 
     try {
       if (await client.isAuthenticated()) {
@@ -115,8 +122,11 @@ export function useAuth() {
    * and the route middleware stood aside during the redirect so it will not
    * move them on by itself. Without this a blocked sessionStorage would leave
    * someone signed in but looking at a page they are not allowed to see.
+   *
+   * Resolves once the route has actually changed, so the caller can finish
+   * establishing the session only after the user is off the landing route.
    */
-  function restoreReturnPath() {
+  async function restoreReturnPath() {
     let path = null
     try {
       path = sessionStorage.getItem(RETURN_KEY)
@@ -124,9 +134,15 @@ export function useAuth() {
     } catch { /* blocked storage — the fallback below applies */ }
 
     const target = isSafeReturnPath(path) ? path : '/organisations'
-    if (target !== router.currentRoute.value.fullPath) {
+    if (target === router.currentRoute.value.fullPath) return
+
+    try {
       // replace, not push: the redirect should not leave a back-button trap.
-      router.replace(target)
+      await router.replace(target)
+    } catch (e) {
+      // A failed navigation must not strand the caller: it sets `ready` after
+      // this, and without it the gate would say "checking your access" forever.
+      error.value = e?.message ?? 'Could not return to the page you signed in from'
     }
   }
 
