@@ -137,6 +137,15 @@ const comprehensivenessSource = computed(() => {
 // than the displayed name.
 const { indicatorHelp, indicatorName } = useIndicatorHelp()
 
+/**
+ * The hierarchy level an indicator is not assessed at for this publisher, or
+ * null. Agreed per publisher, so the figures below it are not measured against
+ * the activities at that level — said in the expanded row, where the figures
+ * it qualifies are.
+ */
+const hierarchyExclusion = groupId =>
+  (groupId ? stats.value?.hierarchyExclusions?.[groupId] ?? null : null)
+
 const INDICATOR_FIELDS = computed(() => [
   // Not empty: an unnamed column header reads as blank when navigating a table
   { key: 'expand',    label: t('orgColExpand'),    thStyle: { width: '34px' } },
@@ -1184,6 +1193,12 @@ const dimensions = computed(() =>
                 </div>
               </template>
               <template #row-expansion="{ item }">
+                <!-- Why this indicator's figures cover fewer activities than
+                     the publisher has: it is not assessed at one hierarchy
+                     level, by agreement. -->
+                <p v-if="hierarchyExclusion(item.groupId)" class="test-list__exclusion">
+                  {{ t('orgTestHierarchyExcluded', { level: hierarchyExclusion(item.groupId) }) }}
+                </p>
                 <ul class="test-list">
                   <li v-for="test in item.tests" :key="test.id" class="test-list__item">
                     <span class="test-list__name">{{ test.name }}</span>

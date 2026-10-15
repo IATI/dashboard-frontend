@@ -568,5 +568,6 @@
   "gateHelp": "Si vous pensez devoir y avoir accès, écrivez à",
   "gateAboutLink": "Comprendre le fonctionnement de l'évaluation",
   "gateSignedInAs": "Connecté en tant que {account}.",
-  "pubScopeAll": "Toutes les organisations déclarantes sont affichées, car votre compte y a accès dans leur ensemble et non seulement à celles qu'il administre."
+  "pubScopeAll": "Toutes les organisations déclarantes sont affichées, car votre compte y a accès dans leur ensemble et non seulement à celles qu'il administre.",
+  "orgTestHierarchyExcluded": "Pour cette organisation, cet indicateur n'est pas évalué pour les activités de niveau hiérarchique {level}."
 }

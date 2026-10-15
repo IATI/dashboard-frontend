@@ -301,11 +301,12 @@ function adaptIdentity(raw) {
 }
 
 /**
- * The Gherkin checks, from stats.gherkin_tests.
+ * The Gherkin checks, from stats.gherkin_tests_hierarchy_exclusions.
  *
- * Was gherkin_tests_current, which the API no longer returns. Two other
- * variants sit beside this one — gherkin_tests_hierarchy_exclusions and
- * gherkin_tests_rm_current_step — which we do not use.
+ * Was gherkin_tests_current, which the API no longer returns, then plain
+ * gherkin_tests. A third variant, gherkin_tests_rm_current_step, sits beside
+ * them and is not used. See gherkinRows for why the exclusions variant is the
+ * one to read.
  *
  * Shape is { "<group id>": { "<Test name>": { None, True, False } } }, where the
  * group id's leading section number is the methodology component it belongs to:
@@ -361,12 +362,30 @@ function testGroupMeta(groupId) {
   }
 }
 
-/** The Gherkin checks, counted pass / fail / not-applicable per activity. */
+/**
+ * The Gherkin checks, counted pass / fail / not-applicable per activity.
+ *
+ * Read from gherkin_tests_hierarchy_exclusions, which respects the exclusions a
+ * publisher has agreed — FCDO, for instance, is not assessed on aid type for
+ * its hierarchy 1 activities. The two properties are identical for a publisher
+ * with no exclusions; where there are some, the plain gherkin_tests would
+ * report the publisher against activities it was agreed not to be assessed on.
+ * It is kept as a fallback for a publisher the new property is missing for,
+ * which would otherwise show no checks at all.
+ *
+ * The exclusions variant also lists the indicators calculated outside Gherkin
+ * (3.3 and 4.7) as empty objects. Those are skipped, since
+ * comprehensiveness_new_non_gherkin is where their real figures live.
+ */
 function gherkinRows(stats) {
   const rows = []
-  for (const [groupId, tests] of Object.entries(stats.gherkin_tests ?? {})) {
+  const groups = stats.gherkin_tests_hierarchy_exclusions ?? stats.gherkin_tests ?? {}
+  const nonGherkin = stats.comprehensiveness_new_non_gherkin ?? {}
+
+  for (const [groupId, tests] of Object.entries(groups)) {
     // Not a check — it reports how many activities count as current
     if (groupId === 'current_data') continue
+    if (groupId in nonGherkin) continue
     const meta = testGroupMeta(groupId)
 
     for (const [name, counts] of Object.entries(tests ?? {})) {
@@ -450,6 +469,14 @@ function adaptStats(stats, methodology) {
     // Shape of the dataset: how deep the activity hierarchy goes, which version(s)
     // are published, and the span of dates the data covers.
     hierarchyLevels: Object.keys(stats.hierarchies ?? {}).map(Number).filter(Boolean).sort(),
+    // Indicator id -> the hierarchy level it is not assessed at for this
+    // publisher, as agreed with them. Arrives with the level as a string.
+    // Empty for most publishers.
+    hierarchyExclusions: Object.fromEntries(
+      Object.entries(stats.hierarchy_exclusions ?? {})
+        .map(([indicator, level]) => [indicator, String(level)])
+        .filter(([, level]) => level),
+    ),
     activitiesByHierarchy: stats.hierarchies ?? null,
     versions: Object.keys(stats.versions ?? {}).sort(),
     earliestDate: stats.date_extremes?.min?.overall ?? null,

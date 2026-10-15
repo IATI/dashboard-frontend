@@ -1152,6 +1152,15 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   tr { break-inside: avoid; page-break-inside: avoid }
 }
 
+// The hierarchy-exclusion note at the top of an expanded indicator row.
+.test-list__exclusion {
+  margin: 0 0 8px;
+  font-size: .85rem;
+  line-height: 1.45;
+  color: var(--grey-70);
+  font-style: italic;
+}
+
 // ─── About ────────────────────────────────────────────────────────────────────
 // The methodology page. Mostly tables, because what a reader has come for is
 // the thresholds and the indicator descriptions rather than the prose.
