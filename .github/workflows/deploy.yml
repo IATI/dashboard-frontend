@@ -44,6 +44,10 @@ jobs:
           # this origin registered against that instance first, or every
           # publisher's organisation lookup is refused.
           # NUXT_PUBLIC_RYD_BASE: https://api.registeryourdata.iatistandard.org
+          #
+          # Uncomment to put the "Development version" notice back across the
+          # top of every page.
+          # NUXT_PUBLIC_SHOW_DEV_BANNER: 'true'
 
       - uses: actions/configure-pages@v6.0.0
 

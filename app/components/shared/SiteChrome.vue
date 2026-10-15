@@ -8,11 +8,19 @@
  */
 defineProps({ active: { type: String, default: '' } })
 const banner = defineModel('banner', { type: Boolean, default: true })
+
+/**
+ * The provisional-data notice is off unless asked for; see showDevBanner in
+ * nuxt.config.ts for how to turn it back on. The dismiss state above still
+ * applies when it is shown.
+ */
+const { public: { showDevBanner } } = useRuntimeConfig()
 </script>
 
 <template>
   <div>
     <BAlert
+      v-if="showDevBanner"
       v-model="banner"
       variant="primary"
       dismissible

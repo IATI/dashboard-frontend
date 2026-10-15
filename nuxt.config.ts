@@ -25,6 +25,15 @@ export default defineNuxtConfig({
       // proxy. Point this at dashboardBase and the proxy can be retired
       // completely; until then only the exploring-data activities page uses it.
       generatedBase: 'https://black-math-8c4c.dashboard-cors-proxy.workers.dev',
+      // The "Development version — data may be incomplete, provisional, or
+      // include fictional placeholder text" notice across the top of every
+      // page. Off by default now that publishers are being invited in.
+      //
+      // Turn it back on by setting this to true, or without a code change with
+      // NUXT_PUBLIC_SHOW_DEV_BANNER=true in the environment (deploy.yml sets
+      // the build's environment). Nuxt coerces the string, so "true" and "1"
+      // both work and anything else leaves it off.
+      showDevBanner: false,
       // Accounts that see every organisation rather than only their own, for
       // the people running the consultation. Comma- or space-separated, and
       // overridable with NUXT_PUBLIC_ALL_ORGS_EMAILS so the list can be changed
