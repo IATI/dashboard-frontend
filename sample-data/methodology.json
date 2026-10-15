@@ -61,11 +61,12 @@
       }
     },
     "disaggregation": {
+      "_comment": "Excellent is 3, not 4: the proposal's table gives 3 quarters a year for both very good and excellent, and the API awards excellent at exactly 3. Because very good and excellent share a threshold, no publisher is ever banded very good on this component.",
       "unit": "count",
       "thresholds": {
         "good": 2,
         "very_good": 3,
-        "excellent": 4
+        "excellent": 3
       }
     },
     "organisation_fields": {

@@ -57,6 +57,28 @@ function threshold(componentId, band) {
   return t(labelKey('value', value))
 }
 
+/**
+ * Collapses a run of identical requirements into one cell spanning them.
+ *
+ * Several components ask the same thing of more than one category — every
+ * availability check must pass for all three, and monthly publishing earns both
+ * very good and excellent — and repeating the words three times across a row
+ * reads as three separate requirements that happen to coincide. One cell
+ * spanning the columns says what is actually true.
+ *
+ * Blanks never merge. An empty cell means that category asks nothing of this
+ * component, and two categories asking nothing are not one shared requirement.
+ */
+function mergeRuns(values) {
+  const out = []
+  for (const text of values) {
+    const last = out.at(-1)
+    if (last && text && last.text === text) last.span++
+    else out.push({ text, span: 1 })
+  }
+  return out
+}
+
 const dimensions = computed(() => DIMENSIONS.map(dim => ({
   ...dim,
   label: t(labelKey('dim', dim.id)),
@@ -64,7 +86,7 @@ const dimensions = computed(() => DIMENSIONS.map(dim => ({
     id,
     label: t(labelKey('sub', id)),
     help: componentHelp(id),
-    cells: BANDS.map(band => threshold(id, band)),
+    cells: mergeRuns(BANDS.map(band => threshold(id, band))),
   })),
 })))
 
@@ -179,8 +201,12 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
                 <tr v-for="row in dim.rows" :key="row.id">
                   <th scope="row">{{ row.label }}</th>
                   <td class="about-table__measures">{{ row.help }}</td>
-                  <td v-for="(cell, i) in row.cells" :key="i" class="about-table__band">
-                    <span v-if="cell">{{ cell }}</span>
+                  <td
+                    v-for="(cell, i) in row.cells" :key="i"
+                    :colspan="cell.span > 1 ? cell.span : undefined"
+                    class="about-table__band"
+                  >
+                    <span v-if="cell.text">{{ cell.text }}</span>
                     <span v-else class="about-table__blank">
                       <span class="visually-hidden">{{ t('starNotRequired') }}</span>
                     </span>
