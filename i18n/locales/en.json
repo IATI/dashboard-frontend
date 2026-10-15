@@ -566,5 +566,6 @@
   "gateGoToList": "See your organisations",
   "gateHelp": "If you think you should have access, contact",
   "gateAboutLink": "Read how the assessment works",
-  "gateSignedInAs": "Signed in as {account}."
+  "gateSignedInAs": "Signed in as {account}.",
+  "pubScopeAll": "Showing every reporting organisation, because your account has access to all of them rather than only the ones it administers."
 }

@@ -21,7 +21,7 @@ const props = defineProps({
 
 const { t } = useI18n({ useScope: 'global' })
 const { signIn } = useAuth()
-const { slugs, accountLabel } = useAccess()
+const { slugs, accountLabel, scopeError } = useAccess()
 
 const body = computed(() => {
   if (props.status === 'signed-out') return 'gateSignedOut'
@@ -53,6 +53,12 @@ const ownOrg = computed(() => (slugs.value.size === 1 ? [...slugs.value][0] : nu
              the account you expected, the wrong one is signed in. -->
         <p v-if="accountLabel" class="access-gate__account">
           {{ t('gateSignedInAs', { account: accountLabel }) }}
+        </p>
+
+        <!-- The underlying error, while this is a preview: a 500 from Register
+             Your Data is something to report, not something to retry forever. -->
+        <p v-if="status === 'failed' && scopeError" class="access-gate__account">
+          {{ scopeError.message }}
         </p>
 
         <button

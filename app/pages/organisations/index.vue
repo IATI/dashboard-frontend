@@ -25,7 +25,9 @@ const { lookup: organisationTypeName, map: orgTypeMap } = useCodelist('Organisat
 //
 // `useMyPublishers` is still the source of which organisations those are;
 // `useAccess` decides what that entitles the viewer to see.
-const { publishers: myOrgs, state: scopeState, error: scopeError } = useMyPublishers()
+// Only the names are needed here; whether the lookup succeeded, and what to do
+// if it did not, is useAccess's business and the gate's.
+const { publishers: myOrgs } = useMyPublishers()
 const { status: accessStatus, seesAll, slugs: mySlugs } = useAccess()
 
 // Narrowed, as opposed to seeing everything. 'none' counts: an account that
@@ -200,9 +202,10 @@ watch([search, filterType], () => {
             </span>
           </template>
         </BAlert>
-        <BAlert v-else-if="scopeState === 'failed'" :model-value="true" variant="warning" class="mb-sm">
-          {{ t('pubScopeUnavailable', { email: SUPPORT_EMAIL }) }}
-          <span v-if="scopeError" class="scope-error">{{ scopeError.message }}</span>
+        <!-- Says why every organisation is listed, so it does not read as a
+             leak to someone who expected to see only their own. -->
+        <BAlert v-else-if="seesAll" :model-value="true" variant="info" class="mb-sm">
+          {{ t('pubScopeAll') }}
         </BAlert>
       </ClientOnly>
 
