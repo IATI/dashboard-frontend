@@ -64,7 +64,7 @@
     "no_critical_errors": "The files are valid against the IATI schema. Files that are not valid are not available in the IATI Datastore.",
     "no_errors": "The IATI Validator reports no errors. IATI Validator errors are (in most cases) fairly basic structural issues.",
     "frequency": "How often the organisation updates its files.",
-    "timeliness": "How far behind the present the published data is.",
+    "timeliness": "How old financial data is when it's published (e.g. one month in arrears).",
     "coverage": "Published spending as a share of an independent reference figure for the same period.",
     "disaggregation": "How many quarters a year the financial data is broken down into, over five years.",
     "organisation_fields": "The organisation file: strategic documents and forward budgets for the organisation as a whole.",
