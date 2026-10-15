@@ -82,7 +82,7 @@
     "1.7_organisation_budget": "The organisation file reports total budgets one, two and three years forward.",
     "1.8_country_budgets": "The organisation file reports total budgets by recipient country, one, two and three years forward.",
     "2.1_reporting_organisation": "Each activity reports the reporting organisation, with a valid organisation type.",
-    "2.2_iati_identifier": "Each activity reports the IATI identifier, starting with the organisation's own reference.",
+    "2.2_iati_identifier": "Each activity reports the IATI identifier, starting with the organisation's own organisation identifier.",
     "2.3_implementing_organisation": "Each activity reports the implementing organisation, with its name and a valid organisation type.",
     "2.4_title": "Each activity reports the title, of at least 10 characters.",
     "2.5_description": "Each activity reports the description, of at least 80 characters.",

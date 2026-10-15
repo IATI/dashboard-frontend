@@ -64,7 +64,7 @@
     "1.7_organisation_budget": "Le fichier d'organisation déclare des budgets totaux à un, deux et trois ans.",
     "1.8_country_budgets": "Le fichier d'organisation déclare des budgets totaux par pays bénéficiaire, à un, deux et trois ans.",
     "2.1_reporting_organisation": "Chaque activité déclare l'organisation déclarante, avec un type d'organisation valide.",
-    "2.2_iati_identifier": "Chaque activité déclare l'identifiant IATI, commençant par la référence propre de l'organisation.",
+    "2.2_iati_identifier": "Chaque activité déclare l'identifiant IATI, commençant par l'identifiant d'organisation propre à l'organisation.",
     "2.3_implementing_organisation": "Chaque activité déclare l'organisation de mise en œuvre, avec son nom et un type d'organisation valide.",
     "2.4_title": "Chaque activité déclare le titre, d'au moins 10 caractères.",
     "2.5_description": "Chaque activité déclare la description, d'au moins 80 caractères.",

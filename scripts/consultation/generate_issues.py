@@ -126,21 +126,43 @@ Full detail: [coverage methodology]({COVERAGE_METHODOLOGY}) ·
 ''',
 }
 
-# The four indicators calculated outside the Gherkin runner have no scenarios
-# to quote, so their measures are named here. Taken from the API's
-# comprehensiveness_new_non_gherkin on 2026-10-15.
+# The four indicators calculated outside the Gherkin runner have no scenarios to
+# quote, so their measures are described here. The names are the API's own, from
+# comprehensiveness_new_non_gherkin on 2026-10-15; a measure with no description
+# is one whose name already says what it is.
 NON_GHERKIN = {
-    '1.5_country_strategy_or_mou': ['Country Strategy or MOU'],
-    '1.8_country_budgets': [
-        'Country budget available 1 year forward',
-        'Country budget available 2 years forward',
-        'Country budget available 3 years forward',
-    ],
-    '3.3_traceability': ['Upward traceability', 'Downward traceability'],
-    '4.7_organisation_identifiers': [
-        'Receiver Org Transaction Valid Refs',
-        'Implementing Org Transaction Valid Refs',
-    ],
+    '1.5_country_strategy_or_mou': {
+        'measures': {'Country Strategy or MOU': None},
+    },
+    '1.8_country_budgets': {
+        'measures': {
+            'Country budget available 1 year forward': None,
+            'Country budget available 2 years forward': None,
+            'Country budget available 3 years forward': None,
+        },
+    },
+    '3.3_traceability': {
+        'measures': {
+            'Upward traceability':
+                "The share of this organisation's incoming funds which explicitly state "
+                "which provider organisation's activity is providing the funds.",
+            'Downward traceability':
+                'The share of activities of downstream partners which report receiving '
+                'funding from this organisation.',
+        },
+    },
+    '4.7_organisation_identifiers': {
+        'intro': 'Whether the organisation identifiers used in implementing organisations '
+                 'and transaction receiver organisations are correctly structured.',
+        'measures': {
+            'Receiver Org Transaction Valid Refs':
+                'The share of transaction receiver organisations whose identifier is '
+                'correctly structured.',
+            'Implementing Org Transaction Valid Refs':
+                'The share of implementing organisations whose identifier is correctly '
+                'structured.',
+        },
+    },
 }
 
 
@@ -235,16 +257,29 @@ def indicator_issue(ind_id, component, dimension, names, helps, notes, features)
         any('skip it' in t.lower() for t in thens) for _, _, thens in scenarios)
 
     if ind_id in NON_GHERKIN:
+        spec = NON_GHERKIN[ind_id]
+        if spec.get('intro'):
+            body += spec['intro'] + '\n\n'
         body += ('Calculated across the organisation\'s data rather than activity by activity, '
                  'so it has no pass/fail scenarios. It reports:\n\n')
-        for measure in NON_GHERKIN[ind_id]:
-            body += f'- {measure}\n'
+        for measure, description in spec['measures'].items():
+            body += f'- **{measure}**'
+            body += f' — {description}\n' if description else '\n'
         body += '\nEach is a proportion, and the indicator is their average.\n'
     elif not scenarios or skipped:
         body += '_No test definition is published for this indicator yet._\n'
     else:
-        body += ('Each test below runs against every current activity. An activity the test '
-                 'does not apply to is left out of the score rather than counted as a failure.\n')
+        # Scope comes from the feature's own Given steps, not from the indicator
+        # number: the 1.x indicators are assessed against the organisation file,
+        # everything else against activities.
+        organisation = any('file is an organisation file' in g
+                           for _, givens, _ in scenarios for g in givens)
+        if organisation:
+            body += 'Each test below runs against each organisation file.\n'
+        else:
+            body += ('Each test below runs against every current activity. An activity the test '
+                     'does not apply to is left out of the score rather than counted as a '
+                     'failure.\n')
         for scenario, givens, thens in scenarios:
             body += f'\n**{scenario}**\n\n'
             conditions = [g for g in givens
