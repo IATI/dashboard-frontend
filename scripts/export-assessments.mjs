@@ -20,6 +20,14 @@
  *   --page-size <n>     organisations per request (default 100)
  *   --concurrency <n>   requests in flight (default 4)
  *   --base <url>        API base (default the frontend's dashboardBase)
+ *   --include <path>    an .xlsx with 'Short name' and 'Include?' columns, whose
+ *                       answers are carried onto each row (see below)
+ *
+ * --include exists so a human's shortlisting decision can travel with the
+ * scores. The annotation is read back from the workbook on every run rather than
+ * copied into this file, so re-running after a methodology change keeps it.
+ * Publishers the workbook does not mention get a blank, and a publisher it
+ * mentions that the API does not return is reported at the end.
  */
 import { writeFileSync } from 'node:fs'
 import { argv } from 'node:process'
@@ -27,6 +35,7 @@ import { createRequire } from 'node:module'
 
 import { adaptPublisher, toAssessmentFragment } from '../app/utils/adaptPublisher.js'
 import { buildXlsx } from './lib/xlsx.mjs'
+import { readColumnMap } from './lib/xlsx-read.mjs'
 
 const methodology = createRequire(import.meta.url)('../sample-data/methodology.json')
 
@@ -44,6 +53,7 @@ function parseArgs(args) {
     pageSize: 100,
     concurrency: 4,
     base: DEFAULT_BASE,
+    include: null,
   }
   const numeric = { limit: 'limit', 'page-size': 'pageSize', concurrency: 'concurrency' }
 
@@ -52,6 +62,7 @@ function parseArgs(args) {
     const value = args[++i]
     if (value === undefined) throw new Error(`--${flag} needs a value`)
     if (flag === 'out') opts.out = value
+    else if (flag === 'include') opts.include = value
     else if (flag === 'base') opts.base = value.replace(/\/$/, '')
     else if (numeric[flag]) {
       const n = Number(value)
@@ -259,11 +270,12 @@ function buildRow(raw, typeName) {
 
 // --- sheets ------------------------------------------------------------------
 
-function columns() {
+function columns({ include } = {}) {
   const cols = [
     { key: 'organisation_identifier', header: 'Organisation identifier', width: 26 },
     { key: 'short_name',              header: 'Short name',              width: 18 },
     { key: 'name',                    header: 'Name of organisation',    width: 44 },
+    ...(include ? [{ key: 'include', header: 'Include?', width: 10 }] : []),
     { key: 'organisation_type',       header: 'Organisation type',       width: 24 },
     { key: 'organisation_type_code',  header: 'Type code',               width: 10 },
     { key: 'hq_country',              header: 'HQ country',              width: 11 },
@@ -307,6 +319,9 @@ function notesSheet(opts, generated, count) {
     { a: 'Source', b: `${opts.base}/api/reporting-orgs/?show_stats=1` },
     { a: 'Organisations', b: String(count) },
     { a: '', b: '' },
+    ...(opts.include
+      ? [{ a: 'Include?', b: `Carried over from ${opts.include}, matched on short name. Blank means the workbook does not mention that publisher.` }, { a: '', b: '' }]
+      : []),
     { a: 'Bands', b: 'Needs improvement (0), Good (1), Very good (2), Excellent (3)' },
     { a: 'Dimension band', b: 'The weakest of its components, except timeliness, which uses the methodology’s joint rule for time lag and frequency.' },
     { a: 'Overall assessment', b: 'The weakest of the four dimension bands.' },
@@ -339,6 +354,15 @@ async function main() {
   const opts = parseArgs(argv.slice(2))
   const started = Date.now()
 
+  let include = null
+  if (opts.include) {
+    include = readColumnMap(opts.include, 'Short name', 'Include?')
+    process.stderr.write(`Read ${include.map.size} Include? answers from ${include.sheets.join(', ')}\n`)
+    for (const c of include.conflicts) {
+      process.stderr.write(`  ! ${c.key}: "${c.had}" elsewhere, "${c.found}" on ${c.sheet} — kept "${c.had}"\n`)
+    }
+  }
+
   process.stderr.write('Loading organisation types…\n')
   const typeList = await getJson(`${CODELIST_BASE}/OrganisationType.json`)
   const typeNames = new Map((typeList.data ?? []).map(item => [String(item.code), item.name]))
@@ -350,7 +374,9 @@ async function main() {
     for (const raw of results) {
       if (rows.length >= opts.limit) break
       try {
-        rows.push(buildRow(raw, typeNames.get(String(raw.organisation_type)) ?? null))
+        const row = buildRow(raw, typeNames.get(String(raw.organisation_type)) ?? null)
+        if (include) row.include = include.map.get(row.short_name) ?? null
+        rows.push(row)
       } catch (error) {
         // One malformed publisher should not lose the other two thousand.
         failures.push(`${raw.short_name}: ${error.message}`)
@@ -365,7 +391,7 @@ async function main() {
 
   const generated = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC'
   writeFileSync(opts.out, buildXlsx([
-    { name: 'Assessments', columns: columns(), rows },
+    { name: 'Assessments', columns: columns({ include: Boolean(include) }), rows },
     notesSheet(opts, generated, rows.length),
   ]))
 
@@ -373,6 +399,15 @@ async function main() {
   process.stderr.write(`Wrote ${opts.out} — ${rows.length} of ${total} organisations in ${seconds}s\n`)
   if (failures.length) {
     process.stderr.write(`${failures.length} could not be adapted:\n  ${failures.join('\n  ')}\n`)
+  }
+  if (include) {
+    const matched = rows.filter(r => r.include).length
+    process.stderr.write(`Include? set on ${matched} of ${include.map.size} annotated publishers\n`)
+    const seen = new Set(rows.map(r => r.short_name))
+    const missing = [...include.map.keys()].filter(k => !seen.has(k))
+    if (missing.length) {
+      process.stderr.write(`${missing.length} annotated but not returned by the API: ${missing.join(', ')}\n`)
+    }
   }
 }
 
