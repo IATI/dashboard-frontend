@@ -39,11 +39,14 @@ jobs:
           # with NUXT_PUBLIC_ALL_ORGS_EMAILS. Note that a NUXT_PUBLIC_* value is
           # inlined into the published bundle, so it cannot hold a secret.
           #
-          # Register Your Data defaults to its dev instance. Before going live,
-          # set this to https://api.registeryourdata.iatistandard.org — and get
-          # this origin registered against that instance first, or every
-          # publisher's organisation lookup is refused.
-          # NUXT_PUBLIC_RYD_BASE: https://api.registeryourdata.iatistandard.org
+          # Register Your Data allows different origins on its two instances.
+          # iati.github.io is allowed by dev only — production refuses its CORS
+          # preflight — so this build has to use dev, while the config default
+          # stays on production for every other deployment (and
+          # preview-dashboard.iatistandard.org, which both instances allow).
+          # Once iati.github.io is registered against production, delete this
+          # line and the default takes over.
+          NUXT_PUBLIC_RYD_BASE: https://dev.api.registeryourdata.iatistandard.org
           #
           # Uncomment to put the "Development version" notice back across the
           # top of every page.

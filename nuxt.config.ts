@@ -68,25 +68,34 @@ export default defineNuxtConfig({
       },
       // Register Your Data — the source of which publishers a user may
       // administer, and so the thing that decides what a signed-in publisher
-      // sees. Enforces an origin allowlist, so the origin the site is served
-      // from has to be registered with RYD as well.
+      // sees. If this call is refused the site cannot scope anyone, and every
+      // publisher is locked out of their own assessment rather than
+      // over-served, so pointing it at the wrong instance is not a soft
+      // failure.
       //
-      // BEFORE GOING LIVE: switch to the production instance,
-      // https://api.registeryourdata.iatistandard.org (the same host without
-      // the dev. prefix), either here or with NUXT_PUBLIC_RYD_BASE in
-      // deploy.yml.
+      // RYD enforces an origin allowlist, and the two instances allow
+      // different origins, so which one to use depends on where the site is
+      // served from. Checked 2026-10-15 by CORS preflight:
       //
-      // Checked 2026-10-15: a CORS preflight from https://iati.github.io is
-      // answered by the dev instance and NOT by the production one, so that
-      // origin is registered against dev only. Production does return
-      // access-control-allow-methods, -allow-headers and -max-age, so its CORS
-      // middleware is running and it is only the origin allowlist that is
-      // missing the entry — one list addition, not a setup job. Switching before it is
-      // registered against production would refuse every publisher's lookup
-      // before the request was even sent — which, because the lookup is what
-      // scopes a publisher to their own organisations, locks every publisher
-      // out. Register the origin first, then switch.
-      rydBase: 'https://dev.api.registeryourdata.iatistandard.org',
+      //   origin                                    production   dev
+      //   https://preview-dashboard.iatistandard.org   allowed    allowed
+      //   https://iati.github.io                       refused    allowed
+      //   http://localhost:<port>                      refused    refused
+      //
+      // Production is the default because that is what a real deployment
+      // should read. The GitHub Pages build overrides it to dev in deploy.yml,
+      // because iati.github.io is only allowed there. Get iati.github.io
+      // registered against production and that override can go.
+      //
+      // Note localhost is on neither allowlist, so RYD cannot be reached in
+      // local development on either setting; an account on allOrgsEmails still
+      // works, because that is checked before RYD.
+      //
+      // To check which instance a build points at, grep .output/public after
+      // `npm run generate` — that inlines the value. `nuxt build` does not:
+      // it leaves NUXT_PUBLIC_* to be read when the server starts, so the
+      // bundle shows the default whatever the environment says.
+      rydBase: 'https://api.registeryourdata.iatistandard.org',
     },
   },
   vite: {
