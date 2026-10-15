@@ -569,5 +569,6 @@
   "pubScopeAll": "Showing every reporting organisation, because your account has access to all of them rather than only the ones it administers.",
   "orgTestHierarchyExcluded": "For this organisation, this indicator is not assessed for activities at hierarchy {level}.",
   "aboutDraftGithub": "Comments on individual indicators are collected as issues on GitHub, one per indicator and per component.",
-  "aboutDraftGithubLink": "Comment on an indicator"
+  "aboutDraftGithubLink": "Comment on an indicator",
+  "aboutThresholdNotRequired": "Not required to achieve this category"
 }

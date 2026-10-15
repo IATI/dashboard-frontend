@@ -52,7 +52,7 @@
     "organisation_fields": "Le fichier d'organisation : documents stratégiques et budgets prévisionnels de l'organisation dans son ensemble.",
     "basic_fields": "Les champs nécessaires pour identifier une activité et la comparer à d'autres. Attendus sur presque toutes les activités.",
     "financial_fields": "Engagements, versements et dépenses, budgets prévisionnels et traçabilité.",
-    "advanced_fields": "Des champs plus exigeants à publier, mais qui rendent les données utiles à beaucoup plus de monde. Non requis pour une première étoile."
+    "advanced_fields": "Des champs plus exigeants à publier, mais qui rendent les données utiles à beaucoup plus de monde. Non requis pour atteindre la catégorie « bon »."
   },
   "indicatorHelp": {
     "1.1_organisation_strategy": "Le fichier d'organisation renvoie à la stratégie de l'organisation.",

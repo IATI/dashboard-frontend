@@ -570,5 +570,6 @@
   "pubScopeAll": "Toutes les organisations déclarantes sont affichées, car votre compte y a accès dans leur ensemble et non seulement à celles qu'il administre.",
   "orgTestHierarchyExcluded": "Pour cette organisation, cet indicateur n'est pas évalué pour les activités de niveau hiérarchique {level}.",
   "aboutDraftGithub": "Les commentaires sur chaque indicateur sont recueillis sous forme de tickets sur GitHub, un par indicateur et par composante.",
-  "aboutDraftGithubLink": "Commenter un indicateur"
+  "aboutDraftGithubLink": "Commenter un indicateur",
+  "aboutThresholdNotRequired": "Non requis pour atteindre cette catégorie"
 }

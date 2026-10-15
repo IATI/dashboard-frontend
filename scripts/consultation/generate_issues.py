@@ -278,7 +278,7 @@ def component_issue(component, dimension, ids, names, comp_help, methodology):
         for key, _ in BANDS:
             v = thresholds.get(key)
             if v is None:
-                cells.append('not required')
+                cells.append('Not required')
             elif unit == 'percent':
                 cells.append(f'{v}%')
             elif unit == 'count':

@@ -214,7 +214,7 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
                   >
                     <span v-if="cell.text">{{ cell.text }}</span>
                     <span v-else class="about-table__blank">
-                      <span class="visually-hidden">{{ t('starNotRequired') }}</span>
+                      <span class="visually-hidden">{{ t('aboutThresholdNotRequired') }}</span>
                     </span>
                   </td>
                 </tr>

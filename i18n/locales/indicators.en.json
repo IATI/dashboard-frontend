@@ -70,7 +70,7 @@
     "organisation_fields": "The organisation file: strategic documents and forward budgets for the organisation as a whole.",
     "basic_fields": "The fields needed to identify an activity and compare it with others. Expected on almost every activity.",
     "financial_fields": "Commitments, disbursements and expenditure, forward budgets, and traceability.",
-    "advanced_fields": "Fields that take more effort to publish but make the data useful to far more people. Not required for a first star."
+    "advanced_fields": "Fields that take more effort to publish but make the data useful to far more people. Not required to achieve the “good” category."
   },
   "indicatorHelp": {
     "1.1_organisation_strategy": "The organisation file links to the organisation strategy.",
