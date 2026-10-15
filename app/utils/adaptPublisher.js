@@ -333,28 +333,50 @@ function humaniseGroupId(groupId) {
   return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
-function adaptTests(stats) {
-  const groups = stats.gherkin_tests ?? {}
-  const rows = []
+/**
+ * Orders indicators by their number, section by section.
+ *
+ * Comparing the ids as strings put 2.10 before 2.2, because "2.1" sorts before
+ * "2.2" one character at a time. Array.prototype.sort is stable and this
+ * compares only the number, so the checks within one indicator stay in the
+ * order the API listed them — sorting those by name once put the organisation
+ * budget's checks in the order one / three / two.
+ */
+function byIndicatorNumber(a, b) {
+  const parts = id => String(id).split('_')[0].split('.').map(Number)
+  const x = parts(a.groupId), y = parts(b.groupId)
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    const d = (x[i] ?? -1) - (y[i] ?? -1)
+    if (d) return Number.isNaN(d) ? String(a.groupId).localeCompare(String(b.groupId)) : d
+  }
+  return 0
+}
 
-  for (const [groupId, tests] of Object.entries(groups)) {
+/** The shared parts of a row, however the check was measured. */
+function testGroupMeta(groupId) {
+  return {
+    groupId,
+    group: humaniseGroupId(groupId),
+    component: COMPONENT_BY_SECTION[Number(groupId.split('.')[0])] ?? null,
+  }
+}
+
+/** The Gherkin checks, counted pass / fail / not-applicable per activity. */
+function gherkinRows(stats) {
+  const rows = []
+  for (const [groupId, tests] of Object.entries(stats.gherkin_tests ?? {})) {
     // Not a check — it reports how many activities count as current
     if (groupId === 'current_data') continue
-
-    const section = Number(groupId.split('.')[0])
-    const component = COMPONENT_BY_SECTION[section] ?? null
-    const group = humaniseGroupId(groupId)
+    const meta = testGroupMeta(groupId)
 
     for (const [name, counts] of Object.entries(tests ?? {})) {
       const passed = counts?.True ?? 0
       const failed = counts?.False ?? 0
       const denominator = passed + failed
       rows.push({
+        ...meta,
         id: `${groupId}::${name}`,
-        groupId,
-        group,
         name,
-        component,
         notApplicable: counts?.None ?? 0,
         numerator: passed,
         denominator,
@@ -362,12 +384,53 @@ function adaptTests(stats) {
       })
     }
   }
+  return rows
+}
 
-  // Grouped, but the API's own order is kept inside each group: sorting by name
-  // put the organisation budget's checks in the order one / three / two, because
-  // that is alphabetical. Array.prototype.sort is stable, so comparing only the
-  // group id leaves the checks as the API listed them.
-  return rows.sort((a, b) => a.groupId.localeCompare(b.groupId))
+/**
+ * The checks that are not expressed as Gherkin scenarios, from
+ * stats.comprehensiveness_new_non_gherkin.
+ *
+ * Four indicators are calculated this way rather than activity by activity:
+ * 1.5 country strategy or MoU, 1.8 country budgets, 3.3 traceability and
+ * 4.7 organisation identifiers. They slot into the same components as the rest,
+ * by the same section numbering in their ids.
+ *
+ * Shape is { "<group id>": { "<Test name>": <ratio|null> } } — a proportion
+ * already, not a pass / fail count, so there is no denominator to show. `ratio`
+ * marks them so the expanded row does not offer a meaningless "0.68 of 1".
+ *
+ * A null ratio is the API saying the check does not apply to this publisher,
+ * which is how an organisation type that is only assessed for traceability in
+ * one direction comes through: the World Bank reports downward traceability and
+ * null upward. Those are given a zero denominator, the same as a Gherkin check
+ * with nothing to assess, which keeps them out of the indicator's average
+ * rather than counting as a failure.
+ */
+function nonGherkinRows(stats) {
+  const rows = []
+  for (const [groupId, tests] of Object.entries(stats.comprehensiveness_new_non_gherkin ?? {})) {
+    const meta = testGroupMeta(groupId)
+
+    for (const [name, ratio] of Object.entries(tests ?? {})) {
+      const measured = typeof ratio === 'number' && Number.isFinite(ratio)
+      rows.push({
+        ...meta,
+        id: `${groupId}::${name}`,
+        name,
+        ratio: true,
+        notApplicable: 0,
+        numerator: measured ? ratio : 0,
+        denominator: measured ? 1 : 0,
+        value: measured ? Math.round(100 * ratio) : null,
+      })
+    }
+  }
+  return rows
+}
+
+function adaptTests(stats) {
+  return [...gherkinRows(stats), ...nonGherkinRows(stats)].sort(byIndicatorNumber)
 }
 
 /** The parts of `stats` we actually use, renamed and typed consistently. */

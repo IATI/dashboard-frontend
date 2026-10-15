@@ -1190,8 +1190,10 @@ const dimensions = computed(() =>
                     <!-- Each check has its own denominator: `None` excludes the
                          activities it does not apply to, so this is not the
                          publisher's activity count and varies check to check. -->
+                    <!-- A ratio-based check has no counts behind it, so the
+                         "n of total" would read as "0.68 of 1". -->
                     <span
-                      v-if="test.denominator"
+                      v-if="test.denominator && !test.ratio"
                       class="test-list__count"
                       :title="test.notApplicable
                         ? t('orgTestExcluded', { n: test.notApplicable.toLocaleString() })
