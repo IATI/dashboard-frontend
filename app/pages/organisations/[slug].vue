@@ -106,9 +106,15 @@ const mostRecentTransaction = computed(() => {
   })
 })
 
-// Activity-level checks. BTable handles sorting; each group opens best-first.
+// Activity-level checks. BTable handles sorting; the default is the framework's
+// own order, see testsSortBy below.
 const tests = computed(() => stats.value?.tests ?? [])
-const testsSortBy = ref([{ key: 'value', order: 'desc' }])
+// Empty, so the table shows the indicators in the order the adapter returns
+// them: the framework's own numbering, 3.1 then 3.2 then 3.3, the same order
+// the About page lists them in. It used to default to score descending, which
+// scattered the numbering and put an indicator somewhere different on every
+// publisher's page. The columns are still sortable; this is only the default.
+const testsSortBy = ref([])
 const expandedIndicators = ref([])
 
 // Which files each comprehensiveness component is read from, with this
