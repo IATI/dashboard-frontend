@@ -16,15 +16,30 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      // Serves both /stats/*.json and the newer /api/* endpoints.
-      // Sends no CORS headers, so browser-side fetches go via the Cloudflare
-      // proxy instead — set NUXT_PUBLIC_DASHBOARD_BASE (see .env and deploy.yml).
+      // Serves both /stats/*.json and the newer /api/* endpoints. These now send
+      // Access-Control-Allow-Origin: *, so the browser reaches them directly and
+      // the CORS proxy that used to stand in front of them is gone.
       dashboardBase: 'https://dev2.dashboard.iatistandard.org',
-      // Deterrent only — this ships in the client bundle and is trivially found.
-      // It exists to stop people stumbling across a provisional dashboard, not to
-      // protect anything. Override with NUXT_PUBLIC_SITE_PASSWORD; set it empty
-      // to disable the gate entirely.
-      sitePassword: 'development',
+      // The /generated/* files are static, served by Apache rather than the
+      // application, and send no CORS header — so these alone still need the
+      // proxy. Point this at dashboardBase and the proxy can be retired
+      // completely; until then only the exploring-data activities page uses it.
+      generatedBase: 'https://black-math-8c4c.dashboard-cors-proxy.workers.dev',
+      // Accounts that see every organisation rather than only their own, for
+      // the people running the consultation. Comma- or space-separated, and
+      // overridable with NUXT_PUBLIC_ALL_ORGS_EMAILS so the list can be changed
+      // without a release.
+      //
+      // Not a secret, and not capable of being one: like everything in
+      // runtimeConfig.public this ships in the client bundle, so these
+      // addresses are readable by anyone who looks. See useAccess for what this
+      // does and does not achieve.
+      allOrgsEmails: [
+        'mark@brough.io',
+        'yemesrach.workie@undp.org',
+        'rohini.simbodyal@undp.org',
+        'jaimie.grant@undp.org',
+      ].join(','),
       // IATI Account SSO (Asgardeo/WSO2). Defaults are the ones the IATI SPA
       // example publishes; override per environment with NUXT_PUBLIC_AUTH_*.
       //

@@ -1096,7 +1096,7 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   .expander,
   .filter-bar,
   .b-pagination,
-  .site-gate { display: none !important }
+  .access-gate { display: none !important }
 
   // Stars, bars and the band tints are the content here, not decoration, so
   // keep them when the browser would otherwise strip backgrounds to save ink.
@@ -1278,10 +1278,10 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
   &__note { font-size: .92em }
 
-  &--ratings tbody th {
+  &--categories tbody th {
     white-space: nowrap;
 
-    .about-table__rating {
+    .about-table__category {
       display: flex;
       flex-direction: column;
       gap: 4px;

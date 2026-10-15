@@ -18,13 +18,19 @@ const fetchedAtLabel = computed(() => {
 })
 const { lookup: organisationTypeName, map: orgTypeMap } = useCodelist('OrganisationType')
 
-// Signed in with an IATI Account, the list narrows to the organisations that
-// account administers. Signed out, it stays the full public list — the site's
-// password gate is the access control there, and this is the same data the
-// dashboard already publishes.
-const { publishers: myOrgs, slugs: mySlugs, state: scopeState, error: scopeError } = useMyPublishers()
+// The list narrows to the organisations the signed-in account administers, and
+// shows every organisation only for accounts on the all-organisations list.
+// There is no signed-out case to handle: the layout gate does not render this
+// page at all without a session.
+//
+// `useMyPublishers` is still the source of which organisations those are;
+// `useAccess` decides what that entitles the viewer to see.
+const { publishers: myOrgs, state: scopeState, error: scopeError } = useMyPublishers()
+const { status: accessStatus, seesAll, slugs: mySlugs } = useAccess()
 
-const scoped = computed(() => scopeState.value === 'scoped')
+// Narrowed, as opposed to seeing everything. 'none' counts: an account that
+// administers nothing is scoped to nothing, not shown the full list.
+const scoped = computed(() => accessStatus.value === 'scoped' || accessStatus.value === 'none')
 
 // An account can administer an organisation the dashboard has no record of —
 // it is registered in RYD but has never published IATI data, so there are no
@@ -148,7 +154,10 @@ const orgTypes = computed(() => {
 
 const rows = computed(() => {
   const all = publishers.value.map(p => ({ ...p, orgType: organisationTypeName(p.organisationType) }))
-  return scoped.value ? all.filter(p => mySlugs.value.has(p.slug)) : all
+  // Fails closed: only an account on the all-organisations list gets the
+  // unfiltered list. Everything else is filtered to the viewer's own slugs,
+  // which is empty if we could not establish them.
+  return seesAll.value ? all : all.filter(p => mySlugs.value.has(p.slug))
 })
 
 const filtered = computed(() => {
@@ -174,7 +183,7 @@ watch([search, filterType], () => {
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: fullSite ? '/' : null },
+      { label: t('breadPublishingQuality'), href: fullSite && seesAll ? '/' : null },
       { label: t('navOrganisations') },
     ]" />
     <TitleBar :title="t('navOrganisations')" />
@@ -182,7 +191,7 @@ watch([search, filterType], () => {
     <main class="main">
       <ClientOnly>
         <BAlert v-if="scoped" :model-value="true" :variant="rows.length ? 'info' : 'warning'" class="mb-sm">
-          <template v-if="!mySlugs.size">{{ t('pubScopedNone') }}</template>
+          <template v-if="!mySlugs.size">{{ t('pubScopedNone', { email: SUPPORT_EMAIL }) }}</template>
           <template v-else-if="!rows.length">{{ t('pubScopedNotPublished', { orgs: notPublishedNames }) }}</template>
           <template v-else>
             {{ t('pubScopedToYou', mySlugs.size) }}
@@ -192,7 +201,7 @@ watch([search, filterType], () => {
           </template>
         </BAlert>
         <BAlert v-else-if="scopeState === 'failed'" :model-value="true" variant="warning" class="mb-sm">
-          {{ t('pubScopeUnavailable') }}
+          {{ t('pubScopeUnavailable', { email: SUPPORT_EMAIL }) }}
           <span v-if="scopeError" class="scope-error">{{ scopeError.message }}</span>
         </BAlert>
       </ClientOnly>

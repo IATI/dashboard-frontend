@@ -33,11 +33,11 @@ jobs:
         run: npm run generate
         env:
           NUXT_APP_BASE_URL: /dashboard-frontend/
-          NUXT_PUBLIC_DASHBOARD_BASE: https://black-math-8c4c.dashboard-cors-proxy.workers.dev
-          # Keeps the password out of the repo. Note it is still inlined into the
-          # published bundle — NUXT_PUBLIC_* is public by design — so this is a
-          # deterrent, not access control.
-          NUXT_PUBLIC_SITE_PASSWORD: ${{ secrets.NUXT_PUBLIC_SITE_PASSWORD }}
+          # The shared password has been replaced by signing in with an IATI
+          # Account; see useAccess. The accounts that see every organisation
+          # default to the list in nuxt.config.ts and can be overridden here
+          # with NUXT_PUBLIC_ALL_ORGS_EMAILS. Note that a NUXT_PUBLIC_* value is
+          # inlined into the published bundle, so it cannot hold a secret.
 
       - uses: actions/configure-pages@v6.0.0
 

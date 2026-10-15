@@ -9,10 +9,16 @@ const { user, ready, isSignedIn, signIn, signOut } = useAuth()
 
 // One list, rendered twice: the horizontal tool nav on desktop and the slide-in
 // panel on mobile. Keeping them separate is how they drift apart.
-// Only the organisations pages are finished, so the preview does not offer the
-// rest — a link that redirects straight back is worse than no link. ?full
-// restores them; see usePreviewScope.
+//
+// Two separate filters, both applied.
+//
+// ?full is about how finished a page is: only the organisations pages and the
+// methodology are ready, so the rest are not offered to anyone without it
+// (see usePreviewScope). Access is about whose data a page shows: the
+// cross-publisher views are only for accounts on the all-organisations list.
+// Requiring both means ?full can never surface a link the gate would refuse.
 const { full: fullSite } = usePreviewScope()
+const { seesAll } = useAccess()
 
 const ALL_NAV = [
   { key: 'overall',   to: '/',              labelKey: 'navOverview' },
@@ -25,7 +31,7 @@ const ALL_NAV = [
 
 const navItems = computed(() =>
   ALL_NAV
-    .filter(item => fullSite.value || isPreviewPath(item.to))
+    .filter(item => routeAccess(item.to) !== 'all' || (fullSite.value && seesAll.value))
     .map(item => ({ ...item, label: t(item.labelKey) })),
 )
 

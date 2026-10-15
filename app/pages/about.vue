@@ -3,7 +3,7 @@
  * A brief explanation of the methodology, for publishers arriving from the
  * consultation email.
  *
- * Short by design: it is the one-page account of how a rating is reached, and
+ * Short by design: it is the one-page account of how an assessment is reached,
  * the full reasoning lives in the proposal document, which is linked. The two
  * things it does carry in full are the thresholds and the indicator
  * descriptions, because those are what someone looking at their own assessment
@@ -19,6 +19,7 @@ import methodology from '~~/sample-data/methodology.json'
 definePageMeta({ active: 'about' })
 const { t } = useI18n({ useScope: 'global' })
 const { full: fullSite } = usePreviewScope()
+const { seesAll } = useAccess()
 const { indicatorHelp, indicatorNote, componentHelp, indicatorName } = useIndicatorHelp()
 
 useHead({ title: () => `${t('aboutTitle')} — ${t('brandDashboard')}` })
@@ -67,11 +68,11 @@ const dimensions = computed(() => DIMENSIONS.map(dim => ({
   })),
 })))
 
-const ratings = [
-  { category: 'needs_improvement', what: 'aboutRatingNeedsImprovementWhat' },
-  { category: 'good',              what: 'aboutRatingGoodWhat' },
-  { category: 'very_good',         what: 'aboutRatingVeryGoodWhat' },
-  { category: 'excellent',         what: 'aboutRatingExcellentWhat' },
+const categories = [
+  { category: 'needs_improvement', what: 'aboutCategoryNeedsImprovementWhat' },
+  { category: 'good',              what: 'aboutCategoryGoodWhat' },
+  { category: 'very_good',         what: 'aboutCategoryVeryGoodWhat' },
+  { category: 'excellent',         what: 'aboutCategoryExcellentWhat' },
 ].map(r => ({ ...r, label: t(labelKey('category', r.category)) }))
 
 // One flat list, with a sub-heading row per component, so the whole set can be
@@ -89,7 +90,6 @@ const indicatorGroups = computed(() => FRAMEWORK_INDICATORS.map(group => ({
   })),
 })))
 
-const SUPPORT_EMAIL = 'support@iatistandard.org'
 const FRAMEWORK_URL = 'https://iatistandard.org/en/news/reimagining-data-quality-consultation/'
 const TESTS_URL = 'https://github.com/IATI/dashboard-tests'
 const VALIDATOR_URL = 'https://validator.iatistandard.org/'
@@ -98,7 +98,7 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
 <template>
   <div>
     <Crumbs :path="[
-      { label: t('breadPublishingQuality'), href: fullSite ? '/' : null },
+      { label: t('breadPublishingQuality'), href: fullSite && seesAll ? '/' : null },
       { label: t('aboutBreadcrumb') },
     ]" />
     <TitleBar :eyebrow="t('aboutEyebrow')" :title="t('aboutTitle')" />
@@ -122,29 +122,30 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
             <div class="about-prose">
               <p>{{ t('aboutHowBody') }}</p>
               <p>{{ t('aboutHowWeakest') }}</p>
+              <p>{{ t('aboutHowIntention') }}</p>
               <p>{{ t('aboutHowWeighting') }}</p>
               <p>{{ t('aboutHowFocus') }}</p>
             </div>
           </Card>
         </BCol>
         <BCol cols="12" lg="5">
-          <Card :kicker="t('aboutRatingsTitle')">
+          <Card :kicker="t('aboutCategoriesTitle')">
             <div class="iati-table">
-              <table class="about-table about-table--ratings">
-              <caption class="visually-hidden">{{ t('aboutRatingsTitle') }}</caption>
+              <table class="about-table about-table--categories">
+              <caption class="visually-hidden">{{ t('aboutCategoriesTitle') }}</caption>
               <thead>
                 <tr>
-                  <th scope="col">{{ t('aboutRatingsCol') }}</th>
-                  <th scope="col">{{ t('aboutRatingsMeans') }}</th>
+                  <th scope="col">{{ t('aboutCategoriesCol') }}</th>
+                  <th scope="col">{{ t('aboutCategoriesMeans') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="rating in ratings" :key="rating.category">
-                  <th scope="row" class="about-table__rating">
-                    <span class="about-table__rating-name">{{ rating.label }}</span>
-                    <Stars :category="rating.category" size="sm" decorative />
+                <tr v-for="cat in categories" :key="cat.category">
+                  <th scope="row" class="about-table__category">
+                    <span class="about-table__category-name">{{ cat.label }}</span>
+                    <Stars :category="cat.category" size="sm" decorative />
                   </th>
-                  <td>{{ t(rating.what) }}</td>
+                  <td>{{ t(cat.what) }}</td>
                 </tr>
               </tbody>
               </table>
