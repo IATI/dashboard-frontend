@@ -56,8 +56,23 @@ export default defineNuxtConfig({
         // access token read which reporting organisations the user administers.
         scope:    'openid profile email ryd ryd:reporting_org',
       },
-      // Register Your Data — the source of which publishers a user may administer.
-      // Enforces an origin allowlist, so the same origins need registering here too.
+      // Register Your Data — the source of which publishers a user may
+      // administer, and so the thing that decides what a signed-in publisher
+      // sees. Enforces an origin allowlist, so the origin the site is served
+      // from has to be registered with RYD as well.
+      //
+      // BEFORE GOING LIVE: switch to the production instance,
+      // https://api.registeryourdata.iatistandard.org (the same host without
+      // the dev. prefix), either here or with NUXT_PUBLIC_RYD_BASE in
+      // deploy.yml.
+      //
+      // Checked 2026-10-15: a CORS preflight from https://iati.github.io is
+      // answered by the dev instance and NOT by the production one, so that
+      // origin is registered against dev only. Switching before it is
+      // registered against production would refuse every publisher's lookup
+      // before the request was even sent — which, because the lookup is what
+      // scopes a publisher to their own organisations, locks every publisher
+      // out. Register the origin first, then switch.
       rydBase: 'https://dev.api.registeryourdata.iatistandard.org',
     },
   },
