@@ -77,7 +77,10 @@ export default defineNuxtConfig({
       //
       // Checked 2026-10-15: a CORS preflight from https://iati.github.io is
       // answered by the dev instance and NOT by the production one, so that
-      // origin is registered against dev only. Switching before it is
+      // origin is registered against dev only. Production does return
+      // access-control-allow-methods, -allow-headers and -max-age, so its CORS
+      // middleware is running and it is only the origin allowlist that is
+      // missing the entry — one list addition, not a setup job. Switching before it is
       // registered against production would refuse every publisher's lookup
       // before the request was even sent — which, because the lookup is what
       // scopes a publisher to their own organisations, locks every publisher
