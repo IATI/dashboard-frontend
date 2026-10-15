@@ -50,7 +50,11 @@ export default defineNuxtConfig({
       auth: {
         clientId: 'nXxAqpsEf4sucq12XfjXWwUWYzMa',
         baseUrl:  'https://api.eu.asgardeo.io/t/iati',
-        scope:    'openid profile ryd ryd:reporting_org',
+        // `email` is needed for the all-organisations list, which matches on
+        // the address: `profile` alone does not carry an email claim, so
+        // without it there is nothing to match. `ryd` scopes are what let the
+        // access token read which reporting organisations the user administers.
+        scope:    'openid profile email ryd ryd:reporting_org',
       },
       // Register Your Data — the source of which publishers a user may administer.
       // Enforces an origin allowlist, so the same origins need registering here too.

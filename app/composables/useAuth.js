@@ -107,17 +107,26 @@ export function useAuth() {
     }
   }
 
-  /** Navigate back to wherever sign-in was started from, once only. */
+  /**
+   * Navigate back to wherever sign-in was started from, once only.
+   *
+   * Falls back to the organisations list rather than staying on the app root:
+   * the root is the cross-publisher overview, which most accounts may not open,
+   * and the route middleware stood aside during the redirect so it will not
+   * move them on by itself. Without this a blocked sessionStorage would leave
+   * someone signed in but looking at a page they are not allowed to see.
+   */
   function restoreReturnPath() {
     let path = null
     try {
       path = sessionStorage.getItem(RETURN_KEY)
       sessionStorage.removeItem(RETURN_KEY)
-    } catch { /* blocked storage — stay on the root */ }
+    } catch { /* blocked storage — the fallback below applies */ }
 
-    if (isSafeReturnPath(path) && path !== router.currentRoute.value.fullPath) {
+    const target = isSafeReturnPath(path) ? path : '/organisations'
+    if (target !== router.currentRoute.value.fullPath) {
       // replace, not push: the redirect should not leave a back-button trap.
-      router.replace(path)
+      router.replace(target)
     }
   }
 

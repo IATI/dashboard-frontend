@@ -21,7 +21,7 @@ const props = defineProps({
 
 const { t } = useI18n({ useScope: 'global' })
 const { signIn } = useAuth()
-const { slugs } = useAccess()
+const { slugs, accountLabel } = useAccess()
 
 const body = computed(() => {
   if (props.status === 'signed-out') return 'gateSignedOut'
@@ -48,6 +48,12 @@ const ownOrg = computed(() => (slugs.value.size === 1 ? [...slugs.value][0] : nu
       <template v-else>
         <h1 class="access-gate__title">{{ t('gateTitle') }}</h1>
         <p class="access-gate__intro">{{ t(body) }}</p>
+
+        <!-- Named, so a refusal can be diagnosed from the page: if this is not
+             the account you expected, the wrong one is signed in. -->
+        <p v-if="accountLabel" class="access-gate__account">
+          {{ t('gateSignedInAs', { account: accountLabel }) }}
+        </p>
 
         <button
           v-if="status === 'signed-out'"
@@ -104,6 +110,10 @@ const ownOrg = computed(() => (slugs.value.size === 1 ? [...slugs.value][0] : nu
   font-size: 1.5rem; color: var(--teal-90); margin: 0 0 10px; line-height: 1.15;
 }
 .access-gate__intro { font-size: .95rem; line-height: 1.55; color: var(--grey-70); margin: 0 }
+.access-gate__account {
+  margin: 10px 0 0; font-size: .85rem; color: var(--grey-60);
+  word-break: break-all;
+}
 .access-gate__action { margin-top: 20px }
 .access-gate__alt { margin: 16px 0 0; font-size: .9rem }
 .access-gate__help {

@@ -37,11 +37,18 @@ export function useAccess() {
     slugCount: slugs.value.size,
   }))
 
+  /**
+   * The identity the allow-list was checked against, for the gate to show.
+   * A refusal that names the account is diagnosable; one that does not is not.
+   */
+  const accountLabel = computed(() => accountIdentities(user.value)[0] ?? null)
+
   return {
     status,
     seesAll,
     slugs,
     scopeError,
+    accountLabel,
     /** Whether this viewer may see one organisation's page. */
     canSee: slug => canSeeOrg(status.value, slugs.value, slug),
     /** Whether a route may be rendered. */

@@ -565,5 +565,6 @@
   "gateGoToYours": "Go to your organisation's assessment",
   "gateGoToList": "See your organisations",
   "gateHelp": "If you think you should have access, contact",
-  "gateAboutLink": "Read how the assessment works"
+  "gateAboutLink": "Read how the assessment works",
+  "gateSignedInAs": "Signed in as {account}."
 }
