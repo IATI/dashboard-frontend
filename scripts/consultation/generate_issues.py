@@ -204,6 +204,20 @@ def load_features():
     return out
 
 
+def readable(step):
+    """
+    State a test as a fact rather than an expectation.
+
+    Gherkin writes its assertions as "`title` should be present", which reads
+    oddly after "Passes when" — "passes when the title should be present". The
+    wording is the test definition's own otherwise; only the modal changes.
+    """
+    step = re.sub(r'\bshould be\b', 'is', step)
+    step = re.sub(r'\bshould have\b', 'has', step)
+    step = re.sub(r'\bshould start\b', 'starts', step)
+    return step
+
+
 def slug(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
@@ -290,7 +304,7 @@ def indicator_issue(ind_id, component, dimension, names, helps, notes, features)
             if conditions:
                 body += '- Only where: ' + '; '.join(conditions) + '\n'
             for then in thens:
-                body += f'- Passes when: {then}\n'
+                body += f'- Passes when: {readable(then)}\n'
 
     note = notes.get(ind_id)
     if note:
