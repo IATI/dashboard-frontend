@@ -369,18 +369,26 @@ def main():
     for stale in out.glob('*.md'):
         stale.unlink()
 
-    written = 0
+    # Components first, in the order the proposal and the dashboard present the
+    # dimensions; then every indicator, in the framework's own numbering. The
+    # file names carry a sequence number because GitHub numbers issues in the
+    # order they are created, and because a plain sort of the names puts 2.10
+    # before 2.2 — in the directory listing as well as in the posting.
+    planned = []
     for _, dimension, components in DIMENSIONS:
         for component in components:
             ids = framework.get(component, [])
-            fn, body = component_issue(component, dimension, ids, names, comp_help, methodology)
-            (out / fn).write_text(body)
-            written += 1
-            for ind_id in ids:
-                fn, body = indicator_issue(ind_id, component, dimension, names, helps, notes, features)
-                (out / fn).write_text(body)
-                written += 1
+            planned.append(component_issue(component, dimension, ids, names, comp_help, methodology))
+    for _, dimension, components in DIMENSIONS:
+        for component in components:
+            for ind_id in framework.get(component, []):
+                planned.append(
+                    indicator_issue(ind_id, component, dimension, names, helps, notes, features))
 
+    for position, (fn, body) in enumerate(planned, start=1):
+        (out / f'{position:02d}-{fn}').write_text(body)
+
+    written = len(planned)
     print(f'wrote {written} issues to {out}')
     missing = [i for i in names if i not in {x for ids in framework.values() for x in ids}]
     if missing:
