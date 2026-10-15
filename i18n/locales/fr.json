@@ -515,8 +515,7 @@
   "aboutLead": "Ce tableau de bord évalue la qualité des données que les organisations publient dans IATI. Il s'agit d'une évaluation préliminaire, fondée sur un cadre encore à l'état de projet et diffusée pour recueillir des retours avant la mise en service.",
   "aboutDraftTitle": "Il s'agit d'un projet",
   "aboutDraftBody": "Le cadre sur lequel reposent ces évaluations fait encore l'objet d'une consultation. Les seuils, les pondérations et certaines définitions d'indicateurs peuvent évoluer. Les chiffres présentés ici ne doivent pas être cités ni utilisés comme référence.",
-  "aboutDraftFeedback": "Les retours sont ouverts jusqu'au 16 novembre 2026. Si quelque chose vous semble erroné, ou si un seuil vous paraît déraisonnable, dites-le : c'est précisément l'objet de la consultation.",
-  "aboutDraftContact": "Écrire à {email}",
+  "aboutDraftFeedback": "Les retours sont ouverts jusqu'au 16 novembre 2026. Si quelque chose vous semble erroné, ou si un seuil vous paraît déraisonnable, dites-le : c'est précisément l'objet de la consultation. Nous encourageons toutes les organisations à transmettre leurs retours sur GitHub.",
   "aboutHowTitle": "Comment une évaluation est établie",
   "aboutHowBody": "Les données sont évaluées selon quatre dimensions. Chaque dimension se compose de composantes, et les composantes de l'exhaustivité se composent d'indicateurs, chacun appliquant un ou plusieurs tests aux données de l'organisation.",
   "aboutHowWeakest": "Une catégorie d'évaluation (bon, très bon, excellent) est atteinte lorsque tous les critères de ce niveau sont remplis. Une dimension prend donc la catégorie de sa composante la plus faible, et l'évaluation globale est celle de la dimension la plus faible.",
@@ -569,7 +568,7 @@
   "gateSignedInAs": "Connecté en tant que {account}.",
   "pubScopeAll": "Toutes les organisations déclarantes sont affichées, car votre compte y a accès dans leur ensemble et non seulement à celles qu'il administre.",
   "orgTestHierarchyExcluded": "Pour cette organisation, cet indicateur n'est pas évalué pour les activités de niveau hiérarchique {level}.",
-  "aboutDraftGithub": "Les commentaires sur chaque indicateur sont recueillis sous forme de tickets sur GitHub, un par indicateur et par composante.",
   "aboutDraftGithubLink": "Commenter un indicateur",
-  "aboutThresholdNotRequired": "Non requis pour atteindre cette catégorie"
+  "aboutThresholdNotRequired": "Non requis pour atteindre cette catégorie",
+  "aboutDraftMore": "Les informations ci-dessous expliquent plus en détail comment l'évaluation est calculée pour chaque organisation. Si vous ne pouvez pas utiliser GitHub, si vous souhaitez transmettre vos retours en privé ou si vous avez d'autres questions, écrivez à"
 }

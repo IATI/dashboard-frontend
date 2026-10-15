@@ -514,8 +514,7 @@
   "aboutLead": "This dashboard assesses the quality of the data organisations publish to IATI. It is a preliminary assessment against a draft framework, shared for feedback before the dashboard goes live.",
   "aboutDraftTitle": "This is a draft",
   "aboutDraftBody": "The framework behind these assessments is still being consulted on. Thresholds, weightings and some indicator definitions may change. Figures here should not be cited or relied upon.",
-  "aboutDraftFeedback": "Feedback is open until 16 November 2026. If something looks wrong, or a threshold looks unreasonable, please say so — that is what the consultation is for.",
-  "aboutDraftContact": "Contact {email}",
+  "aboutDraftFeedback": "Feedback is open until 16 November 2026. If something looks wrong, or a threshold looks unreasonable, please say so — that is what the consultation is for. We are encouraging all organisations to provide their feedback on GitHub.",
   "aboutHowTitle": "How an assessment is reached",
   "aboutHowBody": "Data is assessed against four dimensions. Each dimension is made up of components, and the comprehensiveness components are made up of indicators, each of which runs one or more tests against the organisation's data.",
   "aboutHowWeakest": "An assessment category (good, very good, excellent) is achieved when all criteria at that level are met. A dimension therefore takes the category of its weakest component, and the overall assessment is that of the weakest dimension.",
@@ -568,7 +567,7 @@
   "gateSignedInAs": "Signed in as {account}.",
   "pubScopeAll": "Showing every reporting organisation, because your account has access to all of them rather than only the ones it administers.",
   "orgTestHierarchyExcluded": "For this organisation, this indicator is not assessed for activities at hierarchy {level}.",
-  "aboutDraftGithub": "Comments on individual indicators are collected as issues on GitHub, one per indicator and per component.",
   "aboutDraftGithubLink": "Comment on an indicator",
-  "aboutThresholdNotRequired": "Not required to achieve this category"
+  "aboutThresholdNotRequired": "Not required to achieve this category",
+  "aboutDraftMore": "The information below provides more detail on how the assessment is calculated for each organisation. If you cannot use GitHub, want to share feedback privately, or have further questions, please email"
 }

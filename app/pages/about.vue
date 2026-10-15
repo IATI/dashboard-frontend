@@ -134,13 +134,16 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
       <BAlert :model-value="true" variant="warning" class="about-draft">
         <h2 class="about-draft__title">{{ t('aboutDraftTitle') }}</h2>
         <p>{{ t('aboutDraftBody') }}</p>
+        <!-- GitHub first: the consultation happens there, one issue per
+             indicator and per component. The support address is the fallback
+             for anyone who cannot use it, rather than the first thing offered. -->
         <p>
           {{ t('aboutDraftFeedback') }}
-          <a :href="`mailto:${SUPPORT_EMAIL}`">{{ t('aboutDraftContact', { email: SUPPORT_EMAIL }) }}</a>
+          <a :href="FEEDBACK_URL">{{ t('aboutDraftGithubLink') }}</a>
         </p>
         <p class="mb-0">
-          {{ t('aboutDraftGithub') }}
-          <a :href="FEEDBACK_URL">{{ t('aboutDraftGithubLink') }}</a>
+          {{ t('aboutDraftMore') }}
+          <a :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>.
         </p>
       </BAlert>
 
