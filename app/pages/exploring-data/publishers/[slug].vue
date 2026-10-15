@@ -2,7 +2,12 @@
 definePageMeta({ active: 'exploring' })
 const route = useRoute()
 const slug = route.params.slug
-const { public: { dashboardBase: BASE } } = useRuntimeConfig()
+// Two bases, because the dashboard serves these from two places. The /api and
+// /stats endpoints send Access-Control-Allow-Origin and are reached directly;
+// the /generated/* files are static, served by Apache, and send no CORS header,
+// so they alone still go through the proxy. Point generatedBase at
+// dashboardBase once that changes and the proxy can be retired.
+const { public: { dashboardBase: BASE, generatedBase: GENERATED } } = useRuntimeConfig()
 const C = { teal90: '#155366', teal70: '#448093', teal50: '#73adbf', orange: '#ff7264', grey20: '#dadada', grey60: '#686868', blue: '#06dbe4', green: '#00c497' }
 
 const ORG_TYPES = {
@@ -73,12 +78,12 @@ const [
   useFetch(`${BASE}/stats/current/aggregated-publisher/${slug}/organisation_files.json`),
   useFetch(`${BASE}/stats/current/aggregated-publisher/${slug}/file_size.json`),
   useFetch(`${BASE}/stats/current/aggregated-publisher/${slug}/versions.json`),
-  useFetch(`${BASE}/generated/img/publishers/${slug}_activities.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/publishers/${slug}_activity_files.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/publishers/${slug}_organisation_files.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/publishers/${slug}_file_size.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/publishers/${slug}_validation.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/publishers/${slug}_versions.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/publishers/${slug}_activities.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/publishers/${slug}_activity_files.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/publishers/${slug}_organisation_files.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/publishers/${slug}_file_size.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/publishers/${slug}_validation.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/publishers/${slug}_versions.csv`, { responseType: 'text' }),
   useFetch(`${BASE}/stats/current/aggregated-publisher/${slug}/count_budgets_by_type_by_year.json`),
   useFetch(`${BASE}/stats/current/aggregated-publisher/${slug}/sum_budgets_by_type_by_year.json`),
   useFetch(`${BASE}/stats/current/inverted-file-publisher/${slug}/activities.json`),

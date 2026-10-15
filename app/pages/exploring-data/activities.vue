@@ -2,7 +2,10 @@
 definePageMeta({ active: 'exploring' })
 const { t } = useI18n({ useScope: 'global' })
 
-const { public: { dashboardBase: BASE } } = useRuntimeConfig()
+// Only /generated/* here, which is the one thing still behind the proxy: these
+// are static files served by Apache, which sends no Access-Control-Allow-Origin,
+// unlike the /api and /stats endpoints the rest of the site now reaches direct.
+const { public: { generatedBase: GENERATED } } = useRuntimeConfig()
 
 // Colours matching the design system (CSS vars don't work in Chart.js)
 const C = {
@@ -18,9 +21,9 @@ const [
   { data: uniqueRaw },
   { data: byTypeRaw },
 ] = await Promise.all([
-  useFetch(`${BASE}/generated/img/aggregate/activities.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/aggregate/unique_identifiers.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/aggregate/activities_per_publisher_type.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/activities.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/unique_identifiers.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/activities_per_publisher_type.csv`, { responseType: 'text' }),
 ])
 
 const totalSeries = computed(() => activitiesRaw.value ? toMonthly(parseCSV(activitiesRaw.value), 'date', 'value') : [])

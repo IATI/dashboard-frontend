@@ -2,7 +2,12 @@
 definePageMeta({ active: 'exploring' })
 const { t } = useI18n({ useScope: 'global' })
 
-const { public: { dashboardBase: BASE } } = useRuntimeConfig()
+// Two bases, because the dashboard serves these from two places. The /api and
+// /stats endpoints send Access-Control-Allow-Origin and are reached directly;
+// the /generated/* files are static, served by Apache, and send no CORS header,
+// so they alone still go through the proxy. Point generatedBase at
+// dashboardBase once that changes and the proxy can be retired.
+const { public: { dashboardBase: BASE, generatedBase: GENERATED } } = useRuntimeConfig()
 const C = {
   teal90: '#155366', teal70: '#448093', teal50: '#73adbf',
   orange: '#ff7264', green: '#00c497', blue: '#06dbe4',
@@ -17,9 +22,9 @@ const [
   { data: pubsTableRaw },
   { data: pubsScalar },
 ] = await Promise.all([
-  useFetch(`${BASE}/generated/img/aggregate/publishers.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/aggregate/publisher_types.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/data/csv/publishers.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/publishers.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/publisher_types.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/data/csv/publishers.csv`, { responseType: 'text' }),
   useFetch(`${BASE}/stats/current/aggregated/publishers.json`),
 ])
 
@@ -196,7 +201,7 @@ const FIELDS = [
       <!-- Publisher table -->
       <Card title="List of current active IATI Reporting Orgs">
         <template #actions>
-          <a :href="`${BASE}/generated/data/csv/publishers.csv`" target="_blank">(This table as CSV)</a>
+          <a :href="`${GENERATED}/generated/data/csv/publishers.csv`" target="_blank">(This table as CSV)</a>
         </template>
 
         <!-- Filters -->

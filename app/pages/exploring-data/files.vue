@@ -2,7 +2,12 @@
 definePageMeta({ active: 'exploring' })
 const { t } = useI18n({ useScope: 'global' })
 
-const { public: { dashboardBase: BASE } } = useRuntimeConfig()
+// Two bases, because the dashboard serves these from two places. The /api and
+// /stats endpoints send Access-Control-Allow-Origin and are reached directly;
+// the /generated/* files are static, served by Apache, and send no CORS header,
+// so they alone still go through the proxy. Point generatedBase at
+// dashboardBase once that changes and the proxy can be retired.
+const { public: { dashboardBase: BASE, generatedBase: GENERATED } } = useRuntimeConfig()
 const C = { teal90: '#155366', orange: '#ff7264', green: '#00c497', grey20: '#dadada', grey60: '#686868' }
 
 
@@ -12,9 +17,9 @@ const [
   { data: orgFilesRaw },
   { data: binsData },
 ] = await Promise.all([
-  useFetch(`${BASE}/generated/img/aggregate/file_size.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/aggregate/activity_files.csv`, { responseType: 'text' }),
-  useFetch(`${BASE}/generated/img/aggregate/organisation_files.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/file_size.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/activity_files.csv`, { responseType: 'text' }),
+  useFetch(`${GENERATED}/generated/img/aggregate/organisation_files.csv`, { responseType: 'text' }),
   useFetch(`${BASE}/stats/current/aggregated/file_size_bins.json`),
 ])
 
