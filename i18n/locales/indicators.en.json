@@ -114,9 +114,7 @@
     "1.6_audit": "Propose to exclude for NGOs under the framework; note that this exclusion has not yet been implemented.",
     "1.7_organisation_budget": "Propose to assess NGOs on the previous year rather than on forward projections under the framework; note that this distinction has not yet been implemented. Years forward are counted from the date of assessment rather than the date of the data.",
     "1.8_country_budgets": "Propose to exclude for NGOs and INGOs under the framework; note that this exclusion has not yet been implemented.",
-    "2.1_reporting_organisation": "Not defined in detail in the proposal; the definition applied here is provisional.",
-    "2.9_country_or_region": "Not defined in detail in the proposal; the definition applied here is provisional.",
-    "3.3_traceability": "Direction follows organisation type — onward to partners for governments and foundations, back to funders for NGOs and the private sector, both for multilaterals and public-private partnerships.",
+    "3.3_traceability": "Direction of traceability expected is according to the reporting organisation type: downwards to partners for governments and foundations, upwards to funders for NGOs and the private sector, in both directions for multilaterals and public-private partnerships.",
     "3.4_project_budgets": "How far forward a budget reaches is counted from the date of assessment rather than the date of the data.",
     "4.6_conditions": "Assessed only for activities valued at USD 100,000 or more. The threshold is provisional and subject to consultation.",
     "4.8_documents": "Four of the eight document types are assessed only for activities valued at USD 100,000 or more; the threshold is provisional. The types follow those applied to government donors, and which are reasonable to expect of other organisation types remains subject to consultation."

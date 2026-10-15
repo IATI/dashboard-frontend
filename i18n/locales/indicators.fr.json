@@ -96,9 +96,7 @@
     "1.6_audit": "Il est proposé d'exclure les ONG dans le cadre ; à noter que cette exclusion n'a pas encore été mise en œuvre.",
     "1.7_organisation_budget": "Il est proposé d'évaluer les ONG sur l'année précédente plutôt que sur des projections dans le cadre ; à noter que cette distinction n'a pas encore été mise en œuvre. Les années d'avance sont comptées à partir de la date d'évaluation et non de la date des données.",
     "1.8_country_budgets": "Il est proposé d'exclure les ONG et les ONGI dans le cadre ; à noter que cette exclusion n'a pas encore été mise en œuvre.",
-    "2.1_reporting_organisation": "Non défini en détail dans la proposition ; la définition appliquée ici est provisoire.",
-    "2.9_country_or_region": "Non défini en détail dans la proposition ; la définition appliquée ici est provisoire.",
-    "3.3_traceability": "Le sens de l'analyse suit le type d'organisation — vers les partenaires pour les États et les fondations, vers les financeurs pour les ONG et le secteur privé, dans les deux sens pour les organisations multilatérales et les partenariats public-privé.",
+    "3.3_traceability": "Le sens de traçabilité attendu dépend du type d'organisation déclarante : vers l'aval, vers les partenaires, pour les États et les fondations ; vers l'amont, vers les financeurs, pour les ONG et le secteur privé ; dans les deux sens pour les organisations multilatérales et les partenariats public-privé.",
     "3.4_project_budgets": "L'horizon d'un budget est compté à partir de la date d'évaluation et non de la date des données.",
     "4.6_conditions": "Évalué uniquement pour les activités d'une valeur égale ou supérieure à 100 000 USD. Ce seuil est provisoire et soumis à consultation.",
     "4.8_documents": "Quatre des huit types de documents ne sont évalués que pour les activités d'une valeur égale ou supérieure à 100 000 USD ; ce seuil est provisoire. Les types retenus sont ceux appliqués aux bailleurs publics ; ceux qu'il est raisonnable d'attendre des autres types d'organisation restent soumis à consultation."
