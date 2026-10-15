@@ -20,3 +20,7 @@ launchctl.txt
 # Spreadsheets written by scripts/export-assessments.mjs, which defaults to
 # writing into the working directory. The script is source; its output is not.
 *.xlsx
+
+# Consultation issues staged by scripts/consultation/generate_issues.py for
+# review before posting. The scripts are source; the issues belong on GitHub.
+consultation-issues/
