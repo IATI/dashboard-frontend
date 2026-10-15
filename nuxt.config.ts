@@ -49,6 +49,8 @@ export default defineNuxtConfig({
         'rohini.simbodyal@undp.org',
         'jaimie.grant@undp.org',
         'bee.webb@opendataservices.coop',
+        'emma.clegg@opendataservices.coop',
+        'steven.flower@opendataservices.coop',
       ].join(','),
       // IATI Account SSO (Asgardeo/WSO2). Defaults are the ones the IATI SPA
       // example publishes; override per environment with NUXT_PUBLIC_AUTH_*.
