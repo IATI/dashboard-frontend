@@ -61,14 +61,14 @@
   },
   "componentHelp": {
     "downloadable": "Every registered file could be downloaded from the organisation's server.",
-    "no_critical_errors": "The files are valid against the IATI schema. Files that are not cannot enter the IATI Datastore.",
+    "no_critical_errors": "The files are valid against the IATI schema. Files that are not valid are not available in the IATI Datastore.",
     "no_errors": "The IATI Validator reports no errors.",
     "frequency": "How often the organisation updates its files.",
     "timeliness": "How far behind the present the published data is.",
     "coverage": "Published spending as a share of an independent reference figure for the same period.",
     "disaggregation": "How many quarters a year the financial data is broken down into, over five years.",
     "organisation_fields": "The organisation file: strategic documents and forward budgets for the organisation as a whole.",
-    "basic_fields": "The fields needed to identify an activity and compare it with others. Expected on almost every activity.",
+    "basic_fields": "The fields required to identify an activity and ensure comparability across organisations. Expected on almost every activity.",
     "financial_fields": "Commitments, disbursements and expenditure, forward budgets, and traceability.",
     "advanced_fields": "Fields that take more effort to publish but make the data useful to far more people. Not required to achieve the “good” category."
   },

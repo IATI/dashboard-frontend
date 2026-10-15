@@ -43,14 +43,14 @@
   },
   "componentHelp": {
     "downloadable": "Chaque fichier déclaré a pu être téléchargé depuis le serveur de l'organisation.",
-    "no_critical_errors": "Les fichiers sont valides au regard du schéma IATI. Ceux qui ne le sont pas ne peuvent pas entrer dans le Datastore IATI.",
+    "no_critical_errors": "Les fichiers sont valides au regard du schéma IATI. Les fichiers non valides ne sont pas disponibles dans le Datastore IATI.",
     "no_errors": "Le validateur IATI ne signale aucune erreur.",
     "frequency": "À quelle fréquence l'organisation met à jour ses fichiers.",
     "timeliness": "Le retard des données publiées par rapport à la période en cours.",
     "coverage": "Les dépenses publiées en part d'un chiffre de référence indépendant portant sur la même période.",
     "disaggregation": "En combien de trimestres par an les données financières sont découpées, sur cinq ans.",
     "organisation_fields": "Le fichier d'organisation : documents stratégiques et budgets prévisionnels de l'organisation dans son ensemble.",
-    "basic_fields": "Les champs nécessaires pour identifier une activité et la comparer à d'autres. Attendus sur presque toutes les activités.",
+    "basic_fields": "Les champs requis pour identifier une activité et garantir la comparabilité entre organisations. Attendus sur presque toutes les activités.",
     "financial_fields": "Engagements, versements et dépenses, budgets prévisionnels et traçabilité.",
     "advanced_fields": "Des champs plus exigeants à publier, mais qui rendent les données utiles à beaucoup plus de monde. Non requis pour atteindre la catégorie « bon »."
   },
