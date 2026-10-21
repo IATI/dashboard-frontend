@@ -90,12 +90,17 @@ const dimensions = computed(() => DIMENSIONS.map(dim => ({
   })),
 })))
 
-const categories = [
+// Computed, not a plain array: t() in a one-off .map runs at setup and keeps
+// whatever the locale was then, so switching language left these labels behind
+// while the descriptions beside them, translated in the template, updated.
+const CATEGORIES = [
   { category: 'needs_improvement', what: 'aboutCategoryNeedsImprovementWhat' },
   { category: 'good',              what: 'aboutCategoryGoodWhat' },
   { category: 'very_good',         what: 'aboutCategoryVeryGoodWhat' },
   { category: 'excellent',         what: 'aboutCategoryExcellentWhat' },
-].map(r => ({ ...r, label: t(labelKey('category', r.category)) }))
+]
+const categories = computed(() =>
+  CATEGORIES.map(r => ({ ...r, label: t(labelKey('category', r.category)) })))
 
 // One flat list, with a sub-heading row per component, so the whole set can be
 // read down the page or scanned by number.
