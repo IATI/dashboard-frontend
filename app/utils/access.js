@@ -9,6 +9,20 @@
  */
 
 /**
+ * A path in the form these rules match: no trailing slash, no query or hash.
+ *
+ * GitHub Pages serves a prerendered page as a directory and 301s `/about` to
+ * `/about/`, so every visitor following a link to the methodology arrived on a
+ * path that an exact match did not recognise — and the one page meant to be
+ * public was the only one the trailing slash broke, because the organisation
+ * routes are matched with startsWith.
+ */
+export function normalisePath(path) {
+  const bare = String(path ?? '').split(/[?#]/)[0]
+  return bare.length > 1 ? bare.replace(/\/+$/, '') : bare
+}
+
+/**
  * What a route requires of the viewer.
  *
  *   public — no sign-in. The methodology, which describes the framework and
@@ -22,14 +36,15 @@
  * someone decides otherwise rather than open by default.
  */
 export function routeAccess(path) {
-  if (path === '/about') return 'public'
-  if (path === '/organisations' || path.startsWith('/organisations/')) return 'own'
+  const p = normalisePath(path)
+  if (p === '/about') return 'public'
+  if (p === '/organisations' || p.startsWith('/organisations/')) return 'own'
   return 'all'
 }
 
 /** The organisation a route is about, or null. '/organisations/afdb' -> 'afdb' */
 export function routeOrgSlug(path) {
-  const m = /^\/organisations\/([^/]+)\/?$/.exec(path)
+  const m = /^\/organisations\/([^/]+)$/.exec(normalisePath(path))
   return m ? decodeURIComponent(m[1]) : null
 }
 

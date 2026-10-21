@@ -20,7 +20,10 @@ const STORAGE_KEY = 'iati-dq-full'
  * the methodology, and an organisation's page links to it.
  */
 export function isPreviewPath(path) {
-  return path === '/about' || path === '/organisations' || path.startsWith('/organisations/')
+  // normalisePath for the same reason routeAccess needs it: a prerendered page
+  // is served as a directory, so '/about' arrives as '/about/'.
+  const p = normalisePath(path)
+  return p === '/about' || p === '/organisations' || p.startsWith('/organisations/')
 }
 
 export function usePreviewScope() {
