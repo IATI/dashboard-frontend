@@ -495,6 +495,10 @@ function adaptStats(stats, methodology) {
     timelag:      stats.timelag ?? null,
     timelagValue: TIMELAG_TO_VALUE[String(stats.timelag ?? '').toLowerCase()] ?? null,
 
+    // Per-document Validator counts, which are what the availability panel
+    // draws its bars from.
+    validationSummary: adaptValidationSummary(stats.validation_summary_precalc),
+
     // `validation` only carries the outcomes that occurred, so an absent
     // `fail` key means nothing failed — not that the data is missing.
     validation: {
@@ -591,85 +595,36 @@ function toIso(value) {
   return Number.isNaN(parsed) ? null : new Date(parsed).toISOString()
 }
 
-/** Whole days since a timestamp, or null if unparseable. */
-function daysSince(value) {
-  const iso = toIso(value)
-  return iso === null ? null : Math.floor((Date.now() - Date.parse(iso)) / 86_400_000)
-}
-
 /**
- * Validator findings for one publisher, from dashboard-coverage's
- * validation_errors.json (refreshed weekly, so a looser age gate).
+ * Validator findings for one publisher, from stats.validation_summary_precalc.
  *
- * `documents_with_*` answers "is this publisher OK?"; `total_*` counts instances
- * and is only useful for severity — one publisher has 140 affected documents but
- * 832,258 instances. A publisher whose documents could not be read carries a
- * non-null `error` and must not read as a pass.
+ * Replaces an 814KB cross-origin file from dashboard-coverage that was fetched
+ * on every publisher page for these counts alone, together with the staleness,
+ * unreadability and source-failure handling that reading a separately-built
+ * file required. The API publishes the per-document counts now, in the same
+ * payload as everything else, so all of that goes.
+ *
+ * `documents_with_*` answers "is this publisher OK?"; the bare severity counts
+ * count instances and only say how bad — one publisher has 144 affected
+ * documents and 292,726 instances.
+ *
+ * An empty object means nothing could be checked rather than nothing being
+ * wrong: a publisher whose only file failed to download reports `{}`, not
+ * zeros. That comes back null, so the page leaves the measures unstated instead
+ * of showing a clean bill of health.
  */
-// How stale a file may be before its verdicts are withheld, by refresh cadence.
-// A weekly file legitimately reaches 6-7 days old just before each run, so it
-// needs more headroom than a daily one.
-const MAX_AGE_DAYS_BY_CADENCE = { daily: 7, weekly: 10 }
-const MAX_AGE_DAYS_DEFAULT = 10
-
-export function adaptValidationErrors(raw, slug) {
-  if (!raw?.publishers) return null
-  // Derived from the timestamp, not the file's own age_days: that value is only
-  // correct when written, so a failed rebuild reports 0 while the data ages.
-  const ageDays = daysSince(raw.generated) ?? raw.age_days ?? null
-  const refreshed = raw.refreshed ?? null
-  const maxAge = MAX_AGE_DAYS_BY_CADENCE[refreshed] ?? MAX_AGE_DAYS_DEFAULT
-  const stale = ageDays != null && ageDays > maxAge
-  // A spike in publishers_failed means the Validator API was struggling during
-  // the run, not that publishers' data changed. Treat the whole file as suspect
-  // rather than telling dozens of publishers their documents are unreadable.
-  const failed = raw.publishers_failed ?? 0
-  const sourceSuspect = failed > 30
-
-  const record = raw.publishers[unref(slug)] ?? null
-  const unreadable = Boolean(record?.error) && !sourceSuspect
-
-  // Documents the Validator actually assessed. When every document is
-  // undownloadable the zero counts mean "nothing was checked", not "nothing was
-  // wrong" — 64 publishers are in exactly that state, and reading their zeros as
-  // a pass would score a publisher whose files all 404 as flawless.
-  // documents_assessed is published now; the subtraction is the same number and
-  // keeps this working against older copies of the file.
-  const assessed = record?.documents_assessed
-    ?? ((record?.documents ?? 0) - (record?.undownloadable ?? 0))
-  const usable = Boolean(record) && !stale && !unreadable && !sourceSuspect && assessed > 0
+function adaptValidationSummary(raw) {
+  const documents = raw?.documents ?? null
+  if (!documents) return null
 
   return {
-    stale,
-    ageDays,
-    refreshed,
-    generated:  toIso(raw.generated),
-    unreadable,
-    sourceSuspect,
-    publishersFailed: failed,
-    readError:  record?.error ?? null,
-    documents:            record?.documents ?? null,
-    documentsAssessed:    record ? assessed : null,
-    undownloadable:       record?.undownloadable ?? null,
-    // undownloadable splits two ways: the Validator tried and failed, or has no
-    // record of trying. Only the first is the publisher's problem to fix.
-    downloadFailed:       record?.download_failed ?? null,
-    neverFetched:         record?.never_fetched ?? null,
-    // Two count styles, because they answer different questions: documents_with_*
-    // for "is this publisher OK?", total_* for how bad. One publisher has 140
-    // affected documents but 832,258 instances.
-    severities: ['critical', 'error', 'warning', 'advisory'].map(level => ({
-      level,
-      documents: record?.[`documents_with_${level}`] ?? null,
-      instances: record?.[`total_${level}`] ?? null,
-    })),
-    documentsWithCritical: record?.documents_with_critical ?? null,
-    documentsWithError:    record?.documents_with_error ?? null,
-    totalCritical:         record?.total_critical ?? null,
-    totalError:            record?.total_error ?? null,
-    // null = cannot say (stale, unreadable, or publisher absent)
-    noCriticalErrors: usable ? record.documents_with_critical === 0 : null,
-    noErrors:         usable ? record.documents_with_error === 0 : null,
+    documents,
+    documentsWithCritical: raw.documents_with_critical ?? 0,
+    documentsWithError:    raw.documents_with_error ?? 0,
+    critical: raw.critical ?? 0,
+    error:    raw.error ?? 0,
+    warning:  raw.warning ?? 0,
+    advisory: raw.advisory ?? 0,
   }
 }
 

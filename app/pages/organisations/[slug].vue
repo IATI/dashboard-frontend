@@ -19,11 +19,6 @@ watch(publisherError, err => { if (err) showError(err) }, { immediate: true })
 // renders empty headings and labels with nothing after them.
 const loading = computed(() => !publisher.value && !publisherError.value)
 
-// The Validator file lands after the stats, so the availability panel is held
-// back until both are in rather than appearing with one bar and growing to
-// three. Everything else on the page depends only on the stats.
-const availabilityLoading = computed(() => loading.value || validationPending.value)
-
 // A reporting organisation that has not published an activity file yet. Most of
 // this page is derived from activities, so rather than leaving it to be inferred
 // from empty panels, say so and point at the guidance.
@@ -81,7 +76,6 @@ const publishGuidanceUrl = computed(() =>
 )
 
 // Only the Validator findings now: download failures arrive with the stats.
-const { validation, pending: validationPending } = useAvailabilityData(slug)
 
 // With the rest of the site out of reach, "Publishing Quality" has nowhere to
 // go — a crumb that redirects straight back is worse than plain text.
@@ -198,7 +192,7 @@ const validatorUrl = computed(() => `https://validator.iatistandard.org/organisa
 
 const availabilityStats = computed(() => {
   const d = stats.value?.downloads
-  const v = validation.value
+  const v = stats.value?.validationSummary
   const rows = []
 
   // Every bar is a full-width split: green for the share that is fine, then the
@@ -223,11 +217,13 @@ const availabilityStats = computed(() => {
       affected: d.failed, total: d.files, variant: 'bad',
     }))
   }
-  if (v?.documentsAssessed) {
+  // Null when nothing could be checked, so the measures are left unstated
+  // rather than reported as clean. See adaptValidationSummary.
+  if (v) {
     rows.push(measure({ key: 'critical', label: t('availCritical'),
-      affected: v.documentsWithCritical, total: v.documentsAssessed, variant: 'bad' }))
+      affected: v.documentsWithCritical, total: v.documents, variant: 'bad' }))
     rows.push(measure({ key: 'errors', label: t('availErrors'),
-      affected: v.documentsWithError, total: v.documentsAssessed, variant: 'bad' }))
+      affected: v.documentsWithError, total: v.documents, variant: 'bad' }))
   }
   return rows
 })
@@ -782,13 +778,6 @@ const dimensions = computed(() =>
       <!-- Availability — headline counts only; the detail lives in the source files -->
       <!-- While the stats payload is in flight, stand the four panels up with
            their real headings so the page does not reflow as each arrives. -->
-      <template v-if="availabilityLoading && !loading">
-        <Card class="mt" :kicker="t('dimAvailability')">
-          <Skeleton height="1rem" class="mt-sm" />
-          <Skeleton width="80%" height="1rem" class="mt-sm" />
-          <Skeleton height="2.4rem" class="mt-sm" />
-        </Card>
-      </template>
       <template v-if="loading">
         <Card v-for="dim in DIMENSION_ORDER" :key="dim" class="mt" :kicker="t(labelKey('dim', dim))">
           <Skeleton height="1rem" class="mt-sm" />
@@ -797,7 +786,7 @@ const dimensions = computed(() =>
         </Card>
       </template>
 
-      <Card v-if="availabilityStats.length && !availabilityLoading" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')" :id="`dimension-availability`" tabindex="-1">
+      <Card v-if="availabilityStats.length && !loading" :class="['mt', cardTone('availability')]" :kicker="t('dimAvailability')" :id="`dimension-availability`" tabindex="-1">
         <template v-if="bandFor('availability')" #kicker-actions>
           <DimensionBand :category="bandFor('availability')" :tooltips="dimensionStarTooltips()" />
         </template>
