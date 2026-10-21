@@ -1,4 +1,3 @@
-import methodology from '~~/sample-data/methodology.json'
 
 
 /**
@@ -44,7 +43,7 @@ export function usePublisher(slug, options = {}) {
     {
       watch: [shortName],
       default: () => null,
-      transform: raw => adaptPublisher(raw, methodology),
+      transform: raw => adaptPublisher(raw),
       // The password gate mounts the page during hydration, and useAsyncData
       // skips fetching while hydrating when it finds no SSR payload — so the
       // request was never made at all. Fetch on the client explicitly.

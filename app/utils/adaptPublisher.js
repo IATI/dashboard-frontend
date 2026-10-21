@@ -2,9 +2,8 @@
 //
 // That payload is ~300KB of raw counts with names and shapes that follow the
 // dashboard's internals rather than our methodology. Everything in the app reads
-// the normalised output of this module instead, so when the API changes — or the
-// assessment layer lands and supplies the shape in sample-data/publishing-quality.json
-// directly — only this file has to change.
+// the normalised output of this module instead, so when the API changes only
+// this file has to change.
 //
 // Pure functions, no fetching: pass in the raw payload, get plain objects back.
 
@@ -17,7 +16,7 @@ const TIMELAG_TO_VALUE = {
   'more than one year': 'more_than_one_year',
 }
 
-// timeliness_frequency.csv's Frequency column, mapped onto methodology values.
+// stats.frequency_old.frequency, mapped onto the methodology's enum values.
 const FREQUENCY_TO_VALUE = {
   'monthly':          'monthly',
   'quarterly':        'quarterly',
@@ -27,28 +26,17 @@ const FREQUENCY_TO_VALUE = {
 }
 
 /**
- * The API scores each timeliness component on a 0-4 ordinal, and bands it on the
- * ladder below — read off the value/category pairs its own components carry.
- * frequency_old's verdict maps onto the same scale, so a component rebuilt from
- * it is directly comparable with the timelag component beside it.
- */
-/**
- * Ordinal back to the named value, for the two components the API scores that
- * way. Everything downstream — the methodology thresholds, displayValue, the
- * star tooltips — works in named values, so "3" has to come back as
- * 'one_quarter' rather than being rendered as a bare number.
- *
- * Verified against stats.timelag and frequency_new over 30 publishers: every
- * ordinal 0-4 round-trips to the string the API itself displays.
+ * The API scores timelag and frequency as a 0-4 ordinal. Everything downstream
+ * works in named values — the methodology thresholds, the displayed value, the
+ * star tooltips — so an index comes back as 'one_quarter' rather than a bare 3.
  */
 const ORDINAL_VALUE = {
   timelag:   ['more_than_one_year', 'one_year', 'six_months', 'one_quarter', 'one_month'],
   frequency: ['less_than_annual', 'annually', 'six_monthly', 'quarterly', 'monthly'],
 }
 
-
-// The API scores the assessment itself now. Its component ids differ from the
-// methodology file's, so map them once here rather than renaming either side.
+// The API's component ids differ from the methodology file's; map them once
+// here rather than renaming either side.
 const COMPONENT_ID = {
   basic: 'basic_fields',
   advanced: 'advanced_fields',
@@ -68,10 +56,9 @@ const AS_PERCENT = new Set(['coverage', 'basic', 'advanced', 'financials', 'orga
  * The scored assessment, from stats.assessment_new.
  *
  * The API bands every component and dimension, so the thresholds and the
- * aggregation rules live there rather than being reimplemented here. The
- * methodology file is still read for the thresholds the UI displays.
+ * aggregation rules live there rather than being reimplemented here.
  */
-function adaptAssessment(stats, methodology) {
+function adaptAssessment(stats) {
   const raw = stats.assessment_new
   if (!raw?.dimensions) return null
 
@@ -112,35 +99,25 @@ function adaptAssessment(stats, methodology) {
   return { overall: { category: raw.overall?.category ?? null }, dimensions }
 }
 
-/** Coverage and disaggregation, now carried in the stats payload. */
+/** Coverage and disaggregation, from stats.coverage_dict_from_external_repo. */
 function adaptCoverageFromStats(stats) {
   const raw = stats.coverage_dict_from_external_repo
   if (!raw?.coverage) return null
   const c = raw.coverage
   const d = raw.disaggregation ?? {}
 
-  // Whether this publisher has anything to be compared against. Detected three
-  // ways because the upstream convention changed: it used to report
-  // `coverage: null`, and now reports `coverage: 0` with `no_reference: true`.
-  // A 0 under that flag is an absence of a measurement, not a measured zero, so
-  // treating it as a score would mark ~660 publishers down for not appearing in
-  // any register. Checking all three keeps old and new files working.
-  const hasReference = c.no_reference !== true
-    && c.reference_source != null
-    && c.coverage != null
+  // Whether this publisher has anything to be compared against. A publisher
+  // with no reference reports `coverage: 0` under `no_reference: true`, and
+  // that 0 is an absence of a measurement rather than a measured zero — taking
+  // it as a score would mark down the ~500 publishers who appear in no
+  // register.
+  const hasReference = c.no_reference !== true && c.coverage != null
 
-  // Show the spending figure the ratio was actually computed from, so the three
-  // numbers on the panel agree. dashboard-coverage has dropped the net basis
-  // (IATI/dashboard-coverage f992f49) and coverage is gross for every source,
-  // which is what the missing-basis branch resolves to.
-  //
-  // The net branch is kept until the API picks that up: the dashboard refreshes
-  // coverage_by_slug.json once a night, so for now it still serves net-based
-  // ratios for a handful of entities, and pairing one of those with the gross
-  // figure would reintroduce the mismatch this was written to fix.
-  const grossUsd = c.iati_spending_usd ?? null
-  const netUsd = c.iati_net_spending_usd ?? null
-  const spendingUsd = c.coverage_basis === 'net' ? (netUsd ?? grossUsd) : (grossUsd ?? netUsd)
+  // The spending figure the ratio was computed from, so the three numbers on
+  // the panel agree. Coverage is gross — disbursements plus expenditure — for
+  // every reference source; the net figure is published alongside it and is
+  // only a fallback for an entity missing the gross one.
+  const spendingUsd = c.iati_spending_usd ?? c.iati_net_spending_usd ?? null
 
   const reference = adaptReferenceYear(c.reference_year)
 
@@ -260,27 +237,8 @@ function adaptIdentity(raw) {
   }
 }
 
-/**
- * The Gherkin checks, from stats.gherkin_tests_hierarchy_exclusions.
- *
- * Was gherkin_tests_current, which the API no longer returns, then plain
- * gherkin_tests. A third variant, gherkin_tests_rm_current_step, sits beside
- * them and is not used. See gherkinRows for why the exclusions variant is the
- * one to read.
- *
- * Shape is { "<group id>": { "<Test name>": { None, True, False } } }, where the
- * group id's leading section number is the methodology component it belongs to:
- * 1.x organisation, 2.x basic, 3.x financial, 4.x advanced. That numbering is
- * intrinsic to the ids, so no separate mapping table is needed.
- *
- * `None` counts activities the check does not apply to, so the denominator is
- * True + False — scoring against the full activity count would penalise a
- * publisher for checks that were never relevant to its data.
- *
- * Note the denominators are still every activity rather than the current ones:
- * AfDB has 5,366 activities and 1,220 current, and the widest check counts
- * 5,366. Whatever "current" means upstream, it is not yet applied here.
- */
+// An indicator id's leading section number is the component it belongs to, so
+// no separate mapping table is needed: '2.4_title' is a basic field.
 const COMPONENT_BY_SECTION = {
   1: 'organisation_fields',
   2: 'basic_fields',
@@ -326,16 +284,19 @@ function testGroupMeta(groupId) {
  * The Gherkin checks, counted pass / fail / not-applicable per activity.
  *
  * Read from gherkin_tests_hierarchy_exclusions, which respects the exclusions a
- * publisher has agreed — FCDO, for instance, is not assessed on aid type for
- * its hierarchy 1 activities. The two properties are identical for a publisher
- * with no exclusions; where there are some, the plain gherkin_tests would
- * report the publisher against activities it was agreed not to be assessed on.
- * It is kept as a fallback for a publisher the new property is missing for,
- * which would otherwise show no checks at all.
+ * publisher has agreed — FCDO is not assessed on aid type for its hierarchy 1
+ * activities, for instance. Plain gherkin_tests, which ignores those, is the
+ * fallback for a publisher the exclusions variant is missing.
  *
- * The exclusions variant also lists the indicators calculated outside Gherkin
- * (3.3 and 4.7) as empty objects. Those are skipped, since
- * comprehensiveness_new_non_gherkin is where their real figures live.
+ * Shape is { "<group id>": { "<test name>": { None, True, False } } }. `None`
+ * counts activities the check does not apply to, so the denominator is
+ * True + False: scoring against every activity would penalise a publisher for
+ * checks that were never relevant to it. Those counts still cover all of a
+ * publisher's activities rather than only its current ones — AfDB's widest
+ * check counts 5,366 against 1,217 current.
+ *
+ * 3.3 and 4.7 appear here as empty objects and are skipped;
+ * comprehensiveness_new_non_gherkin holds their real figures.
  */
 function gherkinRows(stats) {
   const rows = []
@@ -413,7 +374,7 @@ function adaptTests(stats) {
 }
 
 /** The parts of `stats` we actually use, renamed and typed consistently. */
-function adaptStats(stats, methodology) {
+function adaptStats(stats) {
   return {
     activityCount:             stats.activities ?? null,
     // Identifiers used by more than one activity, counted across ALL of this
@@ -468,7 +429,7 @@ function adaptStats(stats, methodology) {
 
     tests: adaptTests(stats),
 
-    assessment: adaptAssessment(stats, methodology),
+    assessment: adaptAssessment(stats),
     coverage:   adaptCoverageFromStats(stats),
     // The month this publisher last updated a file — "YYYY-MM", or null when
     // there is no history. When they last PUBLISHED, which is a different
@@ -489,11 +450,11 @@ function adaptStats(stats, methodology) {
  * Normalise a raw reporting-org payload.
  * `stats` is null unless the request was made with ?show_stats=1.
  */
-export function adaptPublisher(raw, methodology) {
+export function adaptPublisher(raw) {
   if (!raw) return null
   return {
     identity: adaptIdentity(raw),
-    stats: raw.stats ? adaptStats(raw.stats, methodology) : null,
+    stats: raw.stats ? adaptStats(raw.stats) : null,
   }
 }
 
@@ -552,12 +513,6 @@ function toIso(value) {
 /**
  * Validator findings for one publisher, from stats.validation_summary_precalc.
  *
- * Replaces an 814KB cross-origin file from dashboard-coverage that was fetched
- * on every publisher page for these counts alone, together with the staleness,
- * unreadability and source-failure handling that reading a separately-built
- * file required. The API publishes the per-document counts now, in the same
- * payload as everything else, so all of that goes.
- *
  * `documents_with_*` answers "is this publisher OK?"; the bare severity counts
  * count instances and only say how bad — one publisher has 144 affected
  * documents and 292,726 instances.
@@ -582,18 +537,3 @@ function adaptValidationSummary(raw) {
   }
 }
 
-
-
-/**
- * Timeliness, from the methodology's joint rule (IATI-Stats#195):
- *
- *   both monthly / one month                              -> excellent
- *   both at least quarterly / a quarter, OR either one
- *   monthly / one month                                   -> good
- *   otherwise                                             -> needs_improvement
- *
- * Deliberately a joint function of the two values rather than an aggregate of
- * their individual bands: the rule awards `good` when EITHER component is top,
- * which taking the weakest band would never do. Note it defines no `very_good`
- * for this dimension.
- */

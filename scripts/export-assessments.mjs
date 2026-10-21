@@ -217,7 +217,7 @@ function dataStatus(stats) {
 const toDate = value => (value ? String(value).slice(0, 10) : null)
 
 function buildRow(raw, typeName) {
-  const publisher = adaptPublisher(raw, methodology)
+  const publisher = adaptPublisher(raw)
   const stats = publisher.stats
   const assessment = stats?.assessment ?? null
   const coverage = stats?.coverage ?? null
