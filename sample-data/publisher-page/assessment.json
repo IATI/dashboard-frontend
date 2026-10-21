@@ -2,7 +2,7 @@
   "publisher": "afdb",
   "generated": "2026-09-10T03:00:00.000Z",
   "derived_from": [
-    "https://dev2.dashboard.iatistandard.org/api/reporting-orgs/{slug}.json?show_stats=1",
+    "https://dev2-dashboard.iatistandard.org/api/reporting-orgs/{slug}.json?show_stats=1",
     "https://iati.github.io/dashboard-coverage/data/publishers/{slug}.json",
     "https://iati.github.io/dashboard-coverage/data/download_errors.json",
     "https://iati.github.io/dashboard-coverage/data/validation_errors.json",

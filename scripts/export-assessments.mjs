@@ -40,7 +40,7 @@ import { readColumnMap } from './lib/xlsx-read.mjs'
 const methodology = createRequire(import.meta.url)('../sample-data/methodology.json')
 
 // Matches runtimeConfig.public.dashboardBase in nuxt.config.ts.
-const DEFAULT_BASE = 'https://dev2.dashboard.iatistandard.org'
+const DEFAULT_BASE = 'https://dev2-dashboard.iatistandard.org'
 // Sends Access-Control-Allow-Origin: *, and is where the page gets type names.
 const CODELIST_BASE = 'https://codelists.codeforiati.org/api/json/en'
 

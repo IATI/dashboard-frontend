@@ -19,12 +19,18 @@ export default defineNuxtConfig({
       // Serves both /stats/*.json and the newer /api/* endpoints. These now send
       // Access-Control-Allow-Origin: *, so the browser reaches them directly and
       // the CORS proxy that used to stand in front of them is gone.
-      dashboardBase: 'https://dev2.dashboard.iatistandard.org',
+      dashboardBase: 'https://dev2-dashboard.iatistandard.org',
       // The /generated/* files are static, served by Apache rather than the
-      // application, and send no CORS header — so these alone still need the
-      // proxy. Point this at dashboardBase and the proxy can be retired
-      // completely; until then only the exploring-data activities page uses it.
-      generatedBase: 'https://black-math-8c4c.dashboard-cors-proxy.workers.dev',
+      // application, and send no Access-Control-Allow-Origin — so a browser
+      // cannot fetch them cross-origin at all. They used to go through a CORS
+      // proxy; that proxy fronted the old dev2.dashboard host and returns 530
+      // now that it is gone, so this points at the dashboard directly.
+      //
+      // That means the five exploring-data pages that read these CSVs cannot
+      // load them until /generated/ sends the header, or a working proxy is put
+      // back here. Those pages are behind ?full and the all-organisations list,
+      // so no publisher meets the failure.
+      generatedBase: 'https://dev2-dashboard.iatistandard.org',
       // The "Development version — data may be incomplete, provisional, or
       // include fictional placeholder text" notice across the top of every
       // page. Off by default now that publishers are being invited in.
