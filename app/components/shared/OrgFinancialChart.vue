@@ -213,10 +213,12 @@ watch(() => props.orgId, load)
     </p>
     <p v-else-if="!hasData" class="org-chart__state">{{ t('orgChartNoData') }}</p>
     <template v-else>
-      <!-- role="img" with a name: the canvas is otherwise an unlabelled
-           graphic, and its contents are unreachable to a screen reader. -->
-      <div class="org-chart__canvas" role="img" :aria-label="chartSummary">
-        <BarChart :data="chartData" :options="chartOptions" />
+      <!-- The name goes on the canvas, not on this wrapper: the canvas is the
+           graphic, and vue-chartjs already gives it role="img". Naming the
+           wrapper instead left the canvas an unlabelled image inside a labelled
+           group. -->
+      <div class="org-chart__canvas">
+        <BarChart :data="chartData" :options="chartOptions" :aria-label="chartSummary" />
       </div>
       <!-- The wrapper carries visually-hidden, not the table: a table cannot be
            shrunk to 1px, because its used width is at least its min-content
