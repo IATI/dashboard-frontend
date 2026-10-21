@@ -571,6 +571,6 @@
   "aboutThresholdNotRequired": "Not required to achieve this category",
   "aboutDraftMore": "The information below provides more detail on how the assessment is calculated for each organisation. If you cannot use GitHub, want to share feedback privately, or have further questions, please email",
   "orgCompSourceCount": "no current activities | {n} current activity | {n} current activities",
-  "orgCompSourceCurrent": "“Organisation fields” are assessed against {org}; the other three components against {act}, for {current}. Traceability and organisation identifiers are the exceptions: neither is measured against that set.",
-  "orgCompSourceNoOrgFileCurrent": "No organisation file has been published, so “Organisation fields” cannot be assessed. The other three components are assessed against {act}, for {current}. Traceability and organisation identifiers are the exceptions: neither is measured against that set."
+  "orgCompSourceCurrent": "“Organisation fields” are assessed against {org}; the other three components against {act}, for {current}. Traceability and organisation identifiers are the exceptions: they are currently assessed against all activities, not only current ones.",
+  "orgCompSourceNoOrgFileCurrent": "No organisation file has been published, so “Organisation fields” cannot be assessed. The other three components are assessed against {act}, for {current}. Traceability and organisation identifiers are the exceptions: they are currently assessed against all activities, not only current ones."
 }
