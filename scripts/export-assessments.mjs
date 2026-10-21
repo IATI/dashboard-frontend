@@ -250,7 +250,7 @@ function buildRow(raw, typeName) {
   // there is, and when it was last touched.
   row.data_status = dataStatus(stats)
   row.activities = stats?.activityCount ?? null
-  row.activity_files = stats?.datasetCount ?? null
+  row.activity_files = stats?.activityFiles ?? null
   row.transaction_total = stats?.transactionTotal ?? null
   row.last_published = stats?.lastPublished ?? null
   row.most_recent_transaction = toDate(stats?.mostRecentTransactionDate)

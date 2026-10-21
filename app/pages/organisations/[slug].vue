@@ -119,7 +119,7 @@ const comprehensivenessSource = computed(() => {
   const st = stats.value
   if (!st) return null
   const org = st.organisationFiles ?? 0
-  const act = st.datasetCount ?? 0
+  const act = st.activityFiles ?? 0
   const files = {
     org: t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org),
     act: t('orgCompSourceActFiles', { n: act.toLocaleString() }, act),
@@ -290,7 +290,10 @@ const datasetFacts = computed(() => {
     dupes ? `${t('orgDsHelpActivities')} ${t('orgDsHelpDuplicates')}` : t('orgDsHelpActivities'),
     dupes ? t('orgDsDuplicates', { n: dupes.toLocaleString() }, dupes) : null)
   add(t('orgDsTransactions'), st.transactionTotal?.toLocaleString(), t('orgDsHelpTransactions'))
-  add(t('orgDsFiles'),        st.datasetCount?.toLocaleString(),     t('orgDsHelpFiles'))
+  // Every registered dataset, activity and organisation files together, which
+  // is what "total number of files" claims and what the organisations list
+  // shows in its Files column.
+  add(t('orgDsFiles'), identity.value?.datasetCount?.toLocaleString(), t('orgDsHelpFiles'))
   add(t('orgDsHierarchy'),    levels.length
     ? (levels.length === 1 ? t('orgDsOneLevel') : t('orgDsLevels', { n: levels.length }))
     : null, t('orgDsHelpHierarchy'))

@@ -396,7 +396,9 @@ function adaptStats(stats) {
     // within a single document, so a duplicate split across two files passes
     // there and shows up only here.
     duplicateIdentifiers:      Object.keys(stats.publisher_duplicate_identifiers ?? {}).length,
-    datasetCount:              stats.activity_files ?? null,
+    // Activity files only. Every registered dataset, which is this plus the
+    // organisation files, is identity.datasetCount.
+    activityFiles:             stats.activity_files ?? null,
     organisationFiles:         stats.organisation_files ?? null,
     transactionTotal:          stats.transaction_total ?? null,
     fileSizeBytes:             stats.file_size ?? null,
