@@ -288,12 +288,12 @@ function testGroupMeta(groupId) {
  * activities, for instance. Plain gherkin_tests, which ignores those, is the
  * fallback for a publisher the exclusions variant is missing.
  *
- * Shape is { "<group id>": { "<test name>": { None, True, False } } }. `None`
- * counts activities the check does not apply to, so the denominator is
- * True + False: scoring against every activity would penalise a publisher for
- * checks that were never relevant to it. Those counts still cover all of a
- * publisher's activities rather than only its current ones — AfDB's widest
- * check counts 5,366 against 1,217 current.
+ * Shape is { "<group id>": { "<test name>": { None, True, False } } }, and the
+ * denominator is True + False. `None` holds everything the check was not
+ * scored against: a publisher's non-current activities, and the current ones
+ * the check does not apply to. So FCDO's title check counts 5,832 — its
+ * current activities exactly — out of 25,386 in total, and its aid type check
+ * counts 5,149 of those, the rest being excluded at hierarchy 1.
  *
  * 3.3 and 4.7 appear here as empty objects and are skipped;
  * comprehensiveness_new_non_gherkin holds their real figures.
