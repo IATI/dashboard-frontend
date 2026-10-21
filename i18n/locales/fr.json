@@ -580,5 +580,9 @@
   "orgCompSourceCurrentLink": "Ce qui constitue une activité en cours",
   "orgCompHierarchyRestricted": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Certains indicateurs ont été restreints afin d'exclure les activités de certains niveaux. Ouvrez un indicateur pour en savoir plus. Écrivez à {email} si vous souhaitez apporter des modifications.",
   "orgCompHierarchyAllTwo": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Les activités des deux niveaux sont actuellement évaluées pour tous les indicateurs. Écrivez à {email} si vous souhaitez apporter des modifications.",
-  "orgCompHierarchyAllMany": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Les activités de tous les niveaux sont actuellement évaluées pour tous les indicateurs. Écrivez à {email} si vous souhaitez apporter des modifications."
+  "orgCompHierarchyAllMany": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Les activités de tous les niveaux sont actuellement évaluées pour tous les indicateurs. Écrivez à {email} si vous souhaitez apporter des modifications.",
+  "orgFeedbackTitle": "Il s'agit d'une évaluation préliminaire",
+  "orgFeedbackBody": "Elle repose sur un cadre encore à l'état de projet, qui fait l'objet d'une consultation : ces chiffres peuvent évoluer et ne doivent pas être cités. Les commentaires sont ouverts jusqu'au 16 novembre 2026.",
+  "orgFeedbackGithub": "Commenter un indicateur",
+  "orgFeedbackEmail": "ou écrivez à"
 }

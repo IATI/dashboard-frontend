@@ -219,6 +219,9 @@ const allChecks = computed(() => tests.value)
 // The Validator keys its organisation pages on the same short name we use as
 // the page slug, so the counts in this panel link straight through to the
 // findings behind them.
+// One issue per indicator and per component; see the About page.
+const FEEDBACK_URL = 'https://github.com/IATI/dashboard-feedback/issues'
+
 const validatorUrl = computed(() => `https://validator.iatistandard.org/organisation/${slug}`)
 
 const availabilityStats = computed(() => {
@@ -712,6 +715,20 @@ const dimensions = computed(() =>
           </p>
           <p v-if="methodologyFocus" class="methodology-note__focus">{{ methodologyFocus }}</p>
         </div>
+
+        <!-- Above the panels rather than at the foot of the page: a publisher
+             arriving from the invitation email should meet the invitation to
+             respond before the detail, not after it. The methodology note
+             above already links to /about, so this does not repeat it. -->
+        <BAlert :model-value="true" variant="info" class="org-feedback mt">
+          <h2 class="org-feedback__title">{{ t('orgFeedbackTitle') }}</h2>
+          <p class="mb-0">
+            {{ t('orgFeedbackBody') }}
+            <a :href="FEEDBACK_URL">{{ t('orgFeedbackGithub') }}</a>,
+            {{ t('orgFeedbackEmail') }}
+            <a :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>.
+          </p>
+        </BAlert>
 
 
       <BRow gutter-x="3" gutter-y="3" class="mt">

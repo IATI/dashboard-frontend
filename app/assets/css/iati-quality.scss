@@ -1161,6 +1161,20 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   font-style: italic;
 }
 
+// The feedback invitation on an organisation's page. Same shape as the draft
+// notice on /about, shorter, and in the informational colour: it invites a
+// response rather than warning about one.
+.org-feedback {
+  margin-bottom: 0;
+
+  &__title {
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    margin: 0 0 4px;
+  }
+}
+
 // ─── About ────────────────────────────────────────────────────────────────────
 // The methodology page. Mostly tables, because what a reader has come for is
 // the thresholds and the indicator descriptions rather than the prose.
