@@ -548,7 +548,7 @@
   "aboutSourceFramework": "Le cadre complet, y compris le raisonnement qui sous-tend chaque dimension et les analyses sur lesquelles il s'appuie, est exposé dans « Reimagining Data Quality: A User Centric Approach — Proposal for Consultation ».",
   "aboutSourceValidator": "La disponibilité s'appuie sur le validateur IATI, qui rend compte en détail de la structure des fichiers d'une organisation.",
   "aboutSourceCoverage": "La couverture compare les dépenses publiées à des chiffres de référence indépendants : les déclarations au CAD de l'OCDE pour les bailleurs, le CCS des Nations Unies pour les agences onusiennes, et les organismes de contrôle nationaux pour les ONG des Pays-Bas, du Royaume-Uni et des États-Unis. Une organisation sans chiffre de référence est évaluée par rapport au budget total qu'elle déclare dans son propre fichier d'organisation.",
-  "aboutSourceStats": "Les calculs sous-jacents sont produits par IATI Stats, et les tests des indicateurs sont publiés en accès libre.",
+  "aboutSourceStats": "Les calculs sous-jacents sont produits par IATI Stats.",
   "aboutSourceLinkValidator": "Validateur IATI",
   "aboutSourceLinkTests": "Définition des tests d'indicateurs",
   "aboutSourceLinkFramework": "Lire le projet de cadre",
@@ -574,5 +574,7 @@
   "orgCompSourceCount": "aucune activité en cours | {n} activité en cours | {n} activités en cours",
   "orgCompSourceCurrent": "Les « champs d'organisation » sont évalués à partir de {org} ; les trois autres composantes à partir de {act}, pour {current}. La traçabilité et les identifiants d'organisation font exception : ils sont actuellement évalués sur l'ensemble des activités, et non sur les seules activités en cours.",
   "orgCompSourceNoOrgFileCurrent": "Aucun fichier d'organisation n'a été publié : les « champs d'organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}, pour {current}. La traçabilité et les identifiants d'organisation font exception : ils sont actuellement évalués sur l'ensemble des activités, et non sur les seules activités en cours.",
-  "aboutSourceLinkCoverage": "Comment la couverture est calculée"
+  "aboutSourceLinkCoverage": "Comment la couverture est calculée",
+  "aboutSourceTimeliness": "L'actualité est évaluée selon la même méthodologie que les statistiques de publication du tableau de bord IATI existant.",
+  "aboutSourceComprehensiveness": "L'exhaustivité est évaluée au moyen de tests exécutés chaque jour sur les données d'un publiant, principalement ceux rédigés dans le dépôt Dashboard Tests."
 }

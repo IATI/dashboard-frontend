@@ -274,13 +274,20 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
             {{ t('aboutSourceFramework') }}
             <a :href="FRAMEWORK_URL">{{ t('aboutSourceLinkFramework') }}</a>
           </p>
+          <!-- One paragraph per dimension, in the order the assessment
+               presents them, then the caveats that apply across all four. -->
           <p>{{ t('aboutSourceValidator') }} <a :href="VALIDATOR_URL">{{ t('aboutSourceLinkValidator') }}</a></p>
+          <p>{{ t('aboutSourceTimeliness') }}</p>
           <p>
             {{ t('aboutSourceCoverage') }}
             <a :href="COVERAGE_URL">{{ t('aboutSourceLinkCoverage') }}</a>
           </p>
+          <p>
+            {{ t('aboutSourceComprehensiveness') }}
+            <a :href="TESTS_URL">{{ t('aboutSourceLinkTests') }}</a>
+          </p>
+          <p>{{ t('aboutSourceStats') }}</p>
           <p>{{ t('aboutSourceSnapshot') }}</p>
-          <p>{{ t('aboutSourceStats') }} <a :href="TESTS_URL">{{ t('aboutSourceLinkTests') }}</a></p>
         </div>
       </Card>
     </main>

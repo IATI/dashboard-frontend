@@ -547,7 +547,7 @@
   "aboutSourceFramework": "The full framework, including the reasoning behind each dimension and the analysis it was built on, is set out in “Reimagining Data Quality: A User Centric Approach — Proposal for Consultation”.",
   "aboutSourceValidator": "Availability draws on the IATI Validator, which reports in detail on how an organisation's files are structured.",
   "aboutSourceCoverage": "Coverage compares published spending against independent reference figures: OECD/DAC reporting for donors, UN CEB for UN agencies, and national regulators for NGOs in the Netherlands, the United Kingdom and the United States. An organisation with no reference figure is measured against the total budget it declares in its own organisation file.",
-  "aboutSourceStats": "The underlying calculations are produced by IATI Stats, and the indicator tests are published openly.",
+  "aboutSourceStats": "The underlying calculations are produced by IATI Stats.",
   "aboutSourceLinkValidator": "IATI Validator",
   "aboutSourceLinkTests": "Indicator test definitions",
   "aboutSourceLinkFramework": "Read the draft framework",
@@ -573,5 +573,7 @@
   "orgCompSourceCount": "no current activities | {n} current activity | {n} current activities",
   "orgCompSourceCurrent": "“Organisation fields” are assessed against {org}; the other three components against {act}, for {current}. Traceability and organisation identifiers are the exceptions: they are currently assessed against all activities, not only current ones.",
   "orgCompSourceNoOrgFileCurrent": "No organisation file has been published, so “Organisation fields” cannot be assessed. The other three components are assessed against {act}, for {current}. Traceability and organisation identifiers are the exceptions: they are currently assessed against all activities, not only current ones.",
-  "aboutSourceLinkCoverage": "How coverage is calculated"
+  "aboutSourceLinkCoverage": "How coverage is calculated",
+  "aboutSourceTimeliness": "Timeliness is assessed using the same methodology as the existing IATI Dashboard Publishing Statistics.",
+  "aboutSourceComprehensiveness": "Comprehensiveness is assessed by tests that run daily across a publisher's data, principally those written in the Dashboard Tests repository."
 }
