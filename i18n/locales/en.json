@@ -546,7 +546,7 @@
   "aboutSourceTitle": "Where the assessment comes from",
   "aboutSourceFramework": "The full framework, including the reasoning behind each dimension and the analysis it was built on, is set out in “Reimagining Data Quality: A User Centric Approach — Proposal for Consultation”.",
   "aboutSourceValidator": "Availability draws on the IATI Validator, which reports in detail on how an organisation's files are structured.",
-  "aboutSourceCoverage": "Coverage compares published spending against independent reference figures — OECD/DAC reporting for donors, and national regulators for NGOs in the Netherlands, the United Kingdom and the United States.",
+  "aboutSourceCoverage": "Coverage compares published spending against independent reference figures: OECD/DAC reporting for donors, UN CEB for UN agencies, and national regulators for NGOs in the Netherlands, the United Kingdom and the United States. An organisation with no reference figure is measured against the total budget it declares in its own organisation file.",
   "aboutSourceStats": "The underlying calculations are produced by IATI Stats, and the indicator tests are published openly.",
   "aboutSourceLinkValidator": "IATI Validator",
   "aboutSourceLinkTests": "Indicator test definitions",
