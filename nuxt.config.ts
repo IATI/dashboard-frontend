@@ -25,22 +25,10 @@ export default defineNuxtConfig({
       // NUXT_PUBLIC_SHOW_DEV_BANNER=true turns it on without a code change.
       showDevBanner: false,
       // Accounts that see every organisation rather than only their own.
-      // Overridable with NUXT_PUBLIC_ALL_ORGS_EMAILS. Ships in the client
-      // bundle, so it cannot hold anything secret.
-      allOrgsEmails: [
-        'mark@brough.io',
-        'yemesrach.workie@undp.org',
-        'rohini.simbodyal@undp.org',
-        'jaimie.grant@undp.org',
-        'bee.webb@opendataservices.coop',
-        'emma.clegg@opendataservices.coop',
-        'steven.flower@opendataservices.coop',
-        'mike.pointer@opendataservices.coop',
-        'leila.farsani@opendataservices.coop',
-        'rob.redpath@opendataservices.coop',
-        'simon.kittle@opendataservices.coop',
-        'annelise.parr@undp.org',
-      ].join(','),
+      // Comma-separated, and overridable with NUXT_PUBLIC_ALL_ORGS_EMAILS, so
+      // an account can be added for a deployment without a code change. Ships
+      // in the client bundle, so it cannot hold anything secret.
+      allOrgsEmails: 'mark@brough.io',
       // IATI Account SSO (Asgardeo/WSO2), overridable with NUXT_PUBLIC_AUTH_*.
       // The redirect URL is the app's own origin, matched exactly, so every
       // origin this is served from must be registered against the client —
