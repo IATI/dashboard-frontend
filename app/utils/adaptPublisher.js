@@ -46,40 +46,6 @@ const ORDINAL_VALUE = {
   frequency: ['less_than_annual', 'annually', 'six_monthly', 'quarterly', 'monthly'],
 }
 
-// Ordering for enum comparisons — higher is better.
-const ENUM_RANK = {
-  one_month: 5, monthly: 5,
-  one_quarter: 4, quarterly: 4,
-  six_months: 3, six_monthly: 3,
-  one_year: 2, annually: 2,
-  more_than_one_year: 1, less_than_annual: 1,
-}
-
-const BANDS_BEST_FIRST = ['excellent', 'very_good', 'good']
-
-/**
- * Which methodology band a raw value earns.
- * A band with no threshold is automatically earned (see methodology.json).
- * Returns null when the component is unknown to the methodology.
- */
-export function deriveCategory(componentId, value, methodology) {
-  const meta = methodology?.components?.[componentId]
-  if (!meta || value === null || value === undefined) return null
-
-  const thresholds = meta.thresholds ?? {}
-  for (const band of BANDS_BEST_FIRST) {
-    if (!(band in thresholds)) return band
-    const threshold = thresholds[band]
-    if (meta.unit === 'percent' || meta.unit === 'count') {
-      if (value >= threshold) return band
-    } else if (meta.unit === 'boolean') {
-      if (value === threshold) return band
-    } else if (meta.unit === 'enum') {
-      if ((ENUM_RANK[value] ?? 0) >= (ENUM_RANK[threshold] ?? 0)) return band
-    }
-  }
-  return 'needs_improvement'
-}
 
 // The API scores the assessment itself now. Its component ids differ from the
 // methodology file's, so map them once here rather than renaming either side.
@@ -99,14 +65,11 @@ const COMPONENT_ID = {
 const AS_PERCENT = new Set(['coverage', 'basic', 'advanced', 'financials', 'organisation'])
 
 /**
- * The scored assessment, straight from stats.assessment_new.
+ * The scored assessment, from stats.assessment_new.
  *
- * Replaces deriving bands in the client from methodology thresholds: the API
- * is now authoritative, so the scale and the aggregation rules live in one
- * place instead of being reimplemented here.
- *
- * Availability is absent from the API's assessment, so it is still derived —
- * see toAssessmentFragment.
+ * The API bands every component and dimension, so the thresholds and the
+ * aggregation rules live there rather than being reimplemented here. The
+ * methodology file is still read for the thresholds the UI displays.
  */
 function adaptAssessment(stats, methodology) {
   const raw = stats.assessment_new
@@ -133,9 +96,6 @@ function adaptAssessment(stats, methodology) {
       const exact = scale ? (scale[comp.value] ?? null)
         : AS_PERCENT.has(rawId) ? comp.value * 100
         : comp.value
-      // The API's own band is used as-is. Checked against the methodology for
-      // every dimension: coverage, comprehensiveness and availability agree.
-      // Timeliness does not, and is corrected in toAssessmentFragment.
       components[id] = {
         value: AS_PERCENT.has(rawId) ? Math.round(exact) : exact,
         category: comp.category ?? null,
@@ -508,16 +468,10 @@ function adaptStats(stats, methodology) {
 
     tests: adaptTests(stats),
 
-    // Now supplied by the API rather than fetched separately or derived here
     assessment: adaptAssessment(stats, methodology),
     coverage:   adaptCoverageFromStats(stats),
-    // frequency_old, not frequency_new. Checked against the published
-    // timeliness_frequency.csv across 11 publishers: old matched 11/11, new
-    // 7/11 — new under-reports recent updates for AfDB, World Bank, EC-INTPA
-    // and Sida, all of which publish monthly. Revisit when new is fixed.
-    // The month this publisher last updated a file, from the same update history
-    // the frequency verdict is derived from — "YYYY-MM", or null when there is
-    // no history at all. This is when they last PUBLISHED, which is a different
+    // The month this publisher last updated a file — "YYYY-MM", or null when
+    // there is no history. When they last PUBLISHED, which is a different
     // question from how current the data is (timelag) or when money last moved
     // (mostRecentTransactionDate).
     lastPublished: latestMonth(stats.frequency_old?.updates_per_month),
@@ -628,59 +582,7 @@ function adaptValidationSummary(raw) {
   }
 }
 
-/**
- * Availability, the one dimension the API does not score.
- *
- * Everything else — coverage, timeliness, comprehensiveness, and the overall
- * band — now comes scored from stats.assessment_new, so this merges the two
- * rather than deriving anything the API already decided.
- *
- * @param {object} sources { publisher, downloads, validation }
- */
-export function toAssessmentFragment({ publisher }, methodology) {
-  const scored = publisher?.stats?.assessment ?? null
-  const dimensions = { ...(scored?.dimensions ?? {}) }
 
-  const component = (id, value, detail) => ({
-    value,
-    category: deriveCategory(id, value, methodology),
-    ...(detail ? { detail } : {}),
-  })
-
-  // Timeliness is the one dimension the API gets wrong, in two ways: it scores
-  // frequency from frequency_new, which under-reports monthly publishers (see
-  // adaptStats), and it bands the dimension on a four-point scale when the
-  // methodology defines only three — any `very_good` is wrong by construction.
-  // So frequency is rescored from frequency_old and the dimension re-derived
-  // from the methodology's joint rule.
-  const frequency = publisher?.stats?.frequency
-  if (dimensions.timeliness && frequency?.value) {
-    const components = {
-      ...dimensions.timeliness.components,
-      frequency: component('frequency', frequency.value, { source_value: frequency.label }),
-    }
-    dimensions.timeliness = {
-      components,
-      category: deriveTimeliness(components.timeliness?.value, components.frequency?.value),
-    }
-  }
-
-  if (!Object.keys(dimensions).length) return null
-
-  // Weakest dimension overall: the API's own overall excludes availability, and
-  // is built on the timeliness band corrected above.
-  const overall = { category: weakestBand(Object.values(dimensions).map(d => d.category)) }
-
-  return { dimensions, overall }
-}
-
-const BAND_LADDER = ['needs_improvement', 'good', 'very_good', 'excellent']
-
-/** The lowest of the given bands, ignoring anything unrecognised. */
-function weakestBand(bands) {
-  const ranks = bands.map(b => BAND_LADDER.indexOf(b)).filter(r => r >= 0)
-  return ranks.length ? BAND_LADDER[Math.min(...ranks)] : null
-}
 
 /**
  * Timeliness, from the methodology's joint rule (IATI-Stats#195):
@@ -695,12 +597,3 @@ function weakestBand(bands) {
  * which taking the weakest band would never do. Note it defines no `very_good`
  * for this dimension.
  */
-export function deriveTimeliness(timelag, frequency) {
-  const top = v => ENUM_RANK[v] === 5          // one month / monthly
-  const mid = v => ENUM_RANK[v] === 4          // a quarter / quarterly
-  if (!timelag || !frequency) return null
-  if (top(timelag) && top(frequency)) return 'excellent'
-  if ((mid(timelag) || top(timelag)) && (mid(frequency) || top(frequency))) return 'good'
-  if (top(timelag) || top(frequency)) return 'good'
-  return 'needs_improvement'
-}

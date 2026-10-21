@@ -8,11 +8,9 @@
  *   node scripts/export-assessments.mjs
  *   node scripts/export-assessments.mjs --out /tmp/scores.xlsx --limit 200
  *
- * It imports the same adapter the organisation page uses, so a methodology or
- * scoring change is picked up here without touching this file. In particular the
- * assessment comes from toAssessmentFragment, which applies the timeliness
- * correction the page applies — so a row here matches what that publisher's page
- * shows, rather than the API's raw bands.
+ * It imports the same adapter the organisation page uses, so a scoring change
+ * is picked up here without touching this file, and a row matches what that
+ * publisher's page shows.
  *
  * Flags:
  *   --out <path>        where to write (default ./iati-dq-assessments-<date>.xlsx)
@@ -33,7 +31,7 @@ import { writeFileSync } from 'node:fs'
 import { argv } from 'node:process'
 import { createRequire } from 'node:module'
 
-import { adaptPublisher, toAssessmentFragment } from '../app/utils/adaptPublisher.js'
+import { adaptPublisher } from '../app/utils/adaptPublisher.js'
 import { buildXlsx } from './lib/xlsx.mjs'
 import { readColumnMap } from './lib/xlsx-read.mjs'
 
@@ -221,7 +219,7 @@ const toDate = value => (value ? String(value).slice(0, 10) : null)
 function buildRow(raw, typeName) {
   const publisher = adaptPublisher(raw, methodology)
   const stats = publisher.stats
-  const assessment = stats ? toAssessmentFragment({ publisher }, methodology) : null
+  const assessment = stats?.assessment ?? null
   const coverage = stats?.coverage ?? null
 
   const row = {

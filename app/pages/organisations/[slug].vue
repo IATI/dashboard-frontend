@@ -486,14 +486,14 @@ function starTooltips(id) {
 }
 
 // The assessment comes scored from the API. Only timeliness is still adjusted
-// here — see toAssessmentFragment. The download and validation files are still
+// here. The download and validation files are still
 // fetched, but now only for the availability panel's file counts, which the
 // assessment does not carry.
 const assessed = computed(() => {
-  const fragment = toAssessmentFragment({ publisher: publisher.value }, methodology)
+  const scored = publisher.value?.stats?.assessment
   return {
-    overall: fragment?.overall?.category ? fragment.overall : null,
-    ...(fragment?.dimensions ?? {}),
+    overall: scored?.overall?.category ? scored.overall : null,
+    ...(scored?.dimensions ?? {}),
   }
 })
 
