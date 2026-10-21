@@ -718,13 +718,15 @@ const dimensions = computed(() =>
 
         <!-- Above the panels rather than at the foot of the page: a publisher
              arriving from the invitation email should meet the invitation to
-             respond before the detail, not after it. The methodology note
-             above already links to /about, so this does not repeat it. -->
+             respond before the detail, not after it. The two clauses either
+             side of the links are separate strings because a link cannot sit
+             inside an i18n message; orgFeedbackAnd carries its own spacing. -->
         <BAlert :model-value="true" variant="info" class="org-feedback mt">
           <h2 class="org-feedback__title">{{ t('orgFeedbackTitle') }}</h2>
           <p class="mb-0">
             {{ t('orgFeedbackBody') }}
-            <a :href="FEEDBACK_URL">{{ t('orgFeedbackGithub') }}</a>,
+            <a :href="FEEDBACK_URL">{{ t('orgFeedbackGithub') }}</a>{{ t('orgFeedbackAnd')
+            }}<NuxtLink to="/about">{{ t('orgFeedbackMethodology') }}</NuxtLink>.
             {{ t('orgFeedbackEmail') }}
             <a :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>.
           </p>

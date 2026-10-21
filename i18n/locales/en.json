@@ -583,5 +583,7 @@
   "orgFeedbackTitle": "This is a preliminary assessment",
   "orgFeedbackBody": "It uses a draft framework that is still being consulted on, so these figures may change and should not be cited. Comments are open until 16 November 2026.",
   "orgFeedbackGithub": "Comment on an indicator",
-  "orgFeedbackEmail": "or email"
+  "orgFeedbackEmail": "If you still have questions, get in touch via",
+  "orgFeedbackAnd": ", and ",
+  "orgFeedbackMethodology": "read the methodology"
 }
