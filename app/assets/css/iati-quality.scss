@@ -1166,12 +1166,19 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // response rather than warning about one.
 .org-feedback {
   margin-bottom: 0;
+  // Centred, which sets it apart from the assessment above and the panels
+  // below — both of which are left-aligned — so it reads as an aside rather
+  // than another finding. Full width rather than a centred column, as the
+  // panels either side of it are.
+  text-align: center;
 
+  // Smaller than a card heading: it labels the box rather than introducing a
+  // section, and at panel width a larger size looked like a page title.
   &__title {
     font-family: "Hanken Grotesk", system-ui, sans-serif;
     font-weight: 700;
-    font-size: 1.02rem;
-    margin: 0 0 4px;
+    font-size: .95rem;
+    margin: 0 0 6px;
   }
 }
 
