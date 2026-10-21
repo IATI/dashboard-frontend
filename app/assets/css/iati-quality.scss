@@ -1166,7 +1166,6 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 // the thresholds and the indicator descriptions rather than the prose.
 
 .about-lead {
-  max-width: 68ch;
   margin: 0 0 20px;
   font-size: 1.08rem;
   line-height: 1.6;
@@ -1186,10 +1185,9 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   p + p { margin-top: 8px }
 }
 
-// Running text here is read, not scanned, so it is held to a comfortable
-// measure even where the card around it is wider.
+// Full width of the panel. A narrow column of text inside a wide card reads as
+// a layout fault next to the full-width tables beside it.
 .about-prose {
-  max-width: 72ch;
   color: var(--grey-70);
   line-height: 1.6;
 
@@ -1218,7 +1216,6 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   }
 
   &__why {
-    max-width: 72ch;
     margin: 0 0 12px;
     font-size: .92rem;
     line-height: 1.55;
@@ -1307,7 +1304,6 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
 
   &__group-help {
     display: block;
-    max-width: 90ch;
     margin-top: 3px;
     font-weight: 400;
     text-transform: none;

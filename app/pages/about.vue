@@ -112,7 +112,7 @@ const indicatorGroups = computed(() => FRAMEWORK_INDICATORS.map(group => ({
   })),
 })))
 
-const FRAMEWORK_URL = 'https://iatistandard.org/en/news/reimagining-data-quality-consultation/'
+const FRAMEWORK_URL = 'https://connect.iatistandard.org/post/reimagining-data-quality-consultation-new-metrics-and-dashbaord-13842373'
 // Where the consultation happens: one issue per indicator and per component.
 const FEEDBACK_URL = 'https://github.com/IATI/dashboard-feedback/issues'
 const TESTS_URL = 'https://github.com/IATI/dashboard-tests'
