@@ -1,5 +1,11 @@
 <script setup>
-const route = useRoute()
+// useRouter().currentRoute, not useRoute(). The two disagree here: useRoute()
+// is updated after a navigation settles, and following a link out of the gate
+// left it reporting the route the app first loaded while the router had
+// already moved on — so the gate kept rendering for the old route and the
+// methodology link appeared to do nothing. currentRoute is the live one.
+const router = useRouter()
+const path = computed(() => router.currentRoute.value.path)
 const bannerVisible = ref(true)
 
 /**
@@ -25,23 +31,25 @@ const { status, canOpen } = useAccess()
  * gate's ClientOnly would stop it being prerendered and flash a "checking
  * access" card at a page that needs no access.
  */
-const isPublic = computed(() => routeAccess(route.path) === 'public')
-const allowed = computed(() => canOpen(route.path))
-const orgSlug = computed(() => routeOrgSlug(route.path))
+const isPublic = computed(() => routeAccess(path.value) === 'public')
+const allowed = computed(() => canOpen(path.value))
+const orgSlug = computed(() => routeOrgSlug(path.value))
+/** From the live route for the same reason as `path`: a stale one highlights the previous page. */
+const activeNav = computed(() => router.currentRoute.value.meta.active ?? '')
 </script>
 
 <template>
   <div class="iati-design-system--enabled">
     <!-- The chrome and the page, shown when this viewer may see them -->
     <template v-if="isPublic">
-      <SiteChrome :active="route.meta.active ?? ''" v-model:banner="bannerVisible">
+      <SiteChrome :active="activeNav" v-model:banner="bannerVisible">
         <slot />
       </SiteChrome>
     </template>
 
     <ClientOnly v-else>
       <AccessGate v-if="!allowed" :status="status" :slug="orgSlug" />
-      <SiteChrome v-else :active="route.meta.active ?? ''" v-model:banner="bannerVisible">
+      <SiteChrome v-else :active="activeNav" v-model:banner="bannerVisible">
         <slot />
       </SiteChrome>
 
