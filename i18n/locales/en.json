@@ -574,5 +574,6 @@
   "orgCompSourceNoOrgFileCurrent": "No organisation file has been published, so “Organisation fields” cannot be assessed. The other three components are assessed against {act}, for {current}. Traceability and organisation identifiers are the exceptions: they are currently assessed against all activities, not only current ones.",
   "aboutSourceLinkCoverage": "How coverage is calculated",
   "aboutSourceTimeliness": "Timeliness is assessed using the same methodology as the existing IATI Dashboard Publishing Statistics.",
-  "aboutSourceComprehensiveness": "Comprehensiveness is assessed by tests that run daily across a publisher's data, principally those written in the Dashboard Tests repository."
+  "aboutSourceComprehensiveness": "Comprehensiveness is assessed by tests that run daily across a publisher's data, principally those written in the Dashboard Tests repository.",
+  "aboutSourceCurrent": "Current activities are defined as: activities which are ongoing; where the planned or actual end date is less than 12 months ago; or with commitment, disbursement or expenditure transactions in the last 12 months."
 }

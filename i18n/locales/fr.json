@@ -575,5 +575,6 @@
   "orgCompSourceNoOrgFileCurrent": "Aucun fichier d'organisation n'a été publié : les « champs d'organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}, pour {current}. La traçabilité et les identifiants d'organisation font exception : ils sont actuellement évalués sur l'ensemble des activités, et non sur les seules activités en cours.",
   "aboutSourceLinkCoverage": "Comment la couverture est calculée",
   "aboutSourceTimeliness": "L'actualité est évaluée selon la même méthodologie que les statistiques de publication du tableau de bord IATI existant.",
-  "aboutSourceComprehensiveness": "L'exhaustivité est évaluée au moyen de tests exécutés chaque jour sur les données d'un publiant, principalement ceux rédigés dans le dépôt Dashboard Tests."
+  "aboutSourceComprehensiveness": "L'exhaustivité est évaluée au moyen de tests exécutés chaque jour sur les données d'un publiant, principalement ceux rédigés dans le dépôt Dashboard Tests.",
+  "aboutSourceCurrent": "Une activité est considérée comme en cours si : elle est en cours de mise en œuvre ; sa date de fin prévue ou réelle remonte à moins de douze mois ; ou elle comporte des transactions d'engagement, de versement ou de dépense au cours des douze derniers mois."
 }

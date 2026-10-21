@@ -286,6 +286,9 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
             {{ t('aboutSourceComprehensiveness') }}
             <a :href="TESTS_URL">{{ t('aboutSourceLinkTests') }}</a>
           </p>
+          <!-- What "current" means, which the comprehensiveness figures on an
+               organisation's page are counted against. -->
+          <p>{{ t('aboutSourceCurrent') }}</p>
           <p>{{ t('aboutSourceStats') }}</p>
         </div>
       </Card>
