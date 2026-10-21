@@ -573,5 +573,6 @@
   "aboutDraftMore": "Les informations ci-dessous expliquent plus en détail comment l'évaluation est calculée pour chaque organisation. Si vous ne pouvez pas utiliser GitHub, si vous souhaitez transmettre vos retours en privé ou si vous avez d'autres questions, écrivez à",
   "orgCompSourceCount": "aucune activité en cours | {n} activité en cours | {n} activités en cours",
   "orgCompSourceCurrent": "Les « champs d'organisation » sont évalués à partir de {org} ; les trois autres composantes à partir de {act}, pour {current}. La traçabilité et les identifiants d'organisation font exception : ils sont actuellement évalués sur l'ensemble des activités, et non sur les seules activités en cours.",
-  "orgCompSourceNoOrgFileCurrent": "Aucun fichier d'organisation n'a été publié : les « champs d'organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}, pour {current}. La traçabilité et les identifiants d'organisation font exception : ils sont actuellement évalués sur l'ensemble des activités, et non sur les seules activités en cours."
+  "orgCompSourceNoOrgFileCurrent": "Aucun fichier d'organisation n'a été publié : les « champs d'organisation » ne peuvent donc pas être évalués. Les trois autres composantes sont évaluées à partir de {act}, pour {current}. La traçabilité et les identifiants d'organisation font exception : ils sont actuellement évalués sur l'ensemble des activités, et non sur les seules activités en cours.",
+  "aboutSourceLinkCoverage": "Comment la couverture est calculée"
 }

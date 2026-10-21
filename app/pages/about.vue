@@ -116,6 +116,9 @@ const FRAMEWORK_URL = 'https://iatistandard.org/en/news/reimagining-data-quality
 // Where the consultation happens: one issue per indicator and per component.
 const FEEDBACK_URL = 'https://github.com/IATI/dashboard-feedback/issues'
 const TESTS_URL = 'https://github.com/IATI/dashboard-tests'
+// The reference sources, how periods are matched, and the total-budget
+// fallback — all set out in full rather than summarised here.
+const COVERAGE_URL = 'https://iati.github.io/dashboard-coverage/methodology/'
 const VALIDATOR_URL = 'https://validator.iatistandard.org/'
 </script>
 
@@ -272,7 +275,10 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
             <a :href="FRAMEWORK_URL">{{ t('aboutSourceLinkFramework') }}</a>
           </p>
           <p>{{ t('aboutSourceValidator') }} <a :href="VALIDATOR_URL">{{ t('aboutSourceLinkValidator') }}</a></p>
-          <p>{{ t('aboutSourceCoverage') }}</p>
+          <p>
+            {{ t('aboutSourceCoverage') }}
+            <a :href="COVERAGE_URL">{{ t('aboutSourceLinkCoverage') }}</a>
+          </p>
           <p>{{ t('aboutSourceSnapshot') }}</p>
           <p>{{ t('aboutSourceStats') }} <a :href="TESTS_URL">{{ t('aboutSourceLinkTests') }}</a></p>
         </div>
