@@ -287,7 +287,6 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
             <a :href="TESTS_URL">{{ t('aboutSourceLinkTests') }}</a>
           </p>
           <p>{{ t('aboutSourceStats') }}</p>
-          <p>{{ t('aboutSourceSnapshot') }}</p>
         </div>
       </Card>
     </main>
