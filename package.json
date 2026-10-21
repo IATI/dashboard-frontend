@@ -16,6 +16,7 @@
   "dependencies": {
     "@asgardeo/auth-spa": "^3.5.2",
     "@nuxtjs/i18n": "^10.6.0",
+    "@nuxtjs/plausible": "^4.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.45.9",
     "chart.js": "^4.5.1",

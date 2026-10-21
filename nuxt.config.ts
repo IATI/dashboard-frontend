@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/plausible'],
   i18n: {
     // The indicator descriptions live beside these, in
     // i18n/locales/indicators.<lang>.json, but are NOT registered here —
@@ -129,6 +129,29 @@ export default defineNuxtConfig({
   },
   components: {
     dirs: [{ path: '~/components', pathPrefix: false }],
+  },
+  // Plausible, as iatistandard.org already uses: cookieless, no personal data,
+  // and so no consent banner. The module rather than a plain script tag because
+  // this is a single-page app — a script tag would record the first load and
+  // miss every navigation after it.
+  //
+  // Events are attributed to whatever hostname the site is served from, so each
+  // one has to exist as a site in the Plausible account or its events are
+  // silently discarded. Override with NUXT_PUBLIC_PLAUSIBLE_DOMAIN to report
+  // two deployments as one site, or NUXT_PUBLIC_PLAUSIBLE_ENABLED=false to turn
+  // tracking off for a build.
+  plausible: {
+    // Pageviews are sent by plugins/plausible-pageviews.client.js instead, so
+    // that the OpenID parameters the sign-in redirect leaves in the URL are not
+    // reported to the analytics service.
+    autoPageviews: false,
+    // Matches the extensions iatistandard.org loads
+    // (script.file-downloads.outbound-links.js).
+    autoOutboundTracking: true,
+    fileDownloads: true,
+    // localhost is ignored by the tracker itself; this is for `nuxt preview`
+    // and anything else served from the machine under another name.
+    ignoredHostnames: ['localhost', '127.0.0.1'],
   },
   nitro: {
     prerender: {
