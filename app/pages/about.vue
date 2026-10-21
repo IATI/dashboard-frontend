@@ -288,7 +288,7 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
           </p>
           <!-- What "current" means, which the comprehensiveness figures on an
                organisation's page are counted against. -->
-          <p>{{ t('aboutSourceCurrent') }}</p>
+          <p id="current-activities">{{ t('aboutSourceCurrent') }}</p>
           <p>{{ t('aboutSourceStats') }}</p>
         </div>
       </Card>

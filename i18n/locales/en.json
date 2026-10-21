@@ -575,5 +575,9 @@
   "aboutSourceLinkCoverage": "How coverage is calculated",
   "aboutSourceTimeliness": "Timeliness is assessed using the same methodology as the existing IATI Dashboard Publishing Statistics.",
   "aboutSourceComprehensiveness": "Comprehensiveness is assessed by tests that run daily across a publisher's data, principally those written in the Dashboard Tests repository.",
-  "aboutSourceCurrent": "Current activities are defined as: activities which are ongoing; where the planned or actual end date is less than 12 months ago; or with commitment, disbursement or expenditure transactions in the last 12 months."
+  "aboutSourceCurrent": "Current activities are defined as: activities which are ongoing; where the planned or actual end date is less than 12 months ago; or with commitment, disbursement or expenditure transactions in the last 12 months.",
+  "orgCompSourceCurrentLink": "What counts as a current activity",
+  "orgCompHierarchyRestricted": "This organisation publishes activities with multiple hierarchies. Some indicators have been restricted to exclude activities at particular hierarchies. Open an indicator for details. Get in touch with {email} if you would like to make any changes.",
+  "orgCompHierarchyAllTwo": "This organisation publishes activities with multiple hierarchies. Activities at both levels are currently assessed for all indicators. Get in touch with {email} if you would like to make any changes.",
+  "orgCompHierarchyAllMany": "This organisation publishes activities with multiple hierarchies. Activities at all levels are currently assessed for all indicators. Get in touch with {email} if you would like to make any changes."
 }

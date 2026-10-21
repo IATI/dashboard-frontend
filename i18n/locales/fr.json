@@ -576,5 +576,9 @@
   "aboutSourceLinkCoverage": "Comment la couverture est calculée",
   "aboutSourceTimeliness": "L'actualité est évaluée selon la même méthodologie que les statistiques de publication du tableau de bord IATI existant.",
   "aboutSourceComprehensiveness": "L'exhaustivité est évaluée au moyen de tests exécutés chaque jour sur les données d'un publiant, principalement ceux rédigés dans le dépôt Dashboard Tests.",
-  "aboutSourceCurrent": "Une activité est considérée comme en cours si : elle est en cours de mise en œuvre ; sa date de fin prévue ou réelle remonte à moins de douze mois ; ou elle comporte des transactions d'engagement, de versement ou de dépense au cours des douze derniers mois."
+  "aboutSourceCurrent": "Une activité est considérée comme en cours si : elle est en cours de mise en œuvre ; sa date de fin prévue ou réelle remonte à moins de douze mois ; ou elle comporte des transactions d'engagement, de versement ou de dépense au cours des douze derniers mois.",
+  "orgCompSourceCurrentLink": "Ce qui constitue une activité en cours",
+  "orgCompHierarchyRestricted": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Certains indicateurs ont été restreints afin d'exclure les activités de certains niveaux. Ouvrez un indicateur pour en savoir plus. Écrivez à {email} si vous souhaitez apporter des modifications.",
+  "orgCompHierarchyAllTwo": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Les activités des deux niveaux sont actuellement évaluées pour tous les indicateurs. Écrivez à {email} si vous souhaitez apporter des modifications.",
+  "orgCompHierarchyAllMany": "Cette organisation publie des activités à plusieurs niveaux hiérarchiques. Les activités de tous les niveaux sont actuellement évaluées pour tous les indicateurs. Écrivez à {email} si vous souhaitez apporter des modifications."
 }

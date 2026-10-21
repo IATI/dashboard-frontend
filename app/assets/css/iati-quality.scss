@@ -1195,6 +1195,9 @@ body { margin: 0; background: var(--grey-10); color: var(--grey-90); font-family
   p:last-child { margin-bottom: 0 }
 }
 
+// Linked to from an organisation's comprehensiveness panel.
+#current-activities { scroll-margin-top: 16px }
+
 .about-dimensions {
   display: grid;
   gap: 32px;

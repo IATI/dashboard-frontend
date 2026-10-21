@@ -156,6 +156,27 @@ const { indicatorHelp, indicatorName } = useIndicatorHelp()
 const hierarchyExclusion = groupId =>
   (groupId ? stats.value?.hierarchyExclusions?.[groupId] ?? null : null)
 
+/**
+ * Whether this publisher's indicators are narrowed by hierarchy, for the note
+ * under the comprehensiveness panel.
+ *
+ * Only shown where there is more than one hierarchy to choose between: a
+ * publisher with a single level has nothing to exclude, so the question does
+ * not arise. Which indicators are narrowed, and at which level, is on each
+ * indicator's own row — this says only whether any are.
+ */
+const hierarchyNote = computed(() => {
+  const st = stats.value
+  const levels = st?.hierarchyLevels?.length ?? 0
+  if (levels < 2) return null
+
+  const restricted = Object.keys(st.hierarchyExclusions ?? {}).length > 0
+  const key = restricted ? 'orgCompHierarchyRestricted'
+    : levels === 2 ? 'orgCompHierarchyAllTwo'
+    : 'orgCompHierarchyAllMany'
+  return t(key, { email: SUPPORT_EMAIL })
+})
+
 const INDICATOR_FIELDS = computed(() => [
   // Not empty: an unnamed column header reads as blank when navigating a table
   { key: 'expand',    label: t('orgColExpand'),    thStyle: { width: '34px' } },
@@ -1254,7 +1275,13 @@ const dimensions = computed(() =>
              read, and at the top it pushed the four panels down the page. -->
         <p v-if="comprehensivenessSource" class="comp-source">
           {{ comprehensivenessSource }}
+          <!-- Only when the sentence names a current-activity count, since
+               that is the phrase the link explains. -->
+          <NuxtLink v-if="stats?.currentActivities != null" to="/about#current-activities">
+            {{ t('orgCompSourceCurrentLink') }}
+          </NuxtLink>
         </p>
+        <p v-if="hierarchyNote" class="comp-source">{{ hierarchyNote }}</p>
       </Card>
 
       </div>
