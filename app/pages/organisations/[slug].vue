@@ -124,12 +124,22 @@ const comprehensivenessSource = computed(() => {
     org: t('orgCompSourceOrgFiles', { n: org.toLocaleString() }, org),
     act: t('orgCompSourceActFiles', { n: act.toLocaleString() }, act),
   }
+
+  // Every activity-level check is scored against the current activities rather
+  // than all of them, which is why the figures above are out of a smaller
+  // number than this publisher's activity count. Around a tenth of publishers
+  // have checks but no current_data group, and those get the sentence without
+  // the clause rather than a blank in the middle of it.
+  const current = st.currentActivities
+  if (current != null) {
+    files.current = t('orgCompSourceCount', { n: current.toLocaleString() }, current)
+  }
+
   // A quarter of publishers have no organisation file at all. "Assessed against
   // no organisation file" is true but unhelpful: what they need to know is that
   // the column reads zero because the file does not exist.
-  return org
-    ? t('orgCompSource', files)
-    : t('orgCompSourceNoOrgFile', files)
+  if (org) return t(current != null ? 'orgCompSourceCurrent' : 'orgCompSource', files)
+  return t(current != null ? 'orgCompSourceNoOrgFileCurrent' : 'orgCompSourceNoOrgFile', files)
 })
 
 // What each indicator measures, from i18n/locales/indicators.<lang>.json —

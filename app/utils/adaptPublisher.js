@@ -369,6 +369,20 @@ function nonGherkinRows(stats) {
   return rows
 }
 
+/**
+ * How many of a publisher's activities count as current.
+ *
+ * Every activity-level check is scored against these rather than against the
+ * whole set, so this is the denominator behind the comprehensiveness figures —
+ * FCDO is assessed on 5,832 of its 25,386 activities. Read from the same
+ * property the checks come from, so the two always agree.
+ */
+function adaptCurrentActivities(stats) {
+  const groups = stats.gherkin_tests_hierarchy_exclusions ?? stats.gherkin_tests ?? {}
+  const counts = Object.values(groups.current_data ?? {})[0]
+  return counts?.True ?? null
+}
+
 function adaptTests(stats) {
   return [...gherkinRows(stats), ...nonGherkinRows(stats)].sort(byIndicatorNumber)
 }
@@ -428,6 +442,7 @@ function adaptStats(stats) {
     },
 
     tests: adaptTests(stats),
+    currentActivities: adaptCurrentActivities(stats),
 
     assessment: adaptAssessment(stats),
     coverage:   adaptCoverageFromStats(stats),
