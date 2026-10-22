@@ -219,9 +219,6 @@ const allChecks = computed(() => tests.value)
 // The Validator keys its organisation pages on the same short name we use as
 // the page slug, so the counts in this panel link straight through to the
 // findings behind them.
-// One issue per indicator and per component; see the About page.
-const FEEDBACK_URL = 'https://github.com/IATI/dashboard-feedback/issues'
-
 const validatorUrl = computed(() => `https://validator.iatistandard.org/organisation/${slug}`)
 
 const availabilityStats = computed(() => {

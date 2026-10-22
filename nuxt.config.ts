@@ -21,9 +21,11 @@ export default defineNuxtConfig({
       // The exploring-data CSVs will not load until that changes or a proxy is
       // put here.
       generatedBase: 'https://dev2-dashboard.iatistandard.org',
-      // The "Development version" notice across the top of every page.
-      // NUXT_PUBLIC_SHOW_DEV_BANNER=true turns it on without a code change.
-      showDevBanner: false,
+      // The preview notice across the top of every page, which says the
+      // dashboard is not public yet and where to send feedback. On until the
+      // consultation closes; NUXT_PUBLIC_SHOW_DEV_BANNER=false turns it off
+      // without a code change.
+      showDevBanner: true,
       // Accounts that see every organisation rather than only their own.
       // Comma-separated, and overridable with NUXT_PUBLIC_ALL_ORGS_EMAILS, so
       // an account can be added for a deployment without a code change. Ships

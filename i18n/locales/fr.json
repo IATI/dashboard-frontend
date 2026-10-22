@@ -587,5 +587,11 @@
   "orgFeedbackEmail": "Si vous avez encore des questions, contactez-nous à l'adresse",
   "orgFeedbackAnd": ", et ",
   "orgFeedbackMethodology": "consultez la méthodologie",
-  "gateSignInFailed": "La connexion n'a pas pu être lancée : {error}"
+  "gateSignInFailed": "La connexion n'a pas pu être lancée : {error}",
+  "bannerTitle": "Aperçu du tableau de bord – pas encore publié.",
+  "bannerBody": "{title} Les évaluations sont préliminaires et reposent sur un cadre encore à l'état de projet, soumis à consultation. Veuillez {methodology} et faire part de vos commentaires sur {connect} et {github} d'ici au {deadline}.",
+  "bannerMethodology": "consulter la méthodologie",
+  "bannerConnect": "IATI Connect",
+  "bannerGithub": "GitHub (indicateurs)",
+  "bannerDeadline": "16 novembre 2026"
 }

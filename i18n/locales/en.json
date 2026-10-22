@@ -586,5 +586,11 @@
   "orgFeedbackEmail": "If you still have questions, get in touch via",
   "orgFeedbackAnd": ", and ",
   "orgFeedbackMethodology": "read the methodology",
-  "gateSignInFailed": "Sign-in could not be started: {error}"
+  "gateSignInFailed": "Sign-in could not be started: {error}",
+  "bannerTitle": "Dashboard preview – not yet publicly released.",
+  "bannerBody": "{title} Assessments are preliminary and based on a draft framework subject to consultation. Please {methodology} and share your feedback on {connect} and {github} by {deadline}.",
+  "bannerMethodology": "review the methodology",
+  "bannerConnect": "IATI Connect",
+  "bannerGithub": "GitHub (indicators)",
+  "bannerDeadline": "16 November 2026"
 }

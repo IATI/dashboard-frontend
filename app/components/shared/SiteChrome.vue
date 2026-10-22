@@ -15,6 +15,7 @@ const banner = defineModel('banner', { type: Boolean, default: true })
  * applies when it is shown.
  */
 const { public: { showDevBanner } } = useRuntimeConfig()
+const { t } = useI18n({ useScope: 'global' })
 </script>
 
 <template>
@@ -26,10 +27,22 @@ const { public: { showDevBanner } } = useRuntimeConfig()
       dismissible
       style="margin: 0; border-radius: 0; border-left: none; border-right: none; border-top: none"
     >
-      <strong>Development version.</strong>
-      This site is a development version for the new front-end of the IATI Data Quality Dashboard.
-      Data may be incomplete, provisional, or include fictional placeholder text.
-      Please do not rely on or cite this data during this phase.
+      <!-- One message with slots rather than a row of fragments, so the
+           sentence stays translatable: a translator can move the links and the
+           date within it, which concatenated pieces would not allow. -->
+      <i18n-t keypath="bannerBody" tag="span" scope="global">
+        <template #title><strong>{{ t('bannerTitle') }}</strong></template>
+        <template #methodology>
+          <NuxtLink to="/about">{{ t('bannerMethodology') }}</NuxtLink>
+        </template>
+        <template #connect>
+          <a :href="CONNECT_URL" target="_blank" rel="noopener">{{ t('bannerConnect') }}</a>
+        </template>
+        <template #github>
+          <a :href="FEEDBACK_URL" target="_blank" rel="noopener">{{ t('bannerGithub') }}</a>
+        </template>
+        <template #deadline><strong>{{ t('bannerDeadline') }}</strong></template>
+      </i18n-t>
     </BAlert>
     <Header :active="active" />
     <slot />
