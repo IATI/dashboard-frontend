@@ -44,16 +44,39 @@ function getClient() {
   if (!import.meta.client) return null
   if (!clientPromise) {
     const { public: { auth } } = useRuntimeConfig()
+    // Both read here rather than inside the callback below: a composable that
+    // needs the Nuxt instance has to be called before the first await, and
+    // appOrigin() reads the runtime config too.
+    const origin = appOrigin()
     clientPromise = import('@asgardeo/auth-spa').then(async ({ AsgardeoSPAClient }) => {
       const client = AsgardeoSPAClient.getInstance()
       await client.initialize({
         clientID: auth.clientId,
         baseUrl: auth.baseUrl,
-        signInRedirectURL: appOrigin(),
-        signOutRedirectURL: appOrigin(),
+        signInRedirectURL: origin,
+        signOutRedirectURL: origin,
         scope: auth.scope.split(' ').filter(Boolean),
+        // The SDK defaults to sessionStorage, which is per-tab: opening an
+        // organisation's page in a second tab found no session there and asked
+        // the publisher to sign in again, even though the first tab was signed
+        // in. localStorage is shared across tabs of the same origin and
+        // survives a reload, so one sign-in covers the browser.
+        //
+        // The trade-off is that the tokens persist and are readable by any
+        // script on this origin. Accepted here for the reason set out in
+        // useAccess: the assessment data behind this sits on a public API, so
+        // the session guards whose data is SHOWN rather than who can reach it.
+        // 'webWorker' keeps tokens out of reach of page scripts and is the
+        // option to revisit if that ever stops being true.
+        storage: 'localStorage',
       })
       return client
+    }).catch(e => {
+      // Otherwise the rejected promise is cached for the life of the page and
+      // every later call fails the same way — including the Sign in button,
+      // which then does nothing at all.
+      clientPromise = null
+      throw e
     })
   }
   return clientPromise
@@ -152,8 +175,14 @@ export function useAuth() {
     try {
       sessionStorage.setItem(RETURN_KEY, router.currentRoute.value.fullPath)
     } catch { /* blocked storage — sign-in still works, just returns to the root */ }
-    const client = await getClient()
-    await client?.signIn()
+    // Reported as the button doing nothing: a failure here used to reject into
+    // the click handler, where it was logged to the console and nowhere else.
+    try {
+      const client = await getClient()
+      await client?.signIn()
+    } catch (e) {
+      error.value = e?.message ?? 'Could not start sign-in'
+    }
   }
 
   async function signOut() {

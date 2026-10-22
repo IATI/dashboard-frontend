@@ -22,7 +22,7 @@
  * authentication in front of the data API, which is not in this repository.
  */
 export function useAccess() {
-  const { user, ready } = useAuth()
+  const { user, ready, error: authError } = useAuth()
   const { slugs, state: scopeState, error: scopeError } = useMyPublishers()
   const { public: { allOrgsEmails } } = useRuntimeConfig()
 
@@ -48,6 +48,8 @@ export function useAccess() {
     seesAll,
     slugs,
     scopeError,
+    /** A sign-in failure, for the gate to show rather than leave to the console. */
+    authError,
     accountLabel,
     /** Whether this viewer may see one organisation's page. */
     canSee: slug => canSeeOrg(status.value, slugs.value, slug),

@@ -585,5 +585,6 @@
   "orgFeedbackGithub": "Comment on an indicator",
   "orgFeedbackEmail": "If you still have questions, get in touch via",
   "orgFeedbackAnd": ", and ",
-  "orgFeedbackMethodology": "read the methodology"
+  "orgFeedbackMethodology": "read the methodology",
+  "gateSignInFailed": "Sign-in could not be started: {error}"
 }

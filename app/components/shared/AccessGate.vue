@@ -21,7 +21,7 @@ const props = defineProps({
 
 const { t } = useI18n({ useScope: 'global' })
 const { signIn } = useAuth()
-const { slugs, accountLabel, scopeError } = useAccess()
+const { slugs, accountLabel, scopeError, authError } = useAccess()
 
 const body = computed(() => {
   if (props.status === 'signed-out') return 'gateSignedOut'
@@ -67,6 +67,12 @@ const ownOrg = computed(() => (slugs.value.size === 1 ? [...slugs.value][0] : nu
         >
           <span>{{ t('navSignIn') }}</span>
         </button>
+
+        <!-- Sign-in itself failing is not the same as being signed out, and
+             without this the only trace of it was a console message. -->
+        <p v-if="authError" class="access-gate__account" aria-live="polite">
+          {{ t('gateSignInFailed', { error: authError }) }}
+        </p>
 
         <p v-if="ownOrg && status !== 'signed-out'" class="access-gate__alt">
           <NuxtLink :to="`/organisations/${ownOrg}`">{{ t('gateGoToYours') }}</NuxtLink>

@@ -586,5 +586,6 @@
   "orgFeedbackGithub": "Commentez un indicateur",
   "orgFeedbackEmail": "Si vous avez encore des questions, contactez-nous à l'adresse",
   "orgFeedbackAnd": ", et ",
-  "orgFeedbackMethodology": "consultez la méthodologie"
+  "orgFeedbackMethodology": "consultez la méthodologie",
+  "gateSignInFailed": "La connexion n'a pas pu être lancée : {error}"
 }
