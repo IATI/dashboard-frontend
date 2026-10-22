@@ -514,7 +514,7 @@
   "aboutLead": "This dashboard assesses the quality of the data organisations publish to IATI. It is a preliminary assessment against a draft framework, shared privately with organisations for feedback before the dashboard goes live in 2027.",
   "aboutDraftTitle": "Provide your feedback",
   "aboutDraftBody": "The framework used to assess IATI data quality on this dashboard is still being consulted on. Thresholds, weightings and some indicator definitions may change.",
-  "aboutDraftFeedback": "Feedback is open until 17 November 2026. If something looks wrong, or a threshold looks unreasonable, please say so — that is what the consultation is for. We encourage organisations to share feedback on individual {github}. We are also inviting organisations to participate in discussions on the proposed assessment thresholds through {connect} and online consultation meetings.",
+  "aboutDraftFeedback": "Feedback is open until 17 November 2026. If something looks wrong, or a threshold looks unreasonable, please say so — that is what the consultation is for. We encourage organisations to share feedback on individual {github}. We are also inviting organisations to participate in discussions on the proposed assessment thresholds through {connect}.",
   "aboutHowTitle": "How an assessment is reached",
   "aboutHowBody": "Data is assessed against four dimensions. Each dimension is made up of components, and the comprehensiveness components are made up of indicators, each of which runs one or more tests against the organisation's data.",
   "aboutHowWeakest": "An assessment category (good, very good, excellent) is achieved when all criteria at that level are met. A dimension therefore takes the category of its weakest component, and the overall assessment is that of the weakest dimension.",
@@ -593,7 +593,7 @@
   "bannerConnect": "IATI Connect",
   "bannerGithub": "GitHub (indicators)",
   "bannerDeadline": "17 November 2026",
-  "orgFeedbackConnect": "You can join discussions on the proposed assessment thresholds on {connect} and online consultations.",
+  "orgFeedbackConnect": "You can join discussions on the proposed assessment thresholds on {connect}.",
   "orgFeedbackConnectLink": "IATI Connect",
   "aboutDraftConnectLink": "IATI Connect"
 }

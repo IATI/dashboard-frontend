@@ -515,7 +515,7 @@
   "aboutLead": "Ce tableau de bord évalue la qualité des données que les organisations publient dans IATI. Il s'agit d'une évaluation préliminaire, fondée sur un cadre encore à l'état de projet et communiquée à titre privé aux organisations pour recueillir leurs retours avant la mise en service en 2027.",
   "aboutDraftTitle": "Faites-nous part de vos commentaires",
   "aboutDraftBody": "Le cadre utilisé pour évaluer la qualité des données IATI sur ce tableau de bord fait encore l'objet d'une consultation. Les seuils, les pondérations et certaines définitions d'indicateurs peuvent évoluer.",
-  "aboutDraftFeedback": "Les commentaires sont ouverts jusqu'au 17 novembre 2026. Si quelque chose vous semble erroné, ou si un seuil vous paraît déraisonnable, dites-le — c'est l'objet de la consultation. Nous encourageons les organisations à faire part de leurs commentaires sur chaque {github}. Nous invitons également les organisations à participer aux discussions sur les seuils d'évaluation proposés via {connect} et lors de réunions de consultation en ligne.",
+  "aboutDraftFeedback": "Les commentaires sont ouverts jusqu'au 17 novembre 2026. Si quelque chose vous semble erroné, ou si un seuil vous paraît déraisonnable, dites-le — c'est l'objet de la consultation. Nous encourageons les organisations à faire part de leurs commentaires sur chaque {github}. Nous invitons également les organisations à participer aux discussions sur les seuils d'évaluation proposés via {connect}.",
   "aboutHowTitle": "Comment une évaluation est établie",
   "aboutHowBody": "Les données sont évaluées selon quatre dimensions. Chaque dimension se compose de composantes, et les composantes de l'exhaustivité se composent d'indicateurs, chacun appliquant un ou plusieurs tests aux données de l'organisation.",
   "aboutHowWeakest": "Une catégorie d'évaluation (bon, très bon, excellent) est atteinte lorsque tous les critères de ce niveau sont remplis. Une dimension prend donc la catégorie de sa composante la plus faible, et l'évaluation globale est celle de la dimension la plus faible.",
@@ -594,7 +594,7 @@
   "bannerConnect": "IATI Connect",
   "bannerGithub": "GitHub (indicateurs)",
   "bannerDeadline": "17 novembre 2026",
-  "orgFeedbackConnect": "Vous pouvez participer aux discussions sur les seuils d'évaluation proposés sur {connect} et lors des consultations en ligne.",
+  "orgFeedbackConnect": "Vous pouvez participer aux discussions sur les seuils d'évaluation proposés sur {connect}.",
   "orgFeedbackConnectLink": "IATI Connect",
   "aboutDraftConnectLink": "IATI Connect"
 }
