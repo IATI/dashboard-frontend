@@ -509,7 +509,7 @@
   "orgChartBudgetShort": "Budgets",
   "orgCovPeriodNote": "Le montant des dépenses IATI indiqué ici couvre l’exercice comptable de {entity}, qui ne correspond pas à l’année civile ; il diffère donc des montants présentés ailleurs sur cette page.",
   "orgIndicatorHelpFor": "Ce que mesure « {name} »",
-  "aboutTitle": "À propos de cette évaluation",
+  "aboutTitle": "À propos",
   "aboutEyebrow": "Méthodologie",
   "aboutBreadcrumb": "À propos",
   "aboutLead": "Ce tableau de bord évalue la qualité des données que les organisations publient dans IATI. Il s'agit d'une évaluation préliminaire, fondée sur un cadre encore à l'état de projet et communiquée à titre privé aux organisations pour recueillir leurs retours avant la mise en service en 2027.",

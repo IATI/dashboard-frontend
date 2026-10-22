@@ -508,7 +508,7 @@
   "orgChartBudgetShort": "Budgets",
   "orgCovPeriodNote": "The IATI spending figure here covers {entity}’s accounting period, which is not the calendar year, so it will differ from the figures elsewhere on this page.",
   "orgIndicatorHelpFor": "What “{name}” measures",
-  "aboutTitle": "About this assessment",
+  "aboutTitle": "About",
   "aboutEyebrow": "Methodology",
   "aboutBreadcrumb": "About",
   "aboutLead": "This dashboard assesses the quality of the data organisations publish to IATI. It is a preliminary assessment against a draft framework, shared privately with organisations for feedback before the dashboard goes live in 2027.",
