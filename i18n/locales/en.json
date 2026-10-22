@@ -513,7 +513,7 @@
   "aboutBreadcrumb": "About",
   "aboutLead": "This dashboard assesses the quality of the data organisations publish to IATI. It is a preliminary assessment against a draft framework, shared privately with organisations for feedback before the dashboard goes live in 2027.",
   "aboutDraftTitle": "Provide your feedback",
-  "aboutDraftBody": "This is a private preview for organisations, ahead of the dashboard going live in 2027. The framework behind these assessments is still being consulted on. Thresholds, weightings and some indicator definitions may change. Figures here should not be cited or relied upon.",
+  "aboutDraftBody": "The framework used to assess IATI data quality on this dashboard is still being consulted on. Thresholds, weightings and some indicator definitions may change.",
   "aboutDraftFeedback": "Feedback is open until 16 November 2026. If something looks wrong, or a threshold looks unreasonable, please say so — that is what the consultation is for. We are encouraging all organisations to provide their feedback on GitHub.",
   "aboutHowTitle": "How an assessment is reached",
   "aboutHowBody": "Data is assessed against four dimensions. Each dimension is made up of components, and the comprehensiveness components are made up of indicators, each of which runs one or more tests against the organisation's data.",

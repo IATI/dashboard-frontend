@@ -514,7 +514,7 @@
   "aboutBreadcrumb": "À propos",
   "aboutLead": "Ce tableau de bord évalue la qualité des données que les organisations publient dans IATI. Il s'agit d'une évaluation préliminaire, fondée sur un cadre encore à l'état de projet et communiquée à titre privé aux organisations pour recueillir leurs retours avant la mise en service en 2027.",
   "aboutDraftTitle": "Faites-nous part de vos commentaires",
-  "aboutDraftBody": "Il s'agit d'un aperçu privé destiné aux organisations, avant la mise en service du tableau de bord en 2027. Le cadre sur lequel reposent ces évaluations fait encore l'objet d'une consultation. Les seuils, les pondérations et certaines définitions d'indicateurs peuvent évoluer. Les chiffres présentés ici ne doivent pas être cités ni utilisés comme référence.",
+  "aboutDraftBody": "Le cadre utilisé pour évaluer la qualité des données IATI sur ce tableau de bord fait encore l'objet d'une consultation. Les seuils, les pondérations et certaines définitions d'indicateurs peuvent évoluer.",
   "aboutDraftFeedback": "Les retours sont ouverts jusqu'au 16 novembre 2026. Si quelque chose vous semble erroné, ou si un seuil vous paraît déraisonnable, dites-le : c'est précisément l'objet de la consultation. Nous encourageons toutes les organisations à transmettre leurs retours sur GitHub.",
   "aboutHowTitle": "Comment une évaluation est établie",
   "aboutHowBody": "Les données sont évaluées selon quatre dimensions. Chaque dimension se compose de composantes, et les composantes de l'exhaustivité se composent d'indicateurs, chacun appliquant un ou plusieurs tests aux données de l'organisation.",
