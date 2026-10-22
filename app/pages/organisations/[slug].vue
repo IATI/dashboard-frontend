@@ -724,6 +724,13 @@ const dimensions = computed(() =>
             {{ t('orgFeedbackBody') }}
             <a :href="FEEDBACK_URL">{{ t('orgFeedbackGithub') }}</a>{{ t('orgFeedbackAnd')
             }}<NuxtLink to="/about">{{ t('orgFeedbackMethodology') }}</NuxtLink>.
+            <!-- One message with a slot, so the link can sit anywhere in the
+                 sentence a translation needs it. -->
+            <i18n-t keypath="orgFeedbackConnect" tag="span" scope="global">
+              <template #connect>
+                <a :href="CONNECT_URL" target="_blank" rel="noopener">{{ t('orgFeedbackConnectLink') }}</a>
+              </template>
+            </i18n-t>
             {{ t('orgFeedbackEmail') }}
             <a :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>.
           </p>

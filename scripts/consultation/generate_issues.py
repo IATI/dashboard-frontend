@@ -234,7 +234,7 @@ FEEDBACK_INDICATOR = """
 - Are the tests the right way to measure it?
 - Should it apply to every publisher, or are there organisation types it should not apply to?
 
-Please comment below. Comments are open until **16 November 2026**.
+Please comment below. Comments are open until **17 November 2026**.
 """
 
 FEEDBACK_COMPONENT_GROUPED = """
@@ -243,7 +243,7 @@ FEEDBACK_COMPONENT_GROUPED = """
 - Are these the right indicators to group together?
 - Are the thresholds set at the right level — too demanding, or not demanding enough?
 
-Please comment below. Comments are open until **16 November 2026**.
+Please comment below. Comments are open until **17 November 2026**.
 """
 
 # A component that is not made up of indicators — availability, timeliness and
@@ -254,7 +254,7 @@ FEEDBACK_COMPONENT_DIRECT = """
 - Is this the right thing to measure?
 - Are the thresholds set at the right level — too demanding, or not demanding enough?
 
-Please comment below. Comments are open until **16 November 2026**.
+Please comment below. Comments are open until **17 November 2026**.
 """
 
 
