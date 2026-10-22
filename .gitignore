@@ -24,3 +24,11 @@ launchctl.txt
 # Consultation issues staged by scripts/consultation/generate_issues.py for
 # review before posting. The scripts are source; the issues belong on GitHub.
 consultation-issues/
+
+# The assessment spreadsheet exporter and the xlsx helpers it uses. Kept on
+# disk but deliberately out of the repository: this one is the front end, and a
+# reporting tool that reads the API and writes a workbook is not part of it. It
+# imports app/utils/adaptPublisher.js, so it has to stay here to run:
+#   node scripts/export-assessments.mjs --include <annotated.xlsx>
+scripts/export-assessments.mjs
+scripts/lib/
