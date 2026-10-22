@@ -143,11 +143,17 @@ const VALIDATOR_URL = 'https://validator.iatistandard.org/'
         <p>{{ t('aboutDraftBody') }}</p>
         <!-- GitHub first: the consultation happens there, one issue per
              indicator and per component. The support address is the fallback
-             for anyone who cannot use it, rather than the first thing offered. -->
-        <p>
-          {{ t('aboutDraftFeedback') }}
-          <a :href="FEEDBACK_URL">{{ t('aboutDraftGithubLink') }}</a>
-        </p>
+             for anyone who cannot use it, rather than the first thing offered.
+             Both links sit inside the sentence as slots rather than trailing
+             it, so a translation can place them where its grammar needs. -->
+        <i18n-t keypath="aboutDraftFeedback" tag="p" scope="global">
+          <template #github>
+            <a :href="FEEDBACK_URL">{{ t('aboutDraftGithubLink') }}</a>
+          </template>
+          <template #connect>
+            <a :href="CONNECT_URL" target="_blank" rel="noopener">{{ t('aboutDraftConnectLink') }}</a>
+          </template>
+        </i18n-t>
         <p class="mb-0">
           {{ t('aboutDraftMore') }}
           <a :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>.
